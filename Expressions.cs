@@ -12,7 +12,8 @@ namespace HULK
     */
     abstract class Expression
     {
-        public abstract string Evaluate();
+        public string value ;
+        public abstract void Evaluate();
     }
 
     abstract class Binary_Exrpessions : Expression
@@ -25,7 +26,6 @@ namespace HULK
 
     class N : Binary_Exrpessions
     {
-        
         public N()
         {
             this.left = new T();
@@ -33,30 +33,34 @@ namespace HULK
             this.right = new T();
         }
 
-        public override string Evaluate()
+        public override void Evaluate()
         {
             //Expression result = new T();
-            double left_value = double.Parse(left.Evaluate());
+            left.Evaluate();
+            double left_value = double.Parse(left.value);
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.Tokens[Lexer.index] == "+")
                 {
                     Lexer.index++;
                     //Expression right = new T();
-                    left_value += double.Parse(right.Evaluate());
+                    right.Evaluate();
+                    left_value += double.Parse(right.value);
                 }
                 else if(Lexer.Tokens[Lexer.index] == "-")
                 {
                     Lexer.index++;
-                    Expression right = new T();
-                    left_value -= double.Parse(right.Evaluate());
+                    //Expression right = new T();
+                    right.Evaluate();
+                    left_value -= double.Parse(right.value);
                 }
                 else if (Lexer.Tokens[Lexer.index] == ";" || Lexer.Tokens[Lexer.index] == ")" ||Lexer.Tokens[Lexer.index] == "in" || Lexer.Tokens[Lexer.index] == ",")//Siguientes
                 {
                     break;
                 }
             }
-            return Convert.ToString(left_value);
+            value = Convert.ToString(left_value);
+            //return Convert.ToString(left_value);
         }
     }
 
@@ -68,23 +72,26 @@ namespace HULK
 
             this.right = new W();
         }
-        public override string Evaluate()
+        public override void Evaluate()
         {
             //Expression result = new W();
-            double left_value = double.Parse(left.Evaluate());
+            left.Evaluate();
+            double left_value = double.Parse(left.value);
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.Tokens[Lexer.index] == "*")
                 {
                     Lexer.index++;
                     //Expression right = new W();
-                    left_value *= double.Parse(right.Evaluate());
+                    right.Evaluate();
+                    left_value *= double.Parse(right.value);
                 }
                 else if(Lexer.Tokens[Lexer.index] == "/")
                 {
                     Lexer.index++;
                     //Expression right = new W();
-                    left_value /= double.Parse(right.Evaluate());
+                    right.Evaluate();
+                    left_value /= double.Parse(right.value);
                 }
                 else if(Lexer.Tokens[Lexer.index] == "+" || Lexer.Tokens[Lexer.index] == "-" || Lexer.Tokens[Lexer.index] == ")" || Lexer.Tokens[Lexer.index] == ";" || Lexer.Tokens[Lexer.index] == "in" || Lexer.Tokens[Lexer.index] == ",")
                 {
@@ -92,7 +99,8 @@ namespace HULK
                     break;
                 }
             }    
-            return Convert.ToString(left_value);
+            value = Convert.ToString(left_value);
+            //return Convert.ToString(left_value);
         }
     }
 
@@ -106,44 +114,50 @@ namespace HULK
             this.right = new F();
         }
 
-        public override string Evaluate()
+        public override void Evaluate()
         {
             //Expression result = new F();
-            double left_value = double.Parse(left.Evaluate());
+            left.Evaluate();
+            double left_value = double.Parse(left.value);
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.Tokens[Lexer.index] == "^")
                 {
                     Lexer.index++;
                     //Expression right = new W();
-                    left_value = Math.Pow(left_value , double.Parse(right.Evaluate()));
+                    right.Evaluate();
+                    left_value = Math.Pow(left_value , double.Parse(right.value));
                 }
                 else break;
                
             }    
-            return Convert.ToString(left_value);
+            value = Convert.ToString(left_value);
+            //return Convert.ToString(left_value);
         }
     }
 
     class F : Expression
     {
-        public override string Evaluate()
+        public override void Evaluate()
         {
             if(Regex.IsMatch(Lexer.Tokens[Lexer.index] , @"\d"))
             {
                 string result = Lexer.Tokens[Lexer.index];
                 Lexer.index++;
-                return result;
+                value = result;
+                //return result;
             }
             else if(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] == "(")
             {
                 Lexer.index++;
                 Expression result = new N();
-                string s = result.Evaluate();
+                result.Evaluate();
+                string s = result.value;
                 if(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] == ")")
                 {
                     Lexer.index++;
-                    return s;
+                    value = s;
+                    //return s;
                 }
                 else
                 {
@@ -155,7 +169,8 @@ namespace HULK
             {
                 string s = let_in.id_store[Lexer.Tokens[Lexer.index]];
                 Lexer.index++;
-                return s;
+                value = s ;
+                //return s ;
 
             }
             else throw new Exception("error");
@@ -166,7 +181,7 @@ namespace HULK
     {
         public static Dictionary< string , string> id_store = new Dictionary<string, string>();
 
-        public override string Evaluate()
+        public override void Evaluate()
         {
             while(Lexer.index < Lexer.Tokens.Count)
             {
@@ -177,8 +192,10 @@ namespace HULK
                     if(Lexer.Tokens[Lexer.index] == "=")
                     {
                         Lexer.index++;
-                        Expression value = new N();
-                        string id_value = value.Evaluate();
+                        Expression Value = new N();
+                        Value.Evaluate();
+                        //string s = Value.Evaluate();
+                        string id_value = Value.value;//cambios
                         id_store.Add(id , id_value );
                     }
                 }
@@ -193,12 +210,13 @@ namespace HULK
             {
                 Lexer.index++;
                 Expression expression = new N();
-                string value = expression.Evaluate();
+                expression.Evaluate();
+                string value = expression.value;
                 let_in.id_store.Clear();
-                return value;
+                this.value = expression.value;
             }
             else throw new Exception("Error");
-        }
+        }  
     }
     /*
     class Instruction : Expression

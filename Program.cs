@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+
 namespace HULK
 {
     class Program
@@ -24,12 +25,19 @@ namespace HULK
                 Lexer l = new Lexer(input);
                 
                 Expression result = new let_in();
+
+                Expression r = new N();
+
+                r.Evaluate();
+                System.Console.WriteLine(r.value);
+
                 if(Regex.IsMatch(Lexer.Tokens[Lexer.index], @"let"))
                 {
                     Lexer.index++;
-                    System.Console.WriteLine(result.Evaluate());
+                    result.Evaluate();
+                    System.Console.WriteLine(result.value);
                 }
-   
+
             }
 
         }
