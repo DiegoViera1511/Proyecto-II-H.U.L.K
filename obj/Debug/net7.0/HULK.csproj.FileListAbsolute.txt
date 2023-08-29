@@ -18,7 +18,6 @@
 /Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/bin/Debug/net7.0/HULK.runtimeconfig.json
 /Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/bin/Debug/net7.0/HULK.dll
 /Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/bin/Debug/net7.0/HULK.pdb
-/Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/obj/Debug/net7.0/HULK.csproj.AssemblyReference.cache
 /Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/obj/Debug/net7.0/HULK.GeneratedMSBuildEditorConfig.editorconfig
 /Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/obj/Debug/net7.0/HULK.AssemblyInfoInputs.cache
 /Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/obj/Debug/net7.0/HULK.AssemblyInfo.cs

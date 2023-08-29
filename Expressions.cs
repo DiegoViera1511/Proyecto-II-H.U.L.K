@@ -12,7 +12,8 @@ namespace HULK
     */
     abstract class Expression
     {
-        public string value ;
+        public string value  ;
+       
         public abstract void Evaluate();
     }
 
@@ -23,7 +24,7 @@ namespace HULK
         public Expression right ;
     }
 
-
+    #region Numeric Expressions
     class N : Binary_Exrpessions
     {
         public N()
@@ -37,6 +38,12 @@ namespace HULK
         {
             //Expression result = new T();
             left.Evaluate();
+            if(Regex.IsMatch(left.value , @"\D+"))
+            {
+                //Construir
+                value = left.value;
+                return ;
+            }
             double left_value = double.Parse(left.value);
             while(Lexer.index < Lexer.Tokens.Count)
             {
@@ -44,7 +51,7 @@ namespace HULK
                 {
                     Lexer.index++;
                     //Expression right = new T();
-                    right.Evaluate();
+                    right.Evaluate(); //Verificar que right value es un número
                     left_value += double.Parse(right.value);
                 }
                 else if(Lexer.Tokens[Lexer.index] == "-")
@@ -76,6 +83,11 @@ namespace HULK
         {
             //Expression result = new W();
             left.Evaluate();
+            if(Regex.IsMatch(left.value , @"\D+"))
+            {
+                value = left.value;
+                return ;
+            }
             double left_value = double.Parse(left.value);
             while(Lexer.index < Lexer.Tokens.Count)
             {
@@ -118,7 +130,14 @@ namespace HULK
         {
             //Expression result = new F();
             left.Evaluate();
+            if(Regex.IsMatch(left.value , @"\D+"))
+            {
+                value = left.value;
+                return ;
+            }
+
             double left_value = double.Parse(left.value);
+
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.Tokens[Lexer.index] == "^")
@@ -157,7 +176,6 @@ namespace HULK
                 {
                     Lexer.index++;
                     value = s;
-                    //return s;
                 }
                 else
                 {
@@ -165,18 +183,28 @@ namespace HULK
                 }
 
             }
+            else if(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index][0] == '"' && Lexer.Tokens[Lexer.index][Lexer.Tokens[Lexer.index].Length - 1] == '"' ) 
+            {
+                value = Lexer.Tokens[Lexer.index].Substring( 0 , Lexer.Tokens[Lexer.index].Length);
+            }
+            else if(Lexer.index < Lexer.Tokens.Count && Regex.IsMatch(Lexer.Tokens[Lexer.index], @"let"))
+            {
+                Lexer.index++;
+                Expression l = new let_in();
+                l.Evaluate();
+                value = l.value;
+            }
             else if (Lexer.index < Lexer.Tokens.Count && let_in.id_store.ContainsKey(Lexer.Tokens[Lexer.index]))
             {
                 string s = let_in.id_store[Lexer.Tokens[Lexer.index]];
                 Lexer.index++;
                 value = s ;
                 //return s ;
-
             }
-            else throw new Exception("error");
         }
     }
 
+    #endregion
     class let_in : Expression
     {
         public static Dictionary< string , string> id_store = new Dictionary<string, string>();
@@ -194,7 +222,7 @@ namespace HULK
                         Lexer.index++;
                         Expression Value = new N();
                         Value.Evaluate();
-                        //string s = Value.Evaluate();
+                        
                         string id_value = Value.value;//cambios
                         id_store.Add(id , id_value );
                     }
@@ -208,38 +236,71 @@ namespace HULK
             }    
             if(Lexer.Tokens[Lexer.index] == "in")
             {
+                
+
                 Lexer.index++;
-                Expression expression = new N();
-                expression.Evaluate();
-                string value = expression.value;
-                let_in.id_store.Clear();
-                this.value = expression.value;
+                Expression HE = new HulkExpression();
+                HE.Evaluate();
+
+                string result ;
+                if(HE.value != null)
+                {
+                    result = HE.value;
+                }
+                else
+                {
+                    Expression e = new N();
+                    e.Evaluate();
+                    result = e.value;
+                }
+
+                this.value = result;
+                id_store.Clear();
+               
             }
             else throw new Exception("Error");
         }  
     }
-    /*
-    class Instruction : Expression
+
+    class Print : Expression
     {
-        public override string Evaluate()
+        public override void Evaluate()
+        {
+            if(Lexer.Tokens[Lexer.index] == "(")
+            {
+                Lexer.index++;
+                Expression x = new N();
+                x.Evaluate();
+                if(Lexer.Tokens[Lexer.index] == ")")
+                {
+                    Lexer.index++;
+                    Console.WriteLine(x.value);
+                    value = x.value;
+                }
+            }
+            //Errores en desarrollo
+        }
+    }
+    
+    class HulkExpression : Expression
+    {
+        public override void Evaluate()
         {
             if(Lexer.Tokens[Lexer.index] == "print")
             {
                 Lexer.index++;
-                if(Lexer.Tokens[Lexer.index] == "(")
-                {
-                    Expression x = new N();
-                    string value = x.Evaluate();
-                    if(Lexer.Tokens[Lexer.index] == ")")
-                    {
-                        Lexer.index++;
-                        Console.WriteLine(value);
-                        return value;
-                    }
-                }
+                Expression p = new Print();
+                p.Evaluate();
+                value = p.value;
             }
-            else throw new Exception("No es una instrucción");
+            else if(Regex.IsMatch(Lexer.Tokens[Lexer.index] , @"let"))
+            {
+                Lexer.index++;
+                Expression l = new let_in();
+                l.Evaluate();
+                value = l.value;
+            }
         }
     }
-    */
+    
 }

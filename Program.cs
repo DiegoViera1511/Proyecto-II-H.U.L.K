@@ -20,26 +20,23 @@ namespace HULK
                 {
                     break;
                 }
+
                 Lexer.index = 0;
                 Lexer.Tokens.Clear();
                 Lexer l = new Lexer(input);
                 
-                Expression result = new let_in();
+                Expression result = new HulkExpression();
+                result.Evaluate();
 
-                Expression r = new N();
-
-                r.Evaluate();
-                System.Console.WriteLine(r.value);
-
-                if(Regex.IsMatch(Lexer.Tokens[Lexer.index], @"let"))
+                if(Lexer.index >= Lexer.Tokens.Count || Lexer.Tokens[Lexer.index] != ";")
                 {
-                    Lexer.index++;
-                    result.Evaluate();
-                    System.Console.WriteLine(result.value);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Se esperaba \" ; \"");
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
-
+        
             }
-
+            
         }
     }
 }
