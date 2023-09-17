@@ -16,25 +16,29 @@ namespace HULK
             int c = 0 ;
             while(true)
             {
+                HULK_Errors.Found = false ;
+                foreach(string id in Function_Declaration.Function_Stack.Keys)
+                {
+                    Function_Declaration.Function_Stack[id] = 0 ;
+                }
                 Console.Write("> ");
 
-               string input = Console.ReadLine();
+                string input = Console.ReadLine();
 
+                //string input = "print ( 5 + 2 * 4) ;";
+                
                 /*
-                string input;
                 if(c == 0 )
                 {
-                    input = "function fac(n) => if( n == 1 ) 1 else n * fac(n - 1) ;" ;
+                    input = "function v( x ) => print ( x)" ;
                     c++;
                 }
-                else input = "let n = 3 in fac(n);";
+                else input = "v( 3 ) ;";
                 */
-                
-            
-                
 
-                
-            
+                //List PROBLEMS
+                //Semantics errors
+                //Expressiones Unarias
                 
                 
                 if(input == "exit")
@@ -52,18 +56,31 @@ namespace HULK
                     Console.WriteLine(m);
                 }
                 */
-    
-                Expression result = new HulkExpression();
-                result.Evaluate();
-               
 
-                if(Lexer.index >= Lexer.Tokens.Count || Lexer.Tokens[Lexer.index] != ";")
+                Expression result = new HulkExpression() ;
+
+                if(!HULK_Errors.Found)
                 {
+                    result.Evaluate();
+                }
+
+                if(! HULK_Errors.Found && (Lexer.index >= Lexer.Tokens.Count || Lexer.Tokens[Lexer.index] != ";"))
+                {
+                    HULK_Errors.Found = true ;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Se esperaba \" ; \"");
                     Console.ForegroundColor = ConsoleColor.Green;
                 }
-        
+                
+                if (! HULK_Errors.Found )
+                {
+                    foreach(string Prints in Lexer.ConsolePrints)
+                    {
+                        Console.WriteLine(Prints);
+                    }
+                }
+                Lexer.ConsolePrints.Clear();
+
             }
 
             Console.ForegroundColor = ConsoleColor.White;
