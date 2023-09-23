@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace HULK
 {
@@ -13,7 +14,7 @@ namespace HULK
         public static int index = 0 ;
 
         public static List<string> Key_Words  = new List<string>()
-        {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" };
+        {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" ,"sin" , "cos" , "sqrt" , "rand" , "exp" , "log" };
    
         public Lexer(string input)
         {
@@ -30,6 +31,7 @@ namespace HULK
             System.Console.WriteLine(m.Value);
             }
             */
+            
 
             foreach(Match m in t )
             {
@@ -39,16 +41,17 @@ namespace HULK
                 }
                 else 
                 {
-                    HULK_Errors.Found = true ;
-                    HULK_Errors.LexicalError(m.Value) ; 
+                    throw new LexicalError(m.Value);
+                    //HULK_Errors.LexicalError(m.Value) ; 
                 }
+                
             }
        }
 
         #region Methods 
         public static bool IsNumber(string Token)
         {
-            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+E\+\d+$") ? true : false ;
+            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+E\+\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+$" ) ? true : false ;
         }
         public static bool IsString(string Token)
         {
@@ -86,6 +89,15 @@ namespace HULK
                 return "prueva";
             }
 
+        }
+
+        public static string GetIncorrectToken(string a , string b , string expectedToken)
+        {
+            if(a != expectedToken )
+            {
+                return TokenType(a) ;
+            }
+            else return TokenType(b) ;            
         }
         #endregion
 
