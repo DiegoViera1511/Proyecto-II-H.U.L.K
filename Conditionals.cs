@@ -21,15 +21,9 @@ namespace HULK
                         e.Evaluate();
                         value = e.value ;
                         
-                        while(Lexer.index < Lexer.Tokens.Count - 1 && Lexer.Tokens[Lexer.index] != "else" )
+                        while(Lexer.index < Lexer.Tokens.Count - 1 && Lexer.Tokens[Lexer.index] != ";" )
                         {
                            Next();
-                        }
-                        if(Lexer.Tokens[Lexer.index] == "else")
-                        {
-                            Next();
-                            Expression checkElse = new B();
-                            checkElse.Evaluate();
                         }
                     }
                     else if(b.value == "false")

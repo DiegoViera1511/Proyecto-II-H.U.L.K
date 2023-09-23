@@ -23,9 +23,9 @@ namespace HULK
                 }
                 Console.Write("> ");
 
-               // string input = Console.ReadLine();
+                string input = Console.ReadLine();
 
-                string input = " ";
+                //string input = " ";
                 
                 /*
                 if(c == 0 )
