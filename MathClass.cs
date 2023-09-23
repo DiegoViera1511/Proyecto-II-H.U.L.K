@@ -16,7 +16,7 @@ namespace HULK
         {
             if(Lexer.Tokens[Lexer.index] == "(")
             {   
-                Lexer.index++;
+                Next();
 
                 while(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] != ")")
                 {
@@ -25,7 +25,7 @@ namespace HULK
                     Arguments.Add(e.value);
                     if(Lexer.Tokens[Lexer.index] == ",")
                     {
-                        Lexer.index++;
+                        Next();
                     }
                     else if(Lexer.Tokens[Lexer.index] == ")")
                     {
@@ -60,7 +60,7 @@ namespace HULK
                         rand();
                     }
 
-                    Lexer.index++;
+                    Next();
                 }
                 else throw new SyntaxError("Missing ' ) '" , "Missing Token" , "Math function" , Lexer.Tokens[Lexer.index-1]);
             }

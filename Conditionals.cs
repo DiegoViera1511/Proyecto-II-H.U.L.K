@@ -8,12 +8,12 @@ namespace HULK
         {
             if(Lexer.Tokens[Lexer.index] == "(")
             {
-                Lexer.index++;
+                Next();
                 Expression b = new B();
                 b.Evaluate();
                 if(Lexer.Tokens[Lexer.index] == ")")
                 {
-                    Lexer.index++;
+                    Next();
                     Expression e = new B();//Va una HE
                     //Expression HE = new HulkExpression();
                     if(b.value == "true")
@@ -23,11 +23,11 @@ namespace HULK
                         
                         while(Lexer.index < Lexer.Tokens.Count - 1 && Lexer.Tokens[Lexer.index] != "else" )
                         {
-                            Lexer.index++;
+                           Next();
                         }
                         if(Lexer.Tokens[Lexer.index] == "else")
                         {
-                            Lexer.index++;
+                            Next();
                             Expression checkElse = new B();
                             checkElse.Evaluate();
                         }
@@ -36,23 +36,14 @@ namespace HULK
                     {
                         while(Lexer.index < Lexer.Tokens.Count - 1  && Lexer.Tokens[Lexer.index] != "else" ) 
                         {
-                            Lexer.index++;
+                            Next();
                         }
                         if(Lexer.Tokens[Lexer.index] == "else")
                         {
-                            Lexer.index++;
+                            Next();
                             Expression ElseExp = new B();
-                            //Expression HE2 = new HulkExpression();
                             
                             ElseExp.Evaluate();
-                            /*
-                            if(two.value == null)
-                            {
-                                HE2.Evaluate();
-                                result = HE2.value;
-                            }
-                            else result = two.value;
-                            */
                             value = ElseExp.value ;
                         }
                     }

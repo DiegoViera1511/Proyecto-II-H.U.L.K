@@ -20,11 +20,11 @@ namespace HULK
                     }
 
                     string id = Lexer.Tokens[Lexer.index];
-                    Lexer.index++;
+                    Next();
 
                     if(Lexer.Tokens[Lexer.index] == "=")
                     {
-                        Lexer.index++;
+                        Next();
                         if(Lexer.Tokens[Lexer.index] == "in" || Lexer.Tokens[Lexer.index] == ",")
                         {
                             //HULK_Errors.SyntaxError("Missing Expression" , "Missing Token" , "let-in" , $"variable {Lexer.Tokens[Lexer.index - 2]}");
@@ -70,11 +70,11 @@ namespace HULK
 
                 if(Lexer.Tokens[Lexer.index] == ",")
                 {
-                    Lexer.index++;
+                    Next();
                 }
                 else if(Lexer.Tokens[Lexer.index] == "in")
                 {
-                    Lexer.index++;
+                    Next();
                     break;
                 }
                 else if (Regex.IsMatch(Lexer.Tokens[Lexer.index] , @"^[a-zA-Z]+\w*$"))
