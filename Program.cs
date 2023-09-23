@@ -23,9 +23,9 @@ namespace HULK
                 }
                 Console.Write("> ");
 
-                string input = Console.ReadLine();
+               // string input = Console.ReadLine();
 
-                //string input = "function tan ( x ) => sin ( x ) / cos ( x ) ;";
+                string input = " ";
                 
                 /*
                 if(c == 0 )
@@ -55,7 +55,7 @@ namespace HULK
                     Expression result = new HulkExpression() ;
 
                     result.Evaluate();
-                    if(Lexer.index >= Lexer.Tokens.Count || Lexer.Tokens[Lexer.index] != ";")
+                    if((Lexer.index >= Lexer.Tokens.Count || Lexer.Tokens[Lexer.index] != ";") && Lexer.Tokens.Count != 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Red ;
                         System.Console.WriteLine("Missing ' ; '");
