@@ -14,23 +14,24 @@ namespace HULK
         public static int index = 0 ;
 
         public static List<string> Key_Words  = new List<string>()
-        {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" ,"sin" , "cos" , "sqrt" , "rand" , "exp" , "log" };
+        {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" ,"sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E" };
    
         public Lexer(string input)
         {
             input = Regex.Replace(input , @"\s+" , " ");
         
-            Regex AllTokens = new(@"\d+[^\D]|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|[a-zA-Z]+\w*|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
+            Regex AllTokens = new(@"\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
             Regex GoodTokens = new(@"^\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");
-
+            
             List<Match> t = AllTokens.Matches(input).ToList() ;
-
+            
             /*
             foreach(Match m in t )
             {
             System.Console.WriteLine(m.Value);
             }
             */
+            
             
 
             foreach(Match m in t )
@@ -51,7 +52,7 @@ namespace HULK
         #region Methods 
         public static bool IsNumber(string Token)
         {
-            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+E\+\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+$" ) ? true : false ;
+            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+E(\+|-)\d+$|^∞$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+$") ? true : false ;
         }
         public static bool IsString(string Token)
         {

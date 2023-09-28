@@ -16,17 +16,19 @@ namespace HULK
             int c = 0 ;
             while(true)
             {
-                HULK_Errors.Found = false ;
                 foreach(string id in Function_Declaration.Function_Stack.Keys)
                 {
                     Function_Declaration.Function_Stack[id] = 0 ;
                 }
+
                 Console.Write("> ");
 
                 string input = Console.ReadLine();
 
-                //string input = " ";
+                //string input = "print(\"hola\" + 5)";
                 
+                //  arreglar el metodo ramdom pa q devuelva[0,1]
+
                 /*
                 if(c == 0 )
                 {

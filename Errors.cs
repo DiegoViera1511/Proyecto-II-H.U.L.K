@@ -107,12 +107,12 @@ namespace HULK
 
     class SemanticError : HULK_Errors
     {
-        public string? Problem ;
-        public string? ProblemType ;
-        public string? BadToken  ;
-        public string expectedToken = "" ;
-        public string? LeftToken ;
-        public string? RightToken ;
+        public string ProblemType ;
+        public string? Problem {get;set;}
+        public string? BadToken {get; set;} 
+        public string? ExpectedToken {get; set;}
+        public string? LeftToken {get; set;}
+        public string? RightToken {get;set;}
 
         public SemanticError(string Problem , string ProblemType  , string BadToken )
         {
@@ -127,13 +127,13 @@ namespace HULK
             this.RightToken = RightToken ;
             this.ProblemType = ProblemType ;
             this.BadToken = BadToken ;
-            this.expectedToken = expectedToken ;
+            this.ExpectedToken = expectedToken ;
         }
         public SemanticError(string Problem ,string ProblemType ,  string expectedToken , string BadToken)
         {
             this.BadToken = BadToken ;
             this.Problem = Problem ;
-            this.expectedToken = expectedToken ;
+            this.ExpectedToken = expectedToken ;
             this.ProblemType = ProblemType ;
         }
         public SemanticError(string BadToken , string ProblemType)
@@ -141,6 +141,7 @@ namespace HULK
             this.BadToken = BadToken ;
             this.ProblemType = ProblemType ;
         }
+    
 
         public override void PrintError()
         {
@@ -164,7 +165,7 @@ namespace HULK
             }
             else if(ProblemType == "ArgumentTypeError")
             {
-                System.Console.WriteLine($"{Problem} receives `{expectedToken}`, not `{BadToken}`.");
+                System.Console.WriteLine($"{Problem} receives `{ExpectedToken}`, not `{BadToken}`.");
             }
             
             Console.ForegroundColor = ConsoleColor.Green;
@@ -177,7 +178,7 @@ namespace HULK
         public string ProblemType ;
         public int? ArgumentsIdCount ;
         public int? ArgumentsValueCount ;
-        public string BadToken  = "...";
+        public string? BadToken ;
         public string? expectedToken ;
         public FunctionsErrors(string functionName , string ProblemType)
         {

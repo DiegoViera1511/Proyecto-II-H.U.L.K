@@ -43,25 +43,17 @@ namespace HULK
 
         public override void Evaluate()
         {
-            
+            if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDLeft = true ;
             left.Evaluate();
-
-            if(left.value == null)
-            {
-                left.value = "true";
-            }
 
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.Tokens[Lexer.index] == "&")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "true";
-                    }
-
+                    
                     if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(right.value) == "boolean")
                     {
                         left.value = And(left.value , right.value);
@@ -69,9 +61,22 @@ namespace HULK
                     else 
                     {
                         
-                       //HULK_Errors.SemanticError("Operator ' & '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != "boolean")
+                            {
+                                throw new SemanticError("Operator ' & '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(left.value) );
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != "boolean")
+                            {
+                                throw new SemanticError("Operator ' & '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(right.value) );
+                            }
+                        }
                         throw new SemanticError("Operator ' & '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.GetIncorrectToken(left.value , right.value , "boolean"));
-                        //return;
+                        
                     }
                     
                 }
@@ -79,21 +84,30 @@ namespace HULK
                 {
     
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "true";//Tester
-                    }
-
+                    
                     if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(right.value) == "boolean")
                     {
                         left.value = Or(left.value , right.value);
                     }
                     else 
                     {
-                        //HULK_Errors.SemanticError("Operator ' | '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != "boolean")
+                            {
+                                throw new SemanticError("Operator ' | '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(left.value) );
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != "boolean")
+                            {
+                                throw new SemanticError("Operator ' | '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(right.value) );
+                            }
+                        }
                         throw new SemanticError("Operator ' | '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.GetIncorrectToken(left.value , right.value , "boolean"));
-                        //return;
                     }
                     
                 }
@@ -104,9 +118,7 @@ namespace HULK
                 }
                 else 
                 {
-                    //HULK_Errors.UnExpectedToken(Lexer.Tokens[Lexer.index]);
                     throw new UnExpectedToken(Lexer.Tokens[Lexer.index]);
-                    //return;
                 }
             }
             
@@ -157,102 +169,138 @@ namespace HULK
         #endregion
         public override void Evaluate()
         {   
-           
+
+            if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDLeft = true ;
             left.Evaluate();
 
-            if(left.value == null)
-            {
-                left.value = "1";
-            }
             while(Lexer.index < Lexer.Tokens.Count)
             {
 
-            
                 if(Lexer.Tokens[Lexer.index] == ">")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "1";
-                    }
+                    
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = GreaterThan(left.value , right.value);
                     }
                     else 
                     {
-                        //HULK_Errors.SemanticError("Operator ' > '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != "number")
+                            {
+                                throw new SemanticError("Operator '>'" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != "number")
+                            {
+                                throw new SemanticError("Operator '>'" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
+                            }
+                        }
                         throw new SemanticError("Operator '>'" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
-                        //return;
+                        
                     }
                 }
                 else if(Lexer.Tokens[Lexer.index] == "<")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "1";
-                    }
+                   
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = LessThan(left.value , right.value);
                     }
                     else 
                     {
-                        //HULK_Errors.SemanticError("Operator ' < '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != "number")
+                            {
+                                throw new SemanticError("Operator ' < '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != "number")
+                            {
+                                throw new SemanticError("Operator ' < '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
+                            }
+                        }
                         throw new SemanticError("Operator ' < '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
-                        //return;
+                    
                     }
                 }
                 else if(Lexer.Tokens[Lexer.index] == "<=")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "1";
-                    }
+                    
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = LessThanOrEqual(left.value , right.value);
                     }
                     else 
                     {
-                        //HULK_Errors.SemanticError("Operator ' <= '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != "number")
+                            {
+                                throw new SemanticError("Operator ' <= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != "number")
+                            {
+                                throw new SemanticError("Operator ' <= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
+                            }
+                        }
                         throw new SemanticError("Operator ' <= '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
-                        //return;
                     }
                 }
                 else if(Lexer.Tokens[Lexer.index] == ">=")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "1";
-                    }
+                    
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = GreaterThanOrEqual(left.value , right.value);
                     }
                     else 
                     {
-                        //HULK_Errors.SemanticError("Operator ' >= '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != "number")
+                            {
+                                throw new SemanticError("Operator ' >= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != "number")
+                            {
+                                throw new SemanticError("Operator ' >= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
+                            }
+                        }
                         throw new SemanticError("Operator ' >= '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
-                        //return;
                     }
                 }
                 else if(Lexer.Tokens[Lexer.index] == "==")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "1";
-                    }
-                    if(Lexer.TokenType(left.value) ==  Lexer.TokenType(right.value))
+                    
+                    if(Lexer.TokenType(left.value) == Lexer.TokenType(right.value))
                     {
                         left.value = Equals(left.value , right.value);
                     }
@@ -267,12 +315,10 @@ namespace HULK
                 else if(Lexer.Tokens[Lexer.index] == "!=")
                 {
                     Next();
+                    if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && IsFunctionID(Lexer.Tokens[Lexer.index])) iDRight = true ;
                     right.Evaluate();
-                    if(right.value == null)
-                    {
-                        right.value = "1";
-                    }
-                    if(Lexer.TokenType(left.value) ==  Lexer.TokenType(right.value))
+                    
+                    if(Lexer.TokenType(left.value) == Lexer.TokenType(right.value))
                     {
                         left.value = Inequality(left.value , right.value);
                     }

@@ -5,7 +5,7 @@ namespace HULK
     class MathExpressions : Expression
     {
         public string mathExp ;
-        public static List<string> MathFunctions = new List<string>(){ "sin" , "cos" , "sqrt" , "rand" , "exp" , "log"};
+        public static List<string> MathFunctions = new List<string>(){ "sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E"};
         List<string> Arguments = new List<string>();
         public MathExpressions(string mathExp)
         {
@@ -14,6 +14,16 @@ namespace HULK
 
         public override void Evaluate()
         {
+            if(mathExp == "PI")
+            {
+               value = Convert.ToString(Math.PI);
+               return ;
+            }
+            else if (mathExp == "E")
+            {
+                value = Convert.ToString(Math.E);
+                return ;
+            }
             if(Lexer.Tokens[Lexer.index] == "(")
             {   
                 Next();
@@ -146,11 +156,20 @@ namespace HULK
             if(Arguments.Count == 0)
             {
                 Random r = new Random() ;
-                double result = r.Next(0 , 1);
+                double result = r.NextDouble();
                 value = Convert.ToString(result);
             }
             else throw new FunctionsErrors("rand" , "ArgumentsCountError" , 0 , Arguments.Count );
 
+        }
+        public void PI()
+        {
+            value = Convert.ToString(Math.PI) ;
+        }
+
+        public void E()
+        {
+            value = Convert.ToString(Math.E) ;
         }
         #endregion 
         

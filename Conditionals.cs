@@ -14,17 +14,22 @@ namespace HULK
                 if(Lexer.Tokens[Lexer.index] == ")")
                 {
                     Next();
-                    Expression e = new B();//Va una HE
-                    //Expression HE = new HulkExpression();
+                    Expression t = new B();
+            
                     if(b.value == "true")
                     {
-                        e.Evaluate();
-                        value = e.value ;
+
+                        t.Evaluate();
                         
-                        while(Lexer.index < Lexer.Tokens.Count - 1 && Lexer.Tokens[Lexer.index] != ";" )
+                        if(Lexer.Tokens[Lexer.index] == "else")
                         {
-                           Next();
+                            value = t.value ;
+                            while(Lexer.index < Lexer.Tokens.Count - 1 && Lexer.Tokens[Lexer.index] != ";" )
+                            {
+                                Next();
+                            }
                         }
+                        else throw new SyntaxError("Missing ' else ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
                     }
                     else if(b.value == "false")
                     {
@@ -35,21 +40,20 @@ namespace HULK
                         if(Lexer.Tokens[Lexer.index] == "else")
                         {
                             Next();
-                            Expression ElseExp = new B();
-                            
-                            ElseExp.Evaluate();
-                            value = ElseExp.value ;
+                            Expression f = new B();
+                            f.Evaluate();
+                            value = f.value ;
                         }
                     }
                 }
                 else
                 {
-                    throw new SyntaxError("Missing ' ) ' " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
+                    throw new SyntaxError("Missing ' ) ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
                 }
             }
             else 
             {
-                throw new SyntaxError("Missing ' ( ' " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
+                throw new SyntaxError("Missing ' ( ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
             }
         }
     }

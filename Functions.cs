@@ -7,7 +7,7 @@ namespace HULK
         public static Dictionary < string , Function > Function_Store = new Dictionary<string, Function>();
         public static Dictionary < string , int > Function_Stack = new Dictionary<string, int>();
 
-        public static List<string>  function_Arguments = new List<string>();
+        public List<string>  function_Arguments = new List<string>();
 
         public override void Evaluate()
         {
@@ -34,21 +34,12 @@ namespace HULK
                             }
                             else
                             {
-                                /*
-                                HULK_Errors.Found = true ;
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("El parámetro " + Lexer.Tokens[Lexer.index] + " está duplicado");
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                */
                                 throw new FunctionsErrors(Lexer.Tokens[Lexer.index], "DuplicateArgument" );
-                                //return;
                             }
                         }
                         else 
                         {
-                            //HULK_Errors.SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
                             throw new SyntaxError("Missing ID" , "Missing Token" , "Function declaration"  , Lexer.Tokens[Lexer.index - 1] );
-                            //return;
                         }
                         if(Lexer.Tokens[Lexer.index] != ",")
                         {
@@ -66,36 +57,11 @@ namespace HULK
                             {
                                 if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && !Lexer.Key_Words.Contains(Lexer.Tokens[Lexer.index]) && !function_Arguments.Contains(Lexer.Tokens[Lexer.index]) && Lexer.Tokens[Lexer.index] != function_id && !Function_Store.ContainsKey(Lexer.Tokens[Lexer.index]) && !Let_in.id_store.ContainsKey(Lexer.Tokens[Lexer.index]))
                                 {
-                                    //HULK_Errors.NoID(Lexer.Tokens[Lexer.index] , "DoNotExistID");
                                     throw new SyntaxError(Lexer.Tokens[Lexer.index] , "DoNotExistID");
-                                    //return;
                                 }
                                 function_Expression.Add(Lexer.Tokens[Lexer.index]);
                                 Next();
                             }
-
-                            //Test Function Body
-                            
-
-                            //Expression FE = new B();
-                            /*
-                            List<string> Originals_Tokens = Lexer.Tokens;
-                            int Original_index = Lexer.index;
-                            Lexer.Tokens = function_Expression;
-                            Lexer.index = 0;
-                            try
-                            {
-                                FE.Evaluate();
-                            }
-                            catch
-                            {
-                                throw new DefaultError("ErrorFunctionBody");
-                            }
-                            Lexer.Tokens = Originals_Tokens;
-                            Lexer.index = Original_index;
-                            */
-                            
-
 
                             if(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] == ";" )
                             {
@@ -112,20 +78,16 @@ namespace HULK
                                 Function_Store.Add(function_id , new Function(function_Arguments , function_Expression , function_id));
                                 Function_Stack.Add(function_id , 0);
                             }
-                            //function_Arguments.Clear();
                         }
+                            
                         else 
                         {
-                            //HULK_Errors.SyntaxError("Missing ' => " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
                             throw new SyntaxError("Missing ' => " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
-                            //return;
                         }
                     }
                     else 
                     {
-                        //HULK_Errors.SyntaxError("Missing ' ) " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
                         throw new SyntaxError("Missing ' ) " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
-                       //return;
                     }
                 }
             }
@@ -146,41 +108,11 @@ namespace HULK
             this.function_Expression = Expression;
             this.function_name = name ;
         }
-
-        private static bool TestExpression(List<string> TestTokens)
-        {
-            int OriginalIndex = Lexer.index ;
-            List<string> OriginalTokens = Lexer.Tokens;
-            Lexer.index = 0 ;
-            Lexer.Tokens = TestTokens;
-            Lexer.Tokens = TestTokens ;
-            Expression test = new B();
-            test.Evaluate();
-            if(HULK_Errors.Found == true)
-            {
-                Lexer.index = OriginalIndex ;
-                Lexer.Tokens = OriginalTokens ;
-                return false ;
-            }
-            else
-            {
-                Lexer.index = OriginalIndex ;
-                Lexer.Tokens = OriginalTokens ;
-                return true ;
-            }
-        }
         public override void Evaluate()
         {
-            if(Function_Declaration.Function_Stack[function_name] > 1000)
+            if(Function_Declaration.Function_Stack[function_name] > 500)
             {   
-                /*
-                HULK_Errors.Found = true ;
-                Console.ForegroundColor = ConsoleColor.Red;
-                System.Console.WriteLine("Stack Overflow " + function_name);
-                Console.ForegroundColor = ConsoleColor.Green;
-                */
                 throw new FunctionsErrors(function_name , "StackOverflow");
-                //return ;
             }
             else Function_Declaration.Function_Stack[function_name]++;
 
@@ -222,12 +154,7 @@ namespace HULK
                 }
                 else 
                 {
-                    //HULK_Errors.Found = true ;
-                    //Console.ForegroundColor = ConsoleColor.Red;
-                    //System.Console.WriteLine($"Function '{function_name}' receives {Arguments_id.Count} argument(s), but {Arguments_value.Count} were given.");
                     throw new FunctionsErrors(function_name , "ArgumentsCountError", Arguments_id.Count , Arguments_value.Count );
-                    //Console.ForegroundColor = ConsoleColor.Green;
-                    //return;
                 }
                 
                 List<string> Originals_Tokens = Lexer.Tokens;
@@ -237,13 +164,26 @@ namespace HULK
                 Lexer.index = 0;
 
                 Expression FE = new B();
+                
                 try
                 {
                     FE.Evaluate();
                 }
                 catch(SemanticError se)
                 {
-                    throw new FunctionsErrors( function_name , "ArgumentTypeError" , se.expectedToken , se.BadToken);
+                    Lexer.Tokens = Originals_Tokens;
+                    Lexer.index = Original_index;
+                    if(se.ProblemType == "ArgumentTypeError")
+                    {
+                        throw new FunctionsErrors( function_name , "ArgumentTypeError" , se.ExpectedToken , se.BadToken);
+                    }
+                    else throw se ;
+                }
+                catch(HULK_Errors he)
+                {
+                    Lexer.Tokens = Originals_Tokens;
+                    Lexer.index = Original_index;
+                    throw he;
                 }
                 
                 result = FE.value;
@@ -257,13 +197,6 @@ namespace HULK
                     {
                         functions_id[s] = Original_values[s];
                     }
-                }
-
-                if(result == null)
-                {
-                    Lexer.index++;
-                    Arguments_value.Clear();
-                    return ;
                 }
 
                 if(Lexer.Tokens[Lexer.index] == ")")
@@ -300,10 +233,6 @@ namespace HULK
 
                 Expression x = new B();
                 x.Evaluate();
-                if(x.value == null)
-                {
-                    return;
-                }
 
                 if(Lexer.Tokens[Lexer.index] == ")")
                 {
