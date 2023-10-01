@@ -2,84 +2,85 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
-    class Function_Declaration : Expression
+    class FunctionDeclaration : Expression
     {
-        public static Dictionary < string , Function > Function_Store = new Dictionary<string, Function>();
-        public static Dictionary < string , int > Function_Stack = new Dictionary<string, int>();
-
-        public List<string>  function_Arguments = new List<string>();
+        public static Dictionary < string , Function > functionStore = new Dictionary<string, Function>();
+        public static Dictionary < string , int > functionStack = new Dictionary<string, int>();
+        public List<string>  functionArguments = new List<string>();
 
         public override void Evaluate()
         {
-            
-            //List<string> function_Arguments = new List<string>();
-            List<string> function_Expression = new List<string>();
+            List<string> functionExpression = new List<string>();
 
-            if(Lexer.IsID(Lexer.Tokens[Lexer.index]))
+            if( Lexer.IsID(ActualToken()) )
             {
-                string function_id = Lexer.Tokens[Lexer.index];
+                if(Lexer.Key_Words.Contains(ActualToken()))
+                {
+                    throw new SyntaxError( ActualToken() , "KeyWordID" );
+                }
+
+                string functionId = ActualToken();
                 Next();
-                if(Lexer.Tokens[Lexer.index] == "(")
+                if(ActualToken() == "(")
                 {
                     Next();
                     
-                    while(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] != ")")
+                    while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                     {
-                        if(Lexer.IsID(Lexer.Tokens[Lexer.index]))
+                        if(Lexer.IsID(ActualToken()))
                         {
-                            if(!function_Arguments.Contains(Lexer.Tokens[Lexer.index]))
+                            if(!functionArguments.Contains(ActualToken()))
                             {
-                                function_Arguments.Add(Lexer.Tokens[Lexer.index]);
+                                functionArguments.Add(ActualToken());
                                 Next();
                             }
                             else
                             {
-                                throw new FunctionsErrors(Lexer.Tokens[Lexer.index], "DuplicateArgument" );
+                                throw new FunctionsErrors(ActualToken(), "DuplicateArgument" );
                             }
                         }
                         else 
                         {
                             throw new SyntaxError("Missing ID" , "Missing Token" , "Function declaration"  , Lexer.Tokens[Lexer.index - 1] );
                         }
-                        if(Lexer.Tokens[Lexer.index] != ",")
+                        if(ActualToken() != ",")
                         {
                             break;
                         }
                         else Next();
                     }
-                    if(Lexer.Tokens[Lexer.index] == ")")
+                    if(ActualToken() == ")")
                     {
                         Next();
-                        if(Lexer.Tokens[Lexer.index] == "=>")
+                        if(ActualToken() == "=>")
                         {
                             Next();
-                            while(Lexer.Tokens[Lexer.index] != ";" && Lexer.index < Lexer.Tokens.Count)
+                            while(ActualToken() != ";" && Lexer.index < Lexer.Tokens.Count)
                             {
-                                if(Lexer.IsID(Lexer.Tokens[Lexer.index]) && !Lexer.Key_Words.Contains(Lexer.Tokens[Lexer.index]) && !function_Arguments.Contains(Lexer.Tokens[Lexer.index]) && Lexer.Tokens[Lexer.index] != function_id && !Function_Store.ContainsKey(Lexer.Tokens[Lexer.index]) && !Let_in.id_store.ContainsKey(Lexer.Tokens[Lexer.index]))
+                                if(Lexer.IsID(ActualToken()) && !Lexer.Key_Words.Contains(ActualToken()) && !functionArguments.Contains(ActualToken()) && ActualToken() != functionId && !functionStore.ContainsKey(ActualToken()) && !Let_in.idStore.ContainsKey(ActualToken()))
                                 {
-                                    throw new SyntaxError(Lexer.Tokens[Lexer.index] , "DoNotExistID");
+                                    throw new SyntaxError(ActualToken() , "DoNotExistID");
                                 }
-                                function_Expression.Add(Lexer.Tokens[Lexer.index]);
+                                functionExpression.Add(ActualToken());
                                 Next();
                             }
 
-                            if(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] == ";" )
+                            if(Lexer.index < Lexer.Tokens.Count && ActualToken() == ";" )
                             {
-                                function_Expression.Add(Lexer.Tokens[Lexer.index]);
+                                functionExpression.Add(ActualToken());
                             }
                             else return;
                         
-                            if(Function_Store.ContainsKey(function_id))
+                            if(functionStore.ContainsKey(functionId))
                             {
-                                Function_Store[function_id] = new Function(function_Arguments , function_Expression , function_id);
+                                functionStore[functionId] = new Function(functionArguments , functionExpression , functionId);
                             }
                             else
                             {
-                                Function_Store.Add(function_id , new Function(function_Arguments , function_Expression , function_id));
-                                Function_Stack.Add(function_id , 0);
+                                functionStore.Add(functionId , new Function(functionArguments , functionExpression , functionId));
+                                functionStack.Add(functionId , 0);
                             }
                         }
-                            
                         else 
                         {
                             throw new SyntaxError("Missing ' => " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
@@ -91,128 +92,129 @@ namespace HULK
                     }
                 }
             }
+            else 
+            {
+                throw new SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
+            }
         }
     }
 
     class Function : Expression
     {
-        private string function_name ;
-        public List<string> Arguments_id = new List<string>();
-        public List<string> Arguments_value = new List<string>();
-        public List<string> function_Expression = new List<string>();
-        public static Dictionary<string , string > functions_id = new Dictionary<string, string>();
+        private string functionName ;
+        public List<string> argumentsId = new List<string>();
+        public List<string> argumentsValue = new List<string>();
+        public List<string> functionExpression = new List<string>();
+        public static Dictionary<string , string > functionsId = new Dictionary<string, string>();
 
-        public Function(List<string> function_Arguments_id , List<string> Expression , string name)
+        public Function(List<string> argumentsId , List<string> functionExpression , string functionName)
         {
-            this.Arguments_id = function_Arguments_id;
-            this.function_Expression = Expression;
-            this.function_name = name ;
+            this.argumentsId = argumentsId ;
+            this.functionExpression = functionExpression;
+            this.functionName = functionName;
         }
         public override void Evaluate()
         {
-            if(Function_Declaration.Function_Stack[function_name] > 500)
+            if(FunctionDeclaration.functionStack[functionName] > 500)
             {   
-                throw new FunctionsErrors(function_name , "StackOverflow");
+                throw new FunctionsErrors(functionName , "StackOverflow");
             }
-            else Function_Declaration.Function_Stack[function_name]++;
+            else FunctionDeclaration.functionStack[functionName]++;
 
-            if(Lexer.Tokens[Lexer.index] == "(")
+            if(ActualToken() == "(")
             {
-                string result ;
+                //string result ;
                 Next();
 
-                Expression e = new B();
+                Expression parameter = new BooleanOperator();
 
-                Arguments_value.Clear();
+                argumentsValue.Clear();
 
                 Dictionary<string , string> Original_values = new Dictionary<string, string>();
-                while(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] != ")")
+                while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                 {
-                    e.Evaluate();
-                    Arguments_value.Add(e.value);
-                    if(Lexer.Tokens[Lexer.index] != ",")
+                    parameter.Evaluate();
+                    argumentsValue.Add(parameter.value);
+                    if(ActualToken() != ",")
                     {
                         break;
                     }
                     else Next();
                 }
-                if(Arguments_id.Count == Arguments_value.Count)
+                if(argumentsId.Count == argumentsValue.Count)
                 {
-                    for(int i = 0 ; i < Arguments_id.Count ; i++)
+                    for(int i = 0 ; i < argumentsId.Count ; i++)
                     {
-                        if(functions_id.ContainsKey(Arguments_id[i]))
+                        if(functionsId.ContainsKey(argumentsId[i]))
                         {
-                            Original_values.Add(Arguments_id[i] , functions_id[Arguments_id[i]]);
+                            Original_values.Add(argumentsId[i] , functionsId[argumentsId[i]]);
                             //Actualiza
-                            functions_id[Arguments_id[i]] = Arguments_value[i];
+                            functionsId[argumentsId[i]] = argumentsValue[i];
                         }
                         else
                         {
-                            functions_id.Add(Arguments_id[i] , Arguments_value[i]);
+                            functionsId.Add(argumentsId[i] , argumentsValue[i]);
                         }
                     }
                 }
                 else 
                 {
-                    throw new FunctionsErrors(function_name , "ArgumentsCountError", Arguments_id.Count , Arguments_value.Count );
+                    throw new FunctionsErrors(functionName , "ArgumentsCountError", argumentsId.Count , argumentsValue.Count );
                 }
                 
-                List<string> Originals_Tokens = Lexer.Tokens;
-                int Original_index = Lexer.index;
+                List<string> originalsTokens = Lexer.Tokens;
+                int originalIndex = Lexer.index;
 
-                Lexer.Tokens = function_Expression;
+                Lexer.Tokens = functionExpression;
                 Lexer.index = 0;
 
-                Expression FE = new B();
+                Expression FE = new BooleanOperator();
                 
                 try
                 {
                     FE.Evaluate();
                 }
-                catch(SemanticError se)
+                catch(SemanticError se)//Catch argument type error
                 {
-                    Lexer.Tokens = Originals_Tokens;
-                    Lexer.index = Original_index;
+                    Lexer.Tokens = originalsTokens;
+                    Lexer.index = originalIndex;
                     if(se.ProblemType == "ArgumentTypeError")
                     {
-                        throw new FunctionsErrors( function_name , "ArgumentTypeError" , se.ExpectedToken , se.BadToken);
+                        throw new FunctionsErrors( functionName , "ArgumentTypeError" , se.ExpectedToken , se.BadToken);
                     }
                     else throw se ;
                 }
-                catch(HULK_Errors he)
+                catch(HulkErrors he)
                 {
-                    Lexer.Tokens = Originals_Tokens;
-                    Lexer.index = Original_index;
+                    Lexer.Tokens = originalsTokens;
+                    Lexer.index = originalIndex;
                     throw he;
                 }
                 
-                result = FE.value;
+                //result = FE.value;
                 
-                Lexer.Tokens = Originals_Tokens;
-                Lexer.index = Original_index;
+                Lexer.Tokens = originalsTokens;
+                Lexer.index = originalIndex;
 
-                foreach(string s in functions_id.Keys)
+                foreach(string s in functionsId.Keys)
                 {
                     if(Original_values.ContainsKey(s))
                     {
-                        functions_id[s] = Original_values[s];
+                        functionsId[s] = Original_values[s];
                     }
                 }
 
-                if(Lexer.Tokens[Lexer.index] == ")")
+                if(ActualToken() == ")")
                 {
-                    value = result ;
+                    value = FE.value ;
                     Next();
-                    Arguments_value.Clear();
-                    Function_Declaration.Function_Stack[function_name]--;
+                    argumentsValue.Clear();
+                    FunctionDeclaration.functionStack[functionName]--;
                 }
                 else 
                 {
-                    //HULK_Errors.SyntaxError("Missing ' ) " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
                     throw new SyntaxError("Missing ' ) ' " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
-                    //return;
                 }
-
             }
         }
     }
@@ -221,50 +223,43 @@ namespace HULK
     {
         public override void Evaluate()
         {
-            if(Lexer.Tokens[Lexer.index] == "(")
+            if(ActualToken() == "(")
             {
                 Next();
-                if(Lexer.Tokens[Lexer.index] == ")")
+
+                if(ActualToken() == ")")
                 {
                     Lexer.index++;
                     Console.WriteLine();
                     return;
                 }
 
-                Expression x = new B();
-                x.Evaluate();
+                Expression printExp = new BooleanOperator();
+                printExp.Evaluate();
 
-                if(Lexer.Tokens[Lexer.index] == ")")
+                if(ActualToken() == ")")
                 {
                     Next();
-                    if(Regex.IsMatch(x.value , @"(\u0022([^\u0022\\]|\\.)*\u0022)"))
+                    if(Lexer.IsString(printExp.value))
                     {
-                        //Console.WriteLine(x.value.Substring( 1 , x.value.Length - 2));
-                        Lexer.ConsolePrints.Add(x.value.Substring( 1 , x.value.Length - 2));
-                        
+                        Lexer.ConsolePrints.Add(printExp.value.Substring( 1 , printExp.value.Length - 2));
                     }
                     else 
                     {
-                        //Console.WriteLine(x.value);
-                        Lexer.ConsolePrints.Add(x.value);
+                        Lexer.ConsolePrints.Add(printExp.value);
                     }
-                    
-                    value = x.value;
+                    value = printExp.value;
                 }
                 else
                 {
-                    //HULK_Errors.SyntaxError("Missing ' ) '" , "Missing Token" , "print" , Lexer.Tokens[Lexer.index-1] );
                     throw new SyntaxError("Missing ' ) '" , "Missing Token" , "print" , Lexer.Tokens[Lexer.index-1] );
-                    //return;
                 }
             }
             else
             {
-               // HULK_Errors.SyntaxError("Missing ' ( '" , "Missing Token" , "print" , Lexer.Tokens[Lexer.index-1] );
                 throw new SyntaxError("Missing ' ( '" , "Missing Token" , "print" , Lexer.Tokens[Lexer.index-1]);
-                //return;
             }
-           
         }
     }
+
 }

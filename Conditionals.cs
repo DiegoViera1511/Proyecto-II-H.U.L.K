@@ -6,43 +6,48 @@ namespace HULK
     {
         public override void Evaluate()
         {
-            if(Lexer.Tokens[Lexer.index] == "(")
+            if( ActualToken() == "(" )
             {
                 Next();
-                Expression b = new B();
-                b.Evaluate();
-                if(Lexer.Tokens[Lexer.index] == ")")
+
+                Expression booleanExpression = new BooleanOperator();
+                booleanExpression.Evaluate();
+
+                if( ActualToken() == ")" )
                 {
                     Next();
-                    Expression t = new B();
             
-                    if(b.value == "true")
+                    if(booleanExpression.value == "true")
                     {
 
-                        t.Evaluate();
+                        Expression trueExp = new BooleanOperator();
+                        trueExp.Evaluate();
                         
-                        if(Lexer.Tokens[Lexer.index] == "else")
+                        if(ActualToken() == "else")
                         {
-                            value = t.value ;
-                            while(Lexer.index < Lexer.Tokens.Count - 1 && Lexer.Tokens[Lexer.index] != ";" )
+                            value = trueExp.value ;
+                            
+                            while(Lexer.index < Lexer.Tokens.Count - 1 && ActualToken() != ";" )
                             {
                                 Next();
                             }
                         }
                         else throw new SyntaxError("Missing ' else ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
                     }
-                    else if(b.value == "false")
+                    else if(booleanExpression.value == "false")
                     {
-                        while(Lexer.index < Lexer.Tokens.Count - 1  && Lexer.Tokens[Lexer.index] != "else" ) 
+                        while(Lexer.index < Lexer.Tokens.Count - 1  && ActualToken() != "else" ) 
                         {
                             Next();
                         }
-                        if(Lexer.Tokens[Lexer.index] == "else")
+                        if(ActualToken() == "else")
                         {
                             Next();
-                            Expression f = new B();
-                            f.Evaluate();
-                            value = f.value ;
+
+                            Expression falseExp = new BooleanOperator();
+                            falseExp.Evaluate(); 
+
+                            value = falseExp.value ;
                         }
                     }
                 }

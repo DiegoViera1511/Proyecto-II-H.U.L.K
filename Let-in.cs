@@ -4,90 +4,87 @@ namespace HULK
 {
     class Let_in : Expression
     {
-        public static Dictionary< string , string> id_store = new Dictionary<string, string>();
+        public static Dictionary< string , string> idStore = new Dictionary<string, string>();
 
         public override void Evaluate()
         {
             while(Lexer.index < Lexer.Tokens.Count)
             {
-                if(Lexer.IsID(Lexer.Tokens[Lexer.index]))
+                if(Lexer.IsID(ActualToken()))
                 {
-                    if(Lexer.Key_Words.Contains(Lexer.Tokens[Lexer.index]))
+                    if(Lexer.Key_Words.Contains(ActualToken()))
                     {
-                        //HULK_Errors.NoID(Lexer.Tokens[Lexer.index] , "KeyWordID");
-                        throw new SyntaxError(Lexer.Tokens[Lexer.index] , "KeyWordID" );
-                        //return;
+                        throw new SyntaxError(ActualToken() , "KeyWordID" );
                     }
 
-                    string id = Lexer.Tokens[Lexer.index];
+                    string id = ActualToken();
                     Next();
 
-                    if(Lexer.Tokens[Lexer.index] == "=")
+                    if(ActualToken() == "=")
                     {
                         Next();
-                        if(Lexer.Tokens[Lexer.index] == "in" || Lexer.Tokens[Lexer.index] == ",")
+                        if(ActualToken() == "in" || ActualToken() == ",")
                         {
                             throw new SyntaxError("Missing Expression" ,  "Missing Token" , "let-in" , $"variable {Lexer.Tokens[Lexer.index - 2]}" );
                         }
 
-                        Expression Value = new B();
+                        Expression Value = new BooleanOperator();
                         Value.Evaluate();
                             
-                        string id_value = Value.value;
+                        string idValue = Value.value;
 
-                        if(id_store.ContainsKey(id))
+                        if(idStore.ContainsKey(id))
                         {
-                            id_store[id] = id_value;
+                            idStore[id] = idValue;
                         }
-                        else if(Function.functions_id.ContainsKey(id))
+                        else if(Function.functionsId.ContainsKey(id))
                         {
-                            Function.functions_id[id] = id_value;
+                            Function.functionsId[id] = idValue;
                         }
-                        else id_store.Add(id , id_value );
+                        else idStore.Add(id , idValue );
                             
                     }
                     else
                     {
                         throw new SyntaxError("Missing ' = '" , "Missing Token" , "let-in" ,Lexer.Tokens[Lexer.index - 1] );
-                    }
-                            
+                    }  
                 }
                 else
                 {
                     throw new SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
                 }            
 
-                if(Lexer.Tokens[Lexer.index] == ",")
+                if(ActualToken() == ",")
                 {
                     Next();
                 }
-                else if(Lexer.Tokens[Lexer.index] == "in")
+                else if(ActualToken() == "in")
                 {
                     Next();
                     break;
                 }
-                else if (Regex.IsMatch(Lexer.Tokens[Lexer.index] , @"^[a-zA-Z]+\w*$"))
+                else if (Regex.IsMatch(ActualToken() , @"^[a-zA-Z]+\w*$"))
                 {
                     throw new SyntaxError("Missing ' , '" , "Missing Token" , "let_in" , Lexer.Tokens[Lexer.index - 1]);
                 }
                 else 
                 {
-                    throw new SyntaxError("Invalid Token" , "Invalid Token" , "let-in" , Lexer.Tokens[Lexer.index]);
+                    throw new SyntaxError("Invalid Token" , "Invalid Token" , "let-in" , ActualToken());
                 }
 
             }    
 
             bool parenthesis = false;
-            if(Lexer.Tokens[Lexer.index] == "(")
+            if(ActualToken() == "(")
             {
                 Lexer.index++;
                 parenthesis = true ;
             }
         
-            Expression e = new B();
-            e.Evaluate();
+            Expression letInExp = new BooleanOperator();
+            letInExp.Evaluate();
 
-            string result = e.value ;
+            string result = letInExp.value ;
            
             if(result == null)
             {
@@ -96,25 +93,22 @@ namespace HULK
 
             if(parenthesis)
             {
-                if(Lexer.Tokens[Lexer.index] == ")")
+                if(ActualToken() == ")")
                 {
                     Lexer.index++;
                     value = result;
-                    id_store.Clear();
+                    idStore.Clear();
                 }
                 else 
                 {
-                    //HULK_Errors.SyntaxError("Missing ' ) " , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1] );
                     throw new SyntaxError("Missing ' ) " , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1] );
-                    //return;
                 }
             }
             else
             {
                 value = result;
-                id_store.Clear();
+                idStore.Clear();
             }
-   
         }  
     }
 }

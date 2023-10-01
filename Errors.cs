@@ -3,13 +3,12 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
-    abstract class HULK_Errors : Exception 
+    abstract class HulkErrors : Exception 
     {
-        public static bool Found = false ;
         public abstract void PrintError();
     }
 
-    class LexicalError : HULK_Errors
+    class LexicalError : HulkErrors
     {
         public string BadToken ;
         public LexicalError(string BadToken)
@@ -18,14 +17,13 @@ namespace HULK
         }
         public override void PrintError()
         {
-            Found = true ;
             Console.ForegroundColor = ConsoleColor.Red;
             System.Console.WriteLine($"! LEXICAL ERROR: '{BadToken}' is not a valid token.");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
 
-    class SyntaxError : HULK_Errors
+    class SyntaxError : HulkErrors
     {
         public string? Problem ;
         public string ProblemType ;
@@ -47,7 +45,6 @@ namespace HULK
         public override void PrintError()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Found = true;
             if ( ProblemType == "Missing Token")
             {
                 System.Console.WriteLine($"! SYNTAX ERROR: {Problem} in '{ExpressionType}' expression after '{Token}' .");
@@ -58,38 +55,19 @@ namespace HULK
             }
             else if(ProblemType == "DoNotExistID")
             {
-                System.Console.WriteLine($"! ERROR : The name '{Token}' does not exist in the current context");
+                System.Console.WriteLine($"! SYNTAX ERROR: The name '{Token}' does not exist in the current context");
                 Console.ForegroundColor = ConsoleColor.Green;
             }
             else if(ProblemType == "KeyWordID")
             {
-                System.Console.WriteLine($"! ERROR : Invalid ID , the name '{Token}' it's a keyword language");
+                System.Console.WriteLine($"! SYNTAX ERROR: Invalid ID , the name '{Token}' it's a keyword language");
                 Console.ForegroundColor = ConsoleColor.Green;
             }
             Console.ForegroundColor = ConsoleColor.Green;
         }
-
-        
-        /*
-        public static void NoID(string Token , string ProblemType)
-        {
-            Found = true ;
-            Console.ForegroundColor = ConsoleColor.Red;
-            if(ProblemType == "DoNotExistID")
-            {
-                System.Console.WriteLine($"! ERROR : The name '{Token}' does not exist in the current context");
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else if(ProblemType == "KeyWordID")
-            {
-                System.Console.WriteLine($"! ERROR : Invalid ID , the name '{Token}' it's a keyword language");
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-        }
-        */
     }
 
-    class UnExpectedToken : HULK_Errors 
+    class UnExpectedToken : HulkErrors 
     {
         public string BadToken ;
         public UnExpectedToken(string BadToken)
@@ -98,22 +76,24 @@ namespace HULK
         }
         public override void PrintError()
         {
-            Found = true ;
             Console.ForegroundColor = ConsoleColor.Red;
             System.Console.WriteLine($"! ERROR : Unexpected Token '{BadToken}'");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
 
-    class SemanticError : HULK_Errors
-    {
-        public string ProblemType ;
-        public string? Problem {get;set;}
-        public string? BadToken {get; set;} 
-        public string? ExpectedToken {get; set;}
-        public string? LeftToken {get; set;}
-        public string? RightToken {get;set;}
 
+    class SemanticError : HulkErrors
+    {
+        public string? ProblemType ;
+        public string? Problem ;
+        public string? BadToken ;
+        public string? ExpectedToken ;
+        public string? LeftToken ;
+        public string? RightToken ;
+        
+
+        
         public SemanticError(string Problem , string ProblemType  , string BadToken )
         {
             this.Problem = Problem ;
@@ -142,10 +122,8 @@ namespace HULK
             this.ProblemType = ProblemType ;
         }
     
-
         public override void PrintError()
         {
-            Found = true ;
             Console.ForegroundColor = ConsoleColor.Red;
             if(ProblemType == "Incorrect Operator")
             {
@@ -170,9 +148,107 @@ namespace HULK
             
             Console.ForegroundColor = ConsoleColor.Green;
         }
+        
     }
 
-    class FunctionsErrors : HULK_Errors 
+    /*
+    class IncorrectOperator : SemanticError
+    {
+        public string operatorProblem ;
+        public string badToken ;
+        public string expectedToken ;
+        public IncorrectOperator(string badToken , string operatorProblem , string expectedToken)
+        {
+            ProblemType = "Incorrect Operator" ;
+            this.badToken = badToken ;
+            this.operatorProblem = operatorProblem ;
+            this.expectedToken = expectedToken ;
+        }
+
+        public override void PrintError()
+        {
+           Console.WriteLine($"{operatorProblem} cannot be applied to operand of type '{badToken}'");
+        }
+    }
+
+    class IncorrectBinaryExpression : SemanticError
+    {
+        public string operatorProblem ;
+        public string leftToken ;
+        public string rightToken ;
+
+        public IncorrectBinaryExpression(string operatorProblem , string leftToken , string rightToken )
+        {
+            ProblemType = "Incorrect Binary Expression" ;
+            this.leftToken = leftToken ;
+            this.rightToken = rightToken ;
+            this.operatorProblem = operatorProblem ;
+        }
+
+        public override void PrintError()
+        {
+            Console.WriteLine($"{operatorProblem} cannot be used between '{leftToken}' and '{rightToken}'");
+        }
+    }
+
+    class DuplicateArgument : SemanticError
+    {
+        string badToken ;
+        
+        public DuplicateArgument(string badToken)
+        {
+            ProblemType = "DuplicateArgument" ;
+            this.badToken = badToken ;
+        }
+
+        public override void PrintError()
+        {
+            Console.WriteLine($"The parameter name '{badToken}' is a duplicate");
+        }
+
+    }
+
+    class ArgumentTypeError : SemanticError
+    {
+        string functionName ;
+        string expectedToken ;
+        string badToken ;
+
+        public ArgumentTypeError(string functionName , string expectedToken , string badToken)
+        {
+            ProblemType = "ArgumentTypeError" ;
+            this.functionName = functionName ;
+            this.expectedToken = expectedToken ;
+            this.badToken = badToken ;
+        }
+
+        public override void PrintError()
+        {
+            Console.WriteLine($"Function '{functionName}' receives '{expectedToken}', not `{badToken}`.");
+        }
+    }
+
+    class ArgumentsCountError : SemanticError
+    {
+        string functionName ;
+        int argumentsIdCount ;
+        int argumentsValueCount ;
+
+        public ArgumentsCountError(string functionName , int argumentsIdCount , int argumentsValueCount )
+        {
+            ProblemType = "ArgumentsCountError" ;
+            this.functionName = functionName ;
+            this.argumentsIdCount = argumentsIdCount ;
+            this.argumentsValueCount = argumentsValueCount ;
+        }
+
+        public override void PrintError()
+        {
+            Console.WriteLine($"Function '{functionName}' receives {argumentsIdCount} argument(s), but {argumentsValueCount} were given.");
+        }
+    }
+    */
+    class FunctionsErrors : HulkErrors 
     {
         public string functionName ;
         public string ProblemType ;
@@ -204,7 +280,6 @@ namespace HULK
 
         public override void PrintError()
         {   
-            Found = true ;
             Console.ForegroundColor = ConsoleColor.Red;
             if(ProblemType == "StackOverflow")
             { 
@@ -225,24 +300,38 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-    
-    class DefaultError : HULK_Errors
+
+
+
+    class DefaultError : HulkErrors
     {
         public string ProblemType ;
+
+        public string? functionName ;
+
         public DefaultError(string ProblemType)
         {
             this.ProblemType = ProblemType ;
+        }
+        public DefaultError(string ProblemType , string functionName)
+        {
+            this.ProblemType = ProblemType ;
+            this.functionName = functionName ;
         }
         public override void PrintError()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             if(ProblemType == "DivisionByZero")
             {
-                System.Console.WriteLine("!Error : Division by constant zero");
+                System.Console.WriteLine("! ERROR: Division by constant zero");
             }
             else if (ProblemType == "ErrorFunctionBody")
             {
-                System.Console.WriteLine("! Error : Invalid Function Declaration.");
+                System.Console.WriteLine("! ERROR: Invalid Function Declaration.");
+            }
+            else if (ProblemType == "StackOverflow")
+            {
+                Console.WriteLine("! ERROR: Stack Overflow " + functionName);
             }
             Console.ForegroundColor = ConsoleColor.Green;
         }

@@ -6,7 +6,7 @@ namespace HULK
     {
         public string mathExp ;
         public static List<string> MathFunctions = new List<string>(){ "sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E"};
-        List<string> Arguments = new List<string>();
+        List<string> arguments = new List<string>();
         public MathExpressions(string mathExp)
         {
             this.mathExp = mathExp;
@@ -24,26 +24,26 @@ namespace HULK
                 value = Convert.ToString(Math.E);
                 return ;
             }
-            if(Lexer.Tokens[Lexer.index] == "(")
+            if(ActualToken() == "(")
             {   
                 Next();
 
-                while(Lexer.index < Lexer.Tokens.Count && Lexer.Tokens[Lexer.index] != ")")
+                while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                 {
-                    Expression e = new B();
+                    Expression e = new BooleanOperator();
                     e.Evaluate();
-                    Arguments.Add(e.value);
-                    if(Lexer.Tokens[Lexer.index] == ",")
+                    arguments.Add(e.value);
+                    if(ActualToken() == ",")
                     {
                         Next();
                     }
-                    else if(Lexer.Tokens[Lexer.index] == ")")
+                    else if(ActualToken() == ")")
                     {
                         break ;
                     }
                     else throw new SyntaxError("Missing ' , '" , "Missing Token" , "Math function" , Lexer.Tokens[Lexer.index - 1]);
                 }
-                if(Lexer.Tokens[Lexer.index] == ")")
+                if(ActualToken() == ")")
                 {
                     if(mathExp == "sqrt")
                     {
@@ -75,92 +75,90 @@ namespace HULK
                 else throw new SyntaxError("Missing ' ) '" , "Missing Token" , "Math function" , Lexer.Tokens[Lexer.index-1]);
             }
             else throw new SyntaxError("Missing ' ( '" , "Missing Token" , "Math function" , Lexer.Tokens[Lexer.index-1]);
-
         }
 
         #region Methods
         public void sqrt()
         {
-            if(Arguments.Count == 1)
+            if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(Arguments[0]))
+                if(Lexer.IsNumber(arguments[0]))
                 {
-                    double result = Math.Sqrt(Convert.ToDouble(Arguments[0]));
+                    double result = Math.Sqrt(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("sqrt" , "ArgumentTypeError" , "number" , Lexer.TokenType(Arguments[0]));
+                else throw new FunctionsErrors("sqrt" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
             }
-            else throw new FunctionsErrors("sqrt" , "ArgumentsCountError" , 1 , Arguments.Count );
+            else throw new FunctionsErrors("sqrt" , "ArgumentsCountError" , 1 , arguments.Count );
         }
         public void sin()
         {
-            if(Arguments.Count == 1)
+            if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(Arguments[0]))
+                if(Lexer.IsNumber(arguments[0]))
                 {
-                    double result = Math.Sin(Convert.ToDouble(Arguments[0]));
+                    double result = Math.Sin(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("sin" , "ArgumentTypeError" , "number" , Lexer.TokenType(Arguments[0]));
+                else throw new FunctionsErrors("sin" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
             }
-            else throw new FunctionsErrors("sin" , "ArgumentsCountError" , 1 , Arguments.Count );
+            else throw new FunctionsErrors("sin" , "ArgumentsCountError" , 1 , arguments.Count );
         }
         public void cos()
         {
-           if(Arguments.Count == 1)
+           if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(Arguments[0]))
+                if(Lexer.IsNumber(arguments[0]))
                 {
-                    double result = Math.Cos(Convert.ToDouble(Arguments[0]));
+                    double result = Math.Cos(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("cos" , "ArgumentTypeError" , "number" , Lexer.TokenType(Arguments[0]));
+                else throw new FunctionsErrors("cos" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
             }
-            else throw new FunctionsErrors("cos" , "ArgumentsCountError" , 1 , Arguments.Count );
+            else throw new FunctionsErrors("cos" , "ArgumentsCountError" , 1 , arguments.Count );
 
         }
         public void exp()
         {
-            if(Arguments.Count == 1)
+            if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(Arguments[0]))
+                if(Lexer.IsNumber(arguments[0]))
                 {
-                    double result = Math.Cos(Convert.ToDouble(Arguments[0]));
+                    double result = Math.Cos(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("exp" , "ArgumentTypeError" , "number" , Lexer.TokenType(Arguments[0]));
+                else throw new FunctionsErrors("exp" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
             }
-            else throw new FunctionsErrors("exp" , "ArgumentsCountError" , 1 , Arguments.Count );
+            else throw new FunctionsErrors("exp" , "ArgumentsCountError" , 1 , arguments.Count );
         }
         public void log()
         {
-            if(Arguments.Count == 2)
+            if(arguments.Count == 2)
             {
-                if(Lexer.IsNumber(Arguments[0]))
+                if(Lexer.IsNumber(arguments[0]))
                 {
-                    double logBase = Convert.ToDouble(Arguments[0]);
-                    if(Lexer.IsNumber(Arguments[1]))
+                    double logBase = Convert.ToDouble(arguments[0]);
+                    if(Lexer.IsNumber(arguments[1]))
                     {
-                        double n = Convert.ToDouble(Arguments[1]);
+                        double n = Convert.ToDouble(arguments[1]);
                         double result = Math.Log(n , logBase);
                         value = Convert.ToString(result) ;
                     }
-                    else throw new FunctionsErrors("log" , "ArgumentTypeError" , "number" , Lexer.TokenType(Arguments[0]));
+                    else throw new FunctionsErrors("log" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
                 }
-                else throw new FunctionsErrors("log" , "ArgumentTypeError" , "number" , Lexer.TokenType(Arguments[0]));
+                else throw new FunctionsErrors("log" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
             }
-            else throw new FunctionsErrors("log" , "ArgumentsCountError" , 2 , Arguments.Count );
+            else throw new FunctionsErrors("log" , "ArgumentsCountError" , 2 , arguments.Count );
         }
         public void rand()
         {
-            if(Arguments.Count == 0)
+            if(arguments.Count == 0)
             {
                 Random r = new Random() ;
                 double result = r.NextDouble();
                 value = Convert.ToString(result);
             }
-            else throw new FunctionsErrors("rand" , "ArgumentsCountError" , 0 , Arguments.Count );
-
+            else throw new FunctionsErrors("rand" , "ArgumentsCountError" , 0 , arguments.Count );
         }
         public void PI()
         {

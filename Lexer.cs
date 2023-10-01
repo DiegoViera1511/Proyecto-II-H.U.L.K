@@ -15,8 +15,21 @@ namespace HULK
 
         public static List<string> Key_Words  = new List<string>()
         {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" ,"sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E" };
-   
-        public Lexer(string input)
+       
+
+        #region Methods 
+
+        public static void Restart()
+        {
+            foreach(string id in FunctionDeclaration.functionStack.Keys)
+            {
+                FunctionDeclaration.functionStack[id] = 0 ;
+            }
+            ConsolePrints.Clear();
+            index = 0;
+            Tokens.Clear();
+        }
+        public static void TokenizeInput(string input)
         {
             input = Regex.Replace(input , @"\s+" , " ");
         
@@ -32,8 +45,6 @@ namespace HULK
             }
             */
             
-            
-
             foreach(Match m in t )
             {
                 if( GoodTokens.IsMatch (m.Value) )
@@ -43,13 +54,9 @@ namespace HULK
                 else 
                 {
                     throw new LexicalError(m.Value);
-                    //HULK_Errors.LexicalError(m.Value) ; 
                 }
-                
             }
-       }
-
-        #region Methods 
+        }
         public static bool IsNumber(string Token)
         {
             return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+E(\+|-)\d+$|^∞$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+$") ? true : false ;
@@ -64,7 +71,7 @@ namespace HULK
         }
         public static bool IsID(string Token)
         {
-            return Regex.IsMatch(Lexer.Tokens[Lexer.index] , @"^[a-zA-Z]+\w*$") ? true : false ;
+            return Regex.IsMatch( Token , @"^[a-zA-Z]+\w*$") ? true : false ;
         }
         public static string TokenType(string Token)
         {
@@ -87,9 +94,8 @@ namespace HULK
             else 
             {
                 System.Console.WriteLine(Token);
-                return "prueva";
+                return "error in code";
             }
-
         }
 
         public static string GetIncorrectToken(string a , string b , string expectedToken)
@@ -103,4 +109,4 @@ namespace HULK
         #endregion
 
     }
-}//@"\d+[^\D]|\+|\-|\*|\^|/|%|\(|\)|(=>)|;|,|let\s|={1,2}|function|if|else|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|[a-zA-Z0-9]+\w*
+}

@@ -11,24 +11,23 @@ namespace HULK
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("H.U.L.K");
-            System.Console.WriteLine();
-            Function_Declaration.Function_Store.Clear();
-            int c = 0 ;
+            Console.WriteLine();
+            //int c = 0 ;
             while(true)
             {
-                foreach(string id in Function_Declaration.Function_Stack.Keys)
-                {
-                    Function_Declaration.Function_Stack[id] = 0 ;
-                }
-
+                Lexer.Restart();//Next line , clean the input and restart the index 
+            
                 Console.Write("> ");
 
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
+
+                if(input == null)
+                {
+                    continue ;
+                }
 
                 //string input = "print(\"hola\" + 5)";
                 
-                //  arreglar el metodo ramdom pa q devuelva[0,1]
-
                 /*
                 if(c == 0 )
                 {
@@ -38,26 +37,22 @@ namespace HULK
                 else input = "v( 3 ) ;";
                 */
 
-                //List PROBLEMS
-                //Semantics errors
-                //Expressiones Unarias
-                
+                //Poner linda clase de errores .
                 
                 if(input == "exit")
                 {
                     break;
                 }
 
-                Lexer.index = 0;
-                Lexer.Tokens.Clear();
                 try
                 {
-                    Lexer l = new Lexer(input);
+                    Lexer.TokenizeInput(input);
 
                     Expression result = new HulkExpression() ;
 
                     result.Evaluate();
-                    if((Lexer.index >= Lexer.Tokens.Count || Lexer.Tokens[Lexer.index] != ";") && Lexer.Tokens.Count != 0)
+
+                    if((Lexer.index >= Lexer.Tokens.Count || Expression.ActualToken() != ";") && Lexer.Tokens.Count != 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Red ;
                         System.Console.WriteLine("Missing ' ; '");
@@ -69,15 +64,12 @@ namespace HULK
                         {
                             Console.WriteLine(Prints);
                         }
-                         Lexer.ConsolePrints.Clear();
                     }
-
                 }
-                catch (HULK_Errors he)
+                catch (HulkErrors he)
                 {
                     he.PrintError();
                 }
-
             }
             Console.ForegroundColor = ConsoleColor.White;
         
