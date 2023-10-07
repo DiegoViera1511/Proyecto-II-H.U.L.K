@@ -38,13 +38,6 @@ namespace HULK
             
             List<Match> t = AllTokens.Matches(input).ToList() ;
             
-            /*
-            foreach(Match m in t )
-            {
-            System.Console.WriteLine(m.Value);
-            }
-            */
-            
             foreach(Match m in t )
             {
                 if( GoodTokens.IsMatch (m.Value) )

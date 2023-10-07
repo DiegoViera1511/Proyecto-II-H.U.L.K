@@ -82,76 +82,12 @@ namespace HULK
         }
     }
 
-
-    class SemanticError : HulkErrors
+    #region SemanticError 
+    abstract class SemanticError : HulkErrors
     {
         public string? ProblemType ;
-        public string? Problem ;
-        public string? BadToken ;
-        public string? ExpectedToken ;
-        public string? LeftToken ;
-        public string? RightToken ;
-        
-
-        
-        public SemanticError(string Problem , string ProblemType  , string BadToken )
-        {
-            this.Problem = Problem ;
-            this.BadToken = BadToken ; 
-            this.ProblemType = ProblemType;
-        }
-        public SemanticError(string Problem , string ProblemType ,string LeftToken , string RightToken , string expectedToken , string BadToken)
-        {
-            this.Problem = Problem ;
-            this.LeftToken = LeftToken ;
-            this.RightToken = RightToken ;
-            this.ProblemType = ProblemType ;
-            this.BadToken = BadToken ;
-            this.ExpectedToken = expectedToken ;
-        }
-        public SemanticError(string Problem ,string ProblemType ,  string expectedToken , string BadToken)
-        {
-            this.BadToken = BadToken ;
-            this.Problem = Problem ;
-            this.ExpectedToken = expectedToken ;
-            this.ProblemType = ProblemType ;
-        }
-        public SemanticError(string BadToken , string ProblemType)
-        {
-            this.BadToken = BadToken ;
-            this.ProblemType = ProblemType ;
-        }
-    
-        public override void PrintError()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            if(ProblemType == "Incorrect Operator")
-            {
-                System.Console.WriteLine($"{Problem} cannot be applied to operand of type '{BadToken}'");
-            }
-            else if(ProblemType == "Incorrect Binary Expression")
-            {
-                System.Console.WriteLine($"{Problem} cannot be used between '{LeftToken}' and '{RightToken}'");
-            }
-            else if(ProblemType == "DuplicateArgument")
-            {
-                Console.WriteLine($"The parameter name '{BadToken}' is a duplicate");
-            }
-            else if(ProblemType == "StackOverflow")
-            {
-                System.Console.WriteLine($"Stack OverFlow Function {BadToken}.");
-            }
-            else if(ProblemType == "ArgumentTypeError")
-            {
-                System.Console.WriteLine($"{Problem} receives `{ExpectedToken}`, not `{BadToken}`.");
-            }
-            
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
-        
     }
 
-    /*
     class IncorrectOperator : SemanticError
     {
         public string operatorProblem ;
@@ -167,27 +103,31 @@ namespace HULK
 
         public override void PrintError()
         {
-           Console.WriteLine($"{operatorProblem} cannot be applied to operand of type '{badToken}'");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{operatorProblem} cannot be applied to operand of type '{badToken}'");
+            Console.ForegroundColor = ConsoleColor.Green;
         }
     }
 
     class IncorrectBinaryExpression : SemanticError
     {
         public string operatorProblem ;
-        public string leftToken ;
-        public string rightToken ;
+        public string leftTokenType ;
+        public string rightTokenType ;
 
-        public IncorrectBinaryExpression(string operatorProblem , string leftToken , string rightToken )
+        public IncorrectBinaryExpression(string operatorProblem , string leftTokenType , string rightTokenType )
         {
             ProblemType = "Incorrect Binary Expression" ;
-            this.leftToken = leftToken ;
-            this.rightToken = rightToken ;
+            this.leftTokenType = leftTokenType ;
+            this.rightTokenType = rightTokenType ;
             this.operatorProblem = operatorProblem ;
         }
 
         public override void PrintError()
-        {
-            Console.WriteLine($"{operatorProblem} cannot be used between '{leftToken}' and '{rightToken}'");
+        {   
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{operatorProblem} cannot be used between '{leftTokenType}' and '{rightTokenType}'");
+            Console.ForegroundColor = ConsoleColor.Green;
         }
     }
 
@@ -203,18 +143,20 @@ namespace HULK
 
         public override void PrintError()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"The parameter name '{badToken}' is a duplicate");
+            Console.ForegroundColor = ConsoleColor.Green;
         }
 
     }
 
     class ArgumentTypeError : SemanticError
     {
-        string functionName ;
-        string expectedToken ;
-        string badToken ;
+        string? functionName ;
+        public string expectedToken ;
+        public string badToken ;
 
-        public ArgumentTypeError(string functionName , string expectedToken , string badToken)
+        public ArgumentTypeError(string expectedToken , string badToken , string? functionName = null)
         {
             ProblemType = "ArgumentTypeError" ;
             this.functionName = functionName ;
@@ -224,7 +166,9 @@ namespace HULK
 
         public override void PrintError()
         {
-            Console.WriteLine($"Function '{functionName}' receives '{expectedToken}', not `{badToken}`.");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Function '{functionName}' receives '{expectedToken}', not '{badToken}'.");
+            Console.ForegroundColor = ConsoleColor.Green;
         }
     }
 
@@ -244,64 +188,13 @@ namespace HULK
 
         public override void PrintError()
         {
-            Console.WriteLine($"Function '{functionName}' receives {argumentsIdCount} argument(s), but {argumentsValueCount} were given.");
-        }
-    }
-    */
-    class FunctionsErrors : HulkErrors 
-    {
-        public string functionName ;
-        public string ProblemType ;
-        public int? ArgumentsIdCount ;
-        public int? ArgumentsValueCount ;
-        public string? BadToken ;
-        public string? expectedToken ;
-        public FunctionsErrors(string functionName , string ProblemType)
-        {
-            this.functionName = functionName ;
-            this.ProblemType = ProblemType ;
-        }
-
-        public FunctionsErrors(string functionName , string ProblemType , int ArgumentsIdCount , int ArgumentsValueCount)
-        {
-            this.functionName = functionName ;
-            this.ProblemType = ProblemType ;
-            this.ArgumentsIdCount = ArgumentsIdCount;
-            this.ArgumentsValueCount = ArgumentsValueCount ;
-        }
-
-        public FunctionsErrors(string functionName , string ProblemType ,  string expectedToken , string BadToken )
-        {
-            this.functionName = functionName ;
-            this.ProblemType = ProblemType ;
-            this.expectedToken = expectedToken ;
-            this.BadToken = BadToken ;
-        }
-
-        public override void PrintError()
-        {   
             Console.ForegroundColor = ConsoleColor.Red;
-            if(ProblemType == "StackOverflow")
-            { 
-               Console.WriteLine("Stack Overflow " + functionName);
-            }
-            else if(ProblemType == "ArgumentsCountError") 
-            {
-                System.Console.WriteLine($"Function '{functionName}' receives {ArgumentsIdCount} argument(s), but {ArgumentsValueCount} were given.");
-            }
-            else if(ProblemType == "ArgumentTypeError")
-            {
-                System.Console.WriteLine($"Function '{functionName}' receives '{expectedToken}', not `{BadToken}`.");
-            }
-            else if(ProblemType == "DuplicateArgument")
-            {
-                Console.WriteLine($"The parameter name '{BadToken}' is a duplicate");
-            }
+            Console.WriteLine($"Function '{functionName}' receives {argumentsIdCount} argument(s), but {argumentsValueCount} were given.");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
 
-
+    #endregion
 
     class DefaultError : HulkErrors
     {

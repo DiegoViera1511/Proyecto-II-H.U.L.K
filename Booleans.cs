@@ -63,21 +63,9 @@ namespace HULK
                     }
                     else 
                     {
-                        if(iDLeft)
-                        {
-                            if(Lexer.TokenType(left.value) != "boolean")
-                            {
-                                throw new SemanticError("Operator ' & '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(left.value) );
-                            }
-                        }
-                        else if(iDRight)
-                        {
-                            if(Lexer.TokenType(right.value) != "boolean")
-                            {
-                                throw new SemanticError("Operator ' & '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(right.value) );
-                            }
-                        }
-                        throw new SemanticError("Operator ' & '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.GetIncorrectToken(left.value , right.value , "boolean"));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "boolean");
+        
+                        throw new IncorrectBinaryExpression("Operator ' & '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if( ActualToken() == "|" )
@@ -92,21 +80,9 @@ namespace HULK
                     }
                     else 
                     {
-                        if(iDLeft)
-                        {
-                            if(Lexer.TokenType(left.value) != "boolean")
-                            {
-                                throw new SemanticError("Operator ' | '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(left.value) );
-                            }
-                        }
-                        else if(iDRight)
-                        {
-                            if(Lexer.TokenType(right.value) != "boolean")
-                            {
-                                throw new SemanticError("Operator ' | '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.TokenType(right.value) );
-                            }
-                        }
-                        throw new SemanticError("Operator ' | '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "boolean" , Lexer.GetIncorrectToken(left.value , right.value , "boolean"));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "boolean");
+                        
+                        throw new IncorrectBinaryExpression("Operator ' | '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if(NextTokens.Contains(ActualToken()))
@@ -186,22 +162,9 @@ namespace HULK
                     }
                     else 
                     {
-                        if(iDLeft)
-                        {
-                            if(Lexer.TokenType(left.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' > '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
-                            }
-                        }
-                        else if(iDRight)
-                        {
-                            if(Lexer.TokenType(right.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' > '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
-                            }
-                        }
-                        throw new SemanticError("Operator ' > '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
                         
+                        throw new IncorrectBinaryExpression("Operator ' > '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if( ActualToken() == "<" )
@@ -218,21 +181,9 @@ namespace HULK
                     }
                     else 
                     {
-                        if(iDLeft)
-                        {
-                            if(Lexer.TokenType(left.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' < '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
-                            }
-                        }
-                        else if(iDRight)
-                        {
-                            if(Lexer.TokenType(right.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' < '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
-                            }
-                        }
-                        throw new SemanticError("Operator ' < '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        
+                        throw new IncorrectBinaryExpression("Operator ' < '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if( ActualToken() == "<=" )
@@ -249,21 +200,9 @@ namespace HULK
                     }
                     else 
                     {
-                        if(iDLeft)
-                        {
-                            if(Lexer.TokenType(left.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' <= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
-                            }
-                        }
-                        else if(iDRight)
-                        {
-                            if(Lexer.TokenType(right.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' <= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
-                            }
-                        }
-                        throw new SemanticError("Operator ' <= '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        //Si no hay problema de argumento lanza el error Binary expression
+                        throw new IncorrectBinaryExpression("Operator ' <= '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if( ActualToken() == ">=" )
@@ -280,21 +219,9 @@ namespace HULK
                     }
                     else 
                     {
-                        if(iDLeft)
-                        {
-                            if(Lexer.TokenType(left.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' >= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(left.value) );
-                            }
-                        }
-                        else if(iDRight)
-                        {
-                            if(Lexer.TokenType(right.value) != "number")
-                            {
-                                throw new SemanticError("Operator ' >= '" , "ArgumentTypeError" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.TokenType(right.value) );
-                            }
-                        }
-                        throw new SemanticError("Operator ' >= '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        
+                        throw new IncorrectBinaryExpression("Operator ' >= '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if( ActualToken() == "==" )
@@ -311,7 +238,21 @@ namespace HULK
                     }
                     else
                     {
-                        throw new SemanticError("Operator ' == '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != Lexer.TokenType(right.value))
+                            {
+                                throw new ArgumentTypeError(Lexer.TokenType(right.value) , Lexer.TokenType(left.value));
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != Lexer.TokenType(left.value))
+                            {
+                                throw new ArgumentTypeError(Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                            }
+                        }
+                        throw new IncorrectBinaryExpression("Operator ' == '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if( ActualToken() == "!=" )
@@ -328,7 +269,21 @@ namespace HULK
                     }
                     else
                     {
-                        throw new SemanticError("Operator ' != '" , "Incorrect Binary Expression" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value) , "number" , Lexer.GetIncorrectToken(left.value , right.value , "number"));
+                        if(iDLeft)
+                        {
+                            if(Lexer.TokenType(left.value) != Lexer.TokenType(right.value))
+                            {
+                                throw new ArgumentTypeError(Lexer.TokenType(right.value) , Lexer.TokenType(left.value));
+                            }
+                        }
+                        else if(iDRight)
+                        {
+                            if(Lexer.TokenType(right.value) != Lexer.TokenType(left.value))
+                            {
+                                throw new ArgumentTypeError(Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                            }
+                        }
+                        throw new IncorrectBinaryExpression("Operator ' != '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if (NextTokens.Contains(ActualToken()))

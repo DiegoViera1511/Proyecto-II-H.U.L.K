@@ -12,7 +12,7 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("H.U.L.K");
             Console.WriteLine();
-            //int c = 0 ;
+            
             while(true)
             {
                 Lexer.Restart();//Next line , clean the input and restart the index 
@@ -26,20 +26,10 @@ namespace HULK
                     continue ;
                 }
 
-                //string input = "print(\"hola\" + 5)";
-                
-                /*
-                if(c == 0 )
-                {
-                    input = "function v( x ) => print ( x)" ;
-                    c++;
-                }
-                else input = "v( 3 ) ;";
-                */
-
-                //Poner linda clase de errores .
-                
-                if(input == "exit")
+                //tester
+                //string input = "print(\"hola\" + 5)"; 
+                    
+                if(input == "stop hulk")
                 {
                     break;
                 }

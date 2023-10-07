@@ -36,6 +36,24 @@ namespace HULK
             }
             else return false ;
         }
+
+        public void CatchArgumentTypeError(bool idLeft , string leftType , bool iDRight , string rightType , string expectedType)
+        {
+            if(iDLeft)
+            {
+                if(leftType != expectedType)
+                {
+                    throw new ArgumentTypeError(expectedType , leftType);
+                }
+            }
+            if(iDRight)
+            {
+                if(rightType != expectedType)
+                {
+                    throw new ArgumentTypeError(expectedType , rightType);
+                }
+            }
+        }
     }
 
     #endregion
@@ -54,6 +72,7 @@ namespace HULK
             else if(ActualToken() == "-") // negative numbers
             {
                 Next();
+
                 Expression num = new Atom();
                 bool isIdfunction = false ;
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
@@ -67,10 +86,41 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        throw new SemanticError("Operator '-'" , "ArgumentTypeError" , Lexer.TokenType(num.value));
+                        throw new ArgumentTypeError( "number" , Lexer.TokenType(num.value) );
                     }
-                    throw new SemanticError("Operator '-'" , "Incorrect Operator" , Lexer.TokenType(num.value));
+                    throw new IncorrectOperator(num.value , "Operator ' - '" , "number");
                 }
+            }
+            else if(ActualToken() == "!")
+            {
+                Next() ;
+
+                Expression boolean = new Atom() ;
+
+                bool isIdfunction = false ;
+                if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
+                boolean.Evaluate();
+                
+                if(boolean.value == "true")
+                {
+                    value = "false" ;
+                }
+                else if(boolean.value == "false")
+                {
+                    value = "true" ;
+                }
+                else 
+                {
+                    if(isIdfunction)
+                    {
+                        if(Lexer.TokenType(boolean.value) != "boolean")
+                        {
+                            throw new ArgumentTypeError( "boolean" , Lexer.TokenType(boolean.value) );
+                        }
+                    }
+                    throw new IncorrectOperator(boolean.value , "Operator ' ! '" , "boolean");
+                }
+
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "(") // ( expression )
             {

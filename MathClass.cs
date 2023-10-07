@@ -87,9 +87,9 @@ namespace HULK
                     double result = Math.Sqrt(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("sqrt" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
+                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "sqrt" );
             }
-            else throw new FunctionsErrors("sqrt" , "ArgumentsCountError" , 1 , arguments.Count );
+            else throw new ArgumentsCountError("sqrt" , 1 , arguments.Count );
         }
         public void sin()
         {
@@ -100,9 +100,9 @@ namespace HULK
                     double result = Math.Sin(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("sin" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
+                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "sin" );
             }
-            else throw new FunctionsErrors("sin" , "ArgumentsCountError" , 1 , arguments.Count );
+            else throw new ArgumentsCountError("sin" , 1 , arguments.Count );
         }
         public void cos()
         {
@@ -113,9 +113,9 @@ namespace HULK
                     double result = Math.Cos(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("cos" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
+                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "cos" );
             }
-            else throw new FunctionsErrors("cos" , "ArgumentsCountError" , 1 , arguments.Count );
+            else throw new ArgumentsCountError("cos"  , 1 , arguments.Count );
 
         }
         public void exp()
@@ -127,9 +127,9 @@ namespace HULK
                     double result = Math.Cos(Convert.ToDouble(arguments[0]));
                     value = Convert.ToString(result);
                 }
-                else throw new FunctionsErrors("exp" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
+                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "exp" );
             }
-            else throw new FunctionsErrors("exp" , "ArgumentsCountError" , 1 , arguments.Count );
+            else throw new ArgumentsCountError("exp" , 1 , arguments.Count );
         }
         public void log()
         {
@@ -144,11 +144,11 @@ namespace HULK
                         double result = Math.Log(n , logBase);
                         value = Convert.ToString(result) ;
                     }
-                    else throw new FunctionsErrors("log" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
+                    else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[1]) , "log" );
                 }
-                else throw new FunctionsErrors("log" , "ArgumentTypeError" , "number" , Lexer.TokenType(arguments[0]));
+                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "log");
             }
-            else throw new FunctionsErrors("log" , "ArgumentsCountError" , 2 , arguments.Count );
+            else throw new ArgumentsCountError( "log" , 2 , arguments.Count );
         }
         public void rand()
         {
@@ -158,7 +158,7 @@ namespace HULK
                 double result = r.NextDouble();
                 value = Convert.ToString(result);
             }
-            else throw new FunctionsErrors("rand" , "ArgumentsCountError" , 0 , arguments.Count );
+            else throw new ArgumentsCountError("rand" , 0 , arguments.Count );
         }
         public void PI()
         {

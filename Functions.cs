@@ -36,7 +36,7 @@ namespace HULK
                             }
                             else
                             {
-                                throw new FunctionsErrors(ActualToken(), "DuplicateArgument" );
+                                throw new DuplicateArgument( ActualToken() ) ;
                             }
                         }
                         else 
@@ -117,13 +117,12 @@ namespace HULK
         {
             if(FunctionDeclaration.functionStack[functionName] > 500)
             {   
-                throw new FunctionsErrors(functionName , "StackOverflow");
+                throw new DefaultError("StackOverflow" , functionName );
             }
             else FunctionDeclaration.functionStack[functionName]++;
 
             if(ActualToken() == "(")
             {
-                //string result ;
                 Next();
 
                 Expression parameter = new BooleanOperator();
@@ -159,7 +158,7 @@ namespace HULK
                 }
                 else 
                 {
-                    throw new FunctionsErrors(functionName , "ArgumentsCountError", argumentsId.Count , argumentsValue.Count );
+                    throw new ArgumentsCountError(functionName , argumentsId.Count , argumentsValue.Count );
                 }
                 
                 List<string> originalsTokens = Lexer.Tokens;
@@ -174,15 +173,12 @@ namespace HULK
                 {
                     FE.Evaluate();
                 }
-                catch(SemanticError se)//Catch argument type error
+                catch(ArgumentTypeError ae)//Catch argument type error
                 {
                     Lexer.Tokens = originalsTokens;
                     Lexer.index = originalIndex;
-                    if(se.ProblemType == "ArgumentTypeError")
-                    {
-                        throw new FunctionsErrors( functionName , "ArgumentTypeError" , se.ExpectedToken , se.BadToken);
-                    }
-                    else throw se ;
+                   
+                    throw new ArgumentTypeError(ae.expectedToken , ae.badToken , functionName );
                 }
                 catch(HulkErrors he)
                 {
@@ -190,9 +186,7 @@ namespace HULK
                     Lexer.index = originalIndex;
                     throw he;
                 }
-                
-                //result = FE.value;
-                
+                            
                 Lexer.Tokens = originalsTokens;
                 Lexer.index = originalIndex;
 
@@ -261,5 +255,4 @@ namespace HULK
             }
         }
     }
-
 }
