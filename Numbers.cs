@@ -32,8 +32,8 @@ namespace HULK
 
         public override void Evaluate()
         {
-            
-            if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDLeft = true ;
+
+            if( IsFunctionID(ActualToken()) ) iDLeft = true ;
             left.Evaluate();
             
             while(Lexer.index < Lexer.Tokens.Count)
@@ -44,7 +44,7 @@ namespace HULK
                     
                     Next();
 
-                    if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDRight = true ;
+                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
                     right.Evaluate();
 
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
@@ -61,7 +61,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDRight = true ;
+                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
                     right.Evaluate();
 
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")

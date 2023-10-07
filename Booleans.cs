@@ -43,7 +43,7 @@ namespace HULK
 
         public override void Evaluate()
         {
-            if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDLeft = true ;
+            if( IsFunctionID(ActualToken()) ) iDLeft = true ;
 
             left.Evaluate();
 
@@ -53,7 +53,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID( ActualToken() ) && IsFunctionID( ActualToken() )) iDRight = true ;
+                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
 
                     right.Evaluate();
                     
@@ -71,7 +71,7 @@ namespace HULK
                 else if( ActualToken() == "|" )
                 {
                     Next();
-                    if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDRight = true ;
+                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
                     right.Evaluate();
                     
                     if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(right.value) == "boolean")
@@ -142,7 +142,7 @@ namespace HULK
         #endregion
         public override void Evaluate()
         {   
-            if(Lexer.IsID( ActualToken() ) && IsFunctionID( ActualToken() )) iDLeft = true ;
+            if( IsFunctionID( ActualToken() ) ) iDLeft = true ;
 
             left.Evaluate();
 
@@ -152,7 +152,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID( ActualToken() ) && IsFunctionID( ActualToken() )) iDRight = true ;
+                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
 
                     right.Evaluate();
                     
@@ -171,7 +171,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDRight = true ;
+                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
 
                     right.Evaluate();
                    
@@ -190,7 +190,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID( ActualToken() ) && IsFunctionID( ActualToken() )) iDRight = true ;
+                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
 
                     right.Evaluate();
                     
@@ -209,7 +209,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID( ActualToken() ) && IsFunctionID( ActualToken() )) iDRight = true ;
+                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
 
                     right.Evaluate();
                     
@@ -228,7 +228,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDRight = true ;
+                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
 
                     right.Evaluate();
                     
@@ -259,7 +259,7 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDRight = true ;
+                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
 
                     right.Evaluate();
                     

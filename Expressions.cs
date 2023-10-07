@@ -63,7 +63,7 @@ namespace HULK
         //Atomics expressions ( numbers , strings , booleans )
         public override void Evaluate()
         {
-            if(Regex.IsMatch(ActualToken() , @"^\d+$")) // numbers
+            if(Lexer.IsNumber(ActualToken())) // numbers
             {
                 string result = ActualToken();
                 Next();
@@ -139,7 +139,7 @@ namespace HULK
                 }
 
             }
-            else if(Lexer.index < Lexer.Tokens.Count && Regex.IsMatch(ActualToken(), @"(\u0022([^\u0022\\]|\\.)*\u0022)") ) // strings
+            else if(Lexer.index < Lexer.Tokens.Count && Lexer.IsString(ActualToken()) ) // strings
             {
                 value = ActualToken();
                 Next();
