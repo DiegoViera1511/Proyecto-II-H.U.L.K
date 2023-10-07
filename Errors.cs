@@ -104,7 +104,7 @@ namespace HULK
         public override void PrintError()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{operatorProblem} cannot be applied to operand of type '{badToken}'");
+            Console.WriteLine($"! SEMANTIC ERROR: {operatorProblem} cannot be applied to operand of type '{badToken}'");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
@@ -126,7 +126,7 @@ namespace HULK
         public override void PrintError()
         {   
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{operatorProblem} cannot be used between '{leftTokenType}' and '{rightTokenType}'");
+            Console.WriteLine($"! SEMANTIC ERROR: {operatorProblem} cannot be used between '{leftTokenType}' and '{rightTokenType}'");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
@@ -144,7 +144,7 @@ namespace HULK
         public override void PrintError()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"The parameter name '{badToken}' is a duplicate");
+            Console.WriteLine($" ! SEMANTIC ERROR: The parameter name '{badToken}' is a duplicate");
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
@@ -167,7 +167,7 @@ namespace HULK
         public override void PrintError()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Function '{functionName}' receives '{expectedToken}', not '{badToken}'.");
+            Console.WriteLine($"! SEMANTIC ERROR: Function '{functionName}' receives '{expectedToken}', not '{badToken}'.");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
@@ -189,7 +189,7 @@ namespace HULK
         public override void PrintError()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Function '{functionName}' receives {argumentsIdCount} argument(s), but {argumentsValueCount} were given.");
+            Console.WriteLine($"! SEMANTIC ERROR: Function '{functionName}' receives {argumentsIdCount} argument(s), but {argumentsValueCount} were given.");
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
