@@ -78,7 +78,7 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 num.Evaluate();
                 
-                if(Lexer.TokenType(num.value) == "number")
+                if(Lexer.IsNumber(num.value))
                 {
                     value = Convert.ToString(-1 * Convert.ToDouble(num.value));
                 }
@@ -113,10 +113,7 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        if(Lexer.TokenType(boolean.value) != "boolean")
-                        {
-                            throw new ArgumentTypeError( "boolean" , Lexer.TokenType(boolean.value) );
-                        }
+                        throw new ArgumentTypeError( "boolean" , Lexer.TokenType(boolean.value) );
                     }
                     throw new IncorrectOperator(boolean.value , "Operator ' ! '" , "boolean");
                 }

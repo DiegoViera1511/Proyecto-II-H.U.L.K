@@ -57,7 +57,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(right.value) == "boolean")
+                    if(Lexer.IsBoolean(left.value) && Lexer.IsBoolean(right.value))
                     {
                         left.value = And(left.value , right.value);
                     }
@@ -74,7 +74,7 @@ namespace HULK
                     if( IsFunctionID(ActualToken()) ) iDRight = true ;
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(right.value) == "boolean")
+                    if(Lexer.IsBoolean(left.value) && Lexer.IsBoolean(right.value))
                     {
                         left.value = Or(left.value , right.value);
                     }
@@ -156,7 +156,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
                     {
                         left.value = GreaterThan(left.value , right.value);
                     }
@@ -175,7 +175,7 @@ namespace HULK
 
                     right.Evaluate();
                    
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
                     {
                         left.value = LessThan(left.value , right.value);
                     }
@@ -194,7 +194,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
                     {
                         left.value = LessThanOrEqual(left.value , right.value);
                     }
@@ -213,7 +213,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
                     {
                         left.value = GreaterThanOrEqual(left.value , right.value);
                     }
