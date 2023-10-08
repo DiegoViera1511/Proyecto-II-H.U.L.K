@@ -12,8 +12,8 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("H.U.L.K");
             Console.WriteLine();
-            
-            while(true)
+        
+            while(true) 
             {
                 Lexer.Restart();//Next line , clean the input and restart the index 
             

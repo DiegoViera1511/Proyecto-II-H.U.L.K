@@ -33,8 +33,8 @@ namespace HULK
         {
             input = Regex.Replace(input , @"\s+" , " ");
         
-            Regex AllTokens = new(@"\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
-            Regex GoodTokens = new(@"^\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");
+            Regex AllTokens = new(@"\d+$|\d+[\.,]{1}\d+|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
+            Regex GoodTokens = new(@"^\d+$|^\d+[\.,]{1}\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");
             
             List<Match> t = AllTokens.Matches(input).ToList() ;
             
@@ -52,7 +52,7 @@ namespace HULK
         }
         public static bool IsNumber(string Token)
         {
-            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+E(\+|-)\d+$|^∞$") || Regex.IsMatch(Token , @"^-{0,1}\d+\.\d+$") ? true : false ;
+            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+[\.,]{1}\d+E(\+|-)\d+$|^∞$") || Regex.IsMatch(Token , @"^-{0,1}\d+[\.,]{1}\d+$") ? true : false ;
         }
         public static bool IsString(string Token)
         {

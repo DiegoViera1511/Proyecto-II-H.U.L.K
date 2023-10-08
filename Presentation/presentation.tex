@@ -1,0 +1,154 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage[left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage[left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage[spanish]{babel}
+\usepackage{cite}
+\usepackage[usenames]{color}
+\usepackage{url}
+
+\bibliographystyle{plain}
+\begin{document}
+\color{white}
+\pagecolor{black}
+    \ttfamily
+    \title{\huge \textbf{H.U.K.L}}
+    \author{Diego Manuel Viera Martínez}
+    \date{octubre , 2023}
+    \maketitle
+    \begin{center}
+        \includegraphics[scale=0.7]{Pictures/matcom.jpg}
+        \label{fig:logo}
+    \end{center}
+    \begin{center}
+        \large Proyecto II de programación
+    \end{center}
+
+    \newpage 
+    
+    \section{Expresiones H.U.L.K}\label{sec:Expresiones}
+    \subsection{Print:}\label{sub:printExpression}
+    \begin{center}
+        Una de las instruccioines más simples en H.U.L.K (print),
+    escirbe en consola el valorde la expresión que pongas entre
+    paréntesis después del "print", en caso de no poner ninguna expresión
+    pone una linea en blanco.
+    \end{center}
+    \textcolor{green}{$>$ print("Hello World !");}\\
+    \textcolor{green}{Hello World !}
+    
+
+    \subsection{Operaciones Aritméticas:}\label{sub:aritmeticsOperations}
+    \begin{flushleft}
+        H.U.L.K cuenta con los operadores aritméticos: + (suma),  - (resta), 
+        * (multiplicación), / (división), \% (módulo) y potencia.
+    \end{flushleft}
+    \textcolor{green}{$>$ print(((1 + 2) * 4) / 2);}
+    
+    \textcolor{green}{6}
+
+    \subsection{Funciones matemáticas básicas:}\label{sub:mathExpressions}
+    \begin{flushleft}
+        Contiene funciones matemáticas básicas para operaciones:
+        
+        \begin{enumerate}
+            \item `sqrt(<value>)` calcula la raíz cuadrada de un valor.
+            \item `sin(<angle>)` calcual en seno de un ángulo en radianes.
+            \item `cos(<angle>)` calcual en coseno de un ángulo en radianes.
+            \item exp(<value>)` calcula el valor de `e` elevado a un valor.
+            \item `log(<base>, <value>)` calcula el logaritmo de un valor en una base dada.
+            \item `rand()` devuelve un número uniforme aleatorio entre 0 y 1 (ambos inclusive).
+        \end{enumerate}
+    \end{flushleft}
+
+    \textcolor{green}{$>$ print(sin(2 * PI) * 2 + cos(3 * PI / log(4, 64)));}
+    
+    \subsection{Funciones:}\label{sub:functions}
+    \begin{flushleft}
+        Para declarar funciones hay se debe seguir una sintaxis:
+
+        function $<$nombre de la función$>$(parámetros) =>  $<$cuerpo de la función$>$
+
+    \end{flushleft}
+    Ejemplo:
+
+    \textcolor{green}{$>$ function tan(x) => sin(x) / cos(x);}
+
+    \newpage
+
+    \subsection{Expresiones let-in:}\label{sub:letin}
+    \begin{flushleft}
+        En H.U.L.K es posible declarar variables usando la expresión let-in, que funciona de la siguiente forma:
+    \end{flushleft}
+
+    \textcolor{green}{$>$ let x = PI/2 in print(tan(x));}
+
+    \begin{flushleft}
+        En general, una expresión let-in consta de una o más declaraciones de variables, y un cuerpo, que puede ser cualquier expresión donde además se pueden utilizar las variables declaradas en el let. Fuera de una expresión let-in las variables dejan de existir.
+    \end{flushleft}
+
+    \begin{flushleft}
+        El valor de retorno de una expresión let-in es el valor de retorno del cuerpo, por lo que es posible hacer:
+    \end{flushleft}
+    
+    \textcolor{green}{$>$ print(7 + (let x = 2 in x * x));}
+    
+    \subsection{Condicionales}\label{sub:conditionals}
+        \begin{flushleft}
+            Las condiciones en HULK se implementan con la expresión if-else, que recibe una expresión booleana entre paréntesis, y dos expresiones para el cuerpo del if y el else respectivamente. Siempre deben incluirse ambas partes:
+        \end{flushleft}
+        
+        \textcolor{green}{$>$ let a = 42 in if (a \% 2 == 0) print($"$Even$"$) else print($"$odd$"$);}
+        
+        \begin{flushleft}
+            Como if-else es una expresión, se puede usar dentro de otra expresión
+        \end{flushleft}
+
+        \textcolor{green}{$>$ let a = 42 in print(if (a \% 2 == 0) $"$even$"$ else $"$odd$"$);}
+
+    \subsubsection{Recursión}\label{sub:recursive}
+    \begin{flushleft}
+        H.U.L.K soporta declaraciones de funciones recursivas:
+    \end{flushleft}
+
+    \textcolor{green}{$>$ function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;}
+
+    \subsection{Errores}\label{sub:errors}
+    \begin{flushleft}
+        Presenta 3 tipos de errores:
+        \begin{enumerate}
+            \item Lexical Errors: Errores que se producen por la presencia de tokens inválidos.\\
+            \textcolor{green}{$>$ let 14a = 5 in print(14a);}\\
+            \textcolor{green}{! LEXICAL ERROR: `14a` is not valid token.}
+            \\
+            \item Syntax Errors: Errores que se producen por expresiones mal formadas.\\
+            \textcolor{green}{$>$ let a = 5 in print(a;}\\
+            \textcolor{green}{! SYNTAX ERROR: Missing closing parenthesis after `a`.}\\
+
+            \textcolor{green}{$>$ let a = 5 inn print(a);}\\
+            \textcolor{green}{! SYNTAX ERROR: Invalid token `inn` in `let-in` expression.}\\
+
+            \textcolor{green}{$>$ let a = in print(a);}\\
+            \textcolor{green}{! SYNTAX ERROR: Missing expression in `let-in` after variable `a`.}\\
+
+            \newpage
+            \item Semantic Errors: Errores que se producen por el uso incorrecto de los tipos y argumentos.\\
+            \textcolor{green}{$>$ let a = "hello world" in print(a + 5);}\\
+            \textcolor{green}{! SEMANTIC ERROR: Operator `+` cannot be used between `string` and `number`.}\\
+
+            \textcolor{green}{$>$ print(fib("hello world"));}\\
+            \textcolor{green}{! SEMANTIC ERROR: Function `fib` receives `number`, not `string`.}\\
+            
+            \textcolor{green}{$>$  print(fib(4,3));}\\
+            \textcolor{green}{! SEMANTIC ERROR: Function `fib` receives 1 argument(s), but 2 were given.}\\
+        \end{enumerate}
+    \end{flushleft}
+
+    \subsection{¿ Cómo iniciar y detener ?}\label{sub:final}
+    \begin{flushleft}
+        Para inicializar H.U.L.K debes abrir su carpeta contenedora en consola y usar el comando(dotnet run)
+        y listo puedes comenzar a usarlo. Para cerrar el porgrama escribe en el input (stop hulk) y regresará a la consola de su PC.
+    \end{flushleft}
+\end{document}
