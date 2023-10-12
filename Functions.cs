@@ -115,7 +115,7 @@ namespace HULK
         }
         public override void Evaluate()
         {
-            if(FunctionDeclaration.functionStack[functionName] > 1000)
+            if(FunctionDeclaration.functionStack[functionName] > 800)
             {   
                 throw new DefaultError("StackOverflow" , functionName );
             }

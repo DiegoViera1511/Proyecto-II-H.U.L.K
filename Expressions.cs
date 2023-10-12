@@ -49,6 +49,7 @@ namespace HULK
 
     #endregion
 
+   
     class Atom : Expression
     {
         //Atomics expressions ( numbers , strings , booleans )
