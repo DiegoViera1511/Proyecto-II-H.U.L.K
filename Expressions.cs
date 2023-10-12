@@ -24,29 +24,20 @@ namespace HULK
     abstract class Binary_Exrpessions : Expression
     {
         public Expression left ;
-        public bool iDLeft = false ;
+        public string? iDLeft  ;
         public Expression right ;
-        public bool iDRight = false ;
+        public string? iDRight  ;
 
-        public bool IsFunctionID(string id)
+        public void CatchArgumentTypeError(string idLeft , string leftType , string iDRight , string rightType , string expectedType)
         {
-            if(Function.functionsId.ContainsKey(id))
-            {
-                return true ;
-            }
-            else return false ;
-        }
-
-        public void CatchArgumentTypeError(bool idLeft , string leftType , bool iDRight , string rightType , string expectedType)
-        {
-            if(iDLeft)
+            if(Function.functionsId.ContainsKey(idLeft))
             {
                 if(leftType != expectedType)
                 {
                     throw new ArgumentTypeError(expectedType , leftType);
                 }
             }
-            if(iDRight)
+            if(Function.functionsId.ContainsKey(iDRight))
             {
                 if(rightType != expectedType)
                 {
@@ -65,9 +56,20 @@ namespace HULK
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
-                string result = ActualToken();
+                value = ActualToken();
                 Next();
-                value = result;
+            }
+            else if(Lexer.index < Lexer.Tokens.Count && Function.functionsId.ContainsKey(ActualToken())) // function variable 
+            {
+                string s = Function.functionsId[ActualToken()];
+                Next();
+                value = s ;
+            }
+            else if (Lexer.index < Lexer.Tokens.Count && Let_in.idStore.ContainsKey(ActualToken())) // let-in variable
+            {
+                string s = Let_in.idStore[ActualToken()];
+                Next();
+                value = s ;
             }
             else if(ActualToken() == "-") // negative numbers
             {
@@ -162,18 +164,6 @@ namespace HULK
                 M.Evaluate();
                 value = M.value ;
 
-            }
-            else if(Lexer.index < Lexer.Tokens.Count && Function.functionsId.ContainsKey(ActualToken())) // function variable 
-            {
-                string s = Function.functionsId[ActualToken()];
-                Next();
-                value = s ;
-            }
-            else if (Lexer.index < Lexer.Tokens.Count && Let_in.idStore.ContainsKey(ActualToken())) // let-in variable
-            {
-                string s = Let_in.idStore[ActualToken()];
-                Next();
-                value = s ;
             }
             else if(Lexer.index < Lexer.Tokens.Count && FunctionDeclaration.functionStore.ContainsKey(ActualToken())) // function call
             {

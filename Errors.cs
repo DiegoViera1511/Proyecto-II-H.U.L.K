@@ -216,15 +216,19 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Red;
             if(ProblemType == "DivisionByZero")
             {
-                System.Console.WriteLine("! ERROR: Division by constant zero");
+                Console.WriteLine("! ERROR: Division by constant zero");
             }
             else if (ProblemType == "ErrorFunctionBody")
             {
-                System.Console.WriteLine("! ERROR: Invalid Function Declaration.");
+                Console.WriteLine("! ERROR: Invalid Function Declaration.");
             }
             else if (ProblemType == "StackOverflow")
             {
                 Console.WriteLine("! ERROR: Stack Overflow " + functionName);
+            }
+            else if(ProblemType == "Missing endOfFile")
+            {
+                Console.WriteLine("Missing ' ; '");
             }
             Console.ForegroundColor = ConsoleColor.Green;
         }

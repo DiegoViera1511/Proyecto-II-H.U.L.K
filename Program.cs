@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace HULK
 {
     class Program
     {
+        
         public static void Main(string[] args )
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("H.U.L.K");
             Console.WriteLine();
-        
+
             while(true) 
             {
                 Lexer.Restart();//Next line , clean the input and restart the index 
@@ -28,7 +30,9 @@ namespace HULK
 
                 //tester
                 //string input = "print(\"hola\" + 5)"; 
-                    
+
+                //Guardar el token en una variable y luego si entro al error ver si está en functon ids
+        
                 if(input == "stop hulk")
                 {
                     break;
@@ -44,9 +48,7 @@ namespace HULK
 
                     if((Lexer.index >= Lexer.Tokens.Count || Expression.ActualToken() != ";") && Lexer.Tokens.Count != 0)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red ;
-                        System.Console.WriteLine("Missing ' ; '");
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        throw new DefaultError("Missing endOfFile");
                     }
                     else
                     {
@@ -66,3 +68,5 @@ namespace HULK
         }
     }
 }
+
+

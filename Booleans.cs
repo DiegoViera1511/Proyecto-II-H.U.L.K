@@ -43,7 +43,8 @@ namespace HULK
 
         public override void Evaluate()
         {
-            if( IsFunctionID(ActualToken()) ) iDLeft = true ;
+            
+            iDLeft = ActualToken() ;
 
             left.Evaluate();
 
@@ -53,7 +54,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
+                    iDRight = ActualToken() ;
 
                     right.Evaluate();
                     
@@ -71,7 +72,7 @@ namespace HULK
                 else if( ActualToken() == "|" )
                 {
                     Next();
-                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate();
                     
                     if(Lexer.IsBoolean(left.value) && Lexer.IsBoolean(right.value))
@@ -142,7 +143,8 @@ namespace HULK
         #endregion
         public override void Evaluate()
         {   
-            if( IsFunctionID( ActualToken() ) ) iDLeft = true ;
+            
+            iDLeft = ActualToken();
 
             left.Evaluate();
 
@@ -152,7 +154,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
+                    iDRight = ActualToken() ;
 
                     right.Evaluate();
                     
@@ -171,7 +173,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
+                   iDRight = ActualToken();
 
                     right.Evaluate();
                    
@@ -190,7 +192,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
+                   iDRight = ActualToken() ;
 
                     right.Evaluate();
                     
@@ -209,7 +211,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID( ActualToken() ) ) iDRight = true ;
+                    iDRight = ActualToken() ;
 
                     right.Evaluate();
                     
@@ -228,7 +230,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
+                    iDRight = ActualToken();
 
                     right.Evaluate();
                     
@@ -238,14 +240,14 @@ namespace HULK
                     }
                     else
                     {
-                        if(iDLeft)
+                        if(Function.functionsId.ContainsKey(iDLeft))
                         {
                             if(Lexer.TokenType(left.value) != Lexer.TokenType(right.value))
                             {
                                 throw new ArgumentTypeError(Lexer.TokenType(right.value) , Lexer.TokenType(left.value));
                             }
                         }
-                        else if(iDRight)
+                        else if(Function.functionsId.ContainsKey(iDRight))
                         {
                             if(Lexer.TokenType(right.value) != Lexer.TokenType(left.value))
                             {
@@ -259,7 +261,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
+                    iDRight = ActualToken() ;
 
                     right.Evaluate();
                     
@@ -269,14 +271,14 @@ namespace HULK
                     }
                     else
                     {
-                        if(iDLeft)
+                        if(Function.functionsId.ContainsKey(iDLeft))
                         {
                             if(Lexer.TokenType(left.value) != Lexer.TokenType(right.value))
                             {
                                 throw new ArgumentTypeError(Lexer.TokenType(right.value) , Lexer.TokenType(left.value));
                             }
                         }
-                        else if(iDRight)
+                        else if(Function.functionsId.ContainsKey(iDRight))
                         {
                             if(Lexer.TokenType(right.value) != Lexer.TokenType(left.value))
                             {

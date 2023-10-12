@@ -4,7 +4,7 @@ namespace HULK
 {
     class SumExpression : Binary_Exrpessions // ( + ; - ; @ )
     {   
-       private List<string> NextTokens = new List<string>(){";", ")" ,"in",",",">","<","else","<","<=",">=","&","|","==","!="};
+       private List<string> NextTokens = new List<string>(){";",")","in",",",">","<","else","<","<=",">=","&","|","==","!="};
         
         public SumExpression()
         {
@@ -32,8 +32,7 @@ namespace HULK
 
         public override void Evaluate()
         {
-
-            if( IsFunctionID(ActualToken()) ) iDLeft = true ;
+            iDLeft = ActualToken() ;
             left.Evaluate();
             
             while(Lexer.index < Lexer.Tokens.Count)
@@ -44,7 +43,7 @@ namespace HULK
                     
                     Next();
 
-                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate();
 
                     if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
@@ -61,7 +60,7 @@ namespace HULK
                 {
                     Next();
 
-                    if( IsFunctionID(ActualToken()) ) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate();
 
                     if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
@@ -78,15 +77,23 @@ namespace HULK
                 {
                     Next();
 
-                    if(Lexer.IsString(left.value))
-                    {
-                        left.value = left.value.Substring( 0 , left.value.Length - 1);
-                    }
                     Expression literal = new BooleanOperator();
                     literal.Evaluate();
-                    if(Lexer.IsString(literal.value))
+                    if(Lexer.IsString(left.value))
                     {
-                        literal.value = literal.value.Substring( 1 , literal.value.Length - 1 );
+                        if(Lexer.IsString(literal.value))
+                        {
+                            left.value = left.value.Substring( 0 , left.value.Length - 1);
+                            literal.value = literal.value.Substring( 1 , literal.value.Length - 1 );
+                        }
+                        else 
+                        {
+                            left.value = left.value.Substring( 1 , left.value.Length - 2) ;
+                        }
+                    }
+                    else if (Lexer.IsString(literal.value))
+                    {
+                        literal.value = literal.value.Substring( 1 , literal.value.Length - 2 );
                     }
 
                     value = left.value + Convert.ToString(literal.value);
@@ -95,7 +102,7 @@ namespace HULK
                 }
                 else if (NextTokens.Contains(ActualToken()))
                 {
-                    value = Convert.ToString(left.value);
+                    value = left.value;
                     break;
                 }
                 else 
@@ -139,7 +146,8 @@ namespace HULK
         #endregion
         public override void Evaluate()
         {
-            if(Lexer.IsID(ActualToken()) && IsFunctionID(ActualToken())) iDLeft = true ;
+            
+            iDLeft = ActualToken() ;
             left.Evaluate();
 
             while(Lexer.index < Lexer.Tokens.Count)
@@ -148,7 +156,7 @@ namespace HULK
                 if(ActualToken() == "*")
                 {   
                     Next();
-                    if(IsFunctionID(ActualToken())) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate();
                     
                     if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
@@ -164,7 +172,7 @@ namespace HULK
                 else if(ActualToken() == "/")
                 {
                     Next();
-                    if(IsFunctionID(ActualToken())) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate(); 
                     
                     if(right.value == "0")
@@ -185,7 +193,7 @@ namespace HULK
                 else if(ActualToken() == "%")
                 {   
                     Next();
-                    if(IsFunctionID(ActualToken())) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate(); 
 
                     if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
@@ -202,7 +210,7 @@ namespace HULK
                 else if(NextTokens.Contains(ActualToken()))
                 {
                     //Siguientes
-                    value = Convert.ToString(left.value);//No hace falta Convert
+                    value = left.value;
                     break;
                 }
                 else 
@@ -232,7 +240,8 @@ namespace HULK
 
         public override void Evaluate()
         {
-            if(IsFunctionID(ActualToken())) iDLeft = true ;
+
+            iDLeft = ActualToken() ;
             left.Evaluate();
             
             while(Lexer.index < Lexer.Tokens.Count)
@@ -240,7 +249,7 @@ namespace HULK
                 if(ActualToken() == "^")
                 {
                     Next();
-                    if(IsFunctionID(ActualToken())) iDRight = true ;
+                    iDRight = ActualToken() ;
                     right.Evaluate();
                     
                     if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
@@ -255,7 +264,7 @@ namespace HULK
                 }
                 else if(NextTokens.Contains(ActualToken()))
                 {
-                    value =  Convert.ToString(left.value);
+                    value = left.value;
                     break;
                 }
                 else 
@@ -264,6 +273,5 @@ namespace HULK
                 }
             }    
         }
-    }
-    
+    } 
 }

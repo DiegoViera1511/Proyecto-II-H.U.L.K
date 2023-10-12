@@ -2,6 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Globalization;
 
 namespace HULK
 {
@@ -11,6 +12,9 @@ namespace HULK
 
         public static List<string> ConsolePrints = new List<string>();
 
+        static private NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
+
+        static public string decimalSeparator = nfi.NumberDecimalSeparator;
         public static int index = 0 ;
 
         public static List<string> Key_Words  = new List<string>()
@@ -32,10 +36,19 @@ namespace HULK
         public static void TokenizeInput(string input)
         {
             input = Regex.Replace(input , @"\s+" , " ");
-        
-            Regex AllTokens = new(@"\d+$|\d+[\.,]{1}\d+|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
-            Regex GoodTokens = new(@"^\d+$|^\d+[\.,]{1}\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");
+            Regex AllTokens ;//= new(@"\d+$|\d+[\.,]{1}\d+|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
+            Regex GoodTokens ;//= new(@"^\d+$|^\d+[\.,]{1}\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");
             
+            if(decimalSeparator == ".")//Mac
+            {
+                AllTokens = new(@"\d+$|\d+\.\d+|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
+                GoodTokens = new(@"^\d+$|^\d+\.\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");         
+            }
+            else//Windows
+            {
+                AllTokens = new(@"\d+$|\d+,\d+|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|\w+|[^\(\)\+\-\*/\^%<>=!&\|,;\s]+");
+                GoodTokens = new(@"^\d+$|^\d+,\d+$|\+|\-|\*|\^|/|%|\(|\)|(=>)|(>=)|(<=)|<[=]{0}|>[=]{0}|!=|;|,|let |={1,2}|function|if|else|!|\&|\||true|false|(\u0022([^\u0022\\]|\\.)*\u0022)|@|^[a-zA-Z]+\w*$");         
+            }
             List<Match> t = AllTokens.Matches(input).ToList() ;
             
             foreach(Match m in t )
@@ -52,7 +65,14 @@ namespace HULK
         }
         public static bool IsNumber(string Token)
         {
-            return Regex.IsMatch(Token , @"^-{0,1}\d+$") || Regex.IsMatch(Token , @"^-{0,1}\d+[\.,]{1}\d+E(\+|-)\d+$|^∞$") || Regex.IsMatch(Token , @"^-{0,1}\d+[\.,]{1}\d+$") ? true : false ;
+            if(decimalSeparator == ".")
+            {
+                return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+\.\d+E(\+|-)\d+$|^-{0,1}\d+\.\d+$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
+            }
+            else 
+            {
+                return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+,\d+E(\+|-)\d+$|^-{0,1}\d+,\d+$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
+            }
         }
         public static bool IsString(string Token)
         {
