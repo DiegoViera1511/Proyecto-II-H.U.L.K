@@ -18,7 +18,7 @@ namespace HULK
         public static int index = 0 ;
 
         public static List<string> Key_Words  = new List<string>()
-        {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" ,"sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E" };
+        {"print" , "let " , "in", "function" , "if" , "else" , "true" , "false" ,"sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E" , "NaN"};
        
 
         #region Methods 
@@ -67,11 +67,11 @@ namespace HULK
         {
             if(decimalSeparator == ".")
             {
-                return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+\.\d+E(\+|-)\d+$|^-{0,1}\d+\.\d+$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
+                return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+\.\d+E(\+|-)\d+$|^-{0,1}\d+\.\d+$|^NaN$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
             }
             else 
             {
-                return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+,\d+E(\+|-)\d+$|^-{0,1}\d+,\d+$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
+                return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+,\d+E(\+|-)\d+$|^-{0,1}\d+,\d+$|^NaN$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
             }
         }
         public static bool IsString(string Token)
