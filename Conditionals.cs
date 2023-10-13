@@ -12,6 +12,10 @@ namespace HULK
 
                 Expression booleanExpression = new BooleanOperator();
                 booleanExpression.Evaluate();
+                if(!Lexer.IsBoolean(booleanExpression.value))
+                {
+                    throw new ConditionalErrors(Lexer.TokenType(booleanExpression.value)) ;
+                }
 
                 if( ActualToken() == ")" )
                 {
