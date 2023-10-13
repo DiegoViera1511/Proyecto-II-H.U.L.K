@@ -12,12 +12,16 @@ namespace HULK
 
                 Expression booleanExpression = new BooleanOperator();
                 booleanExpression.Evaluate();
+                if(!booleanExpression.Equals(typeof(bool)))
+                {
+                    throw new ConditionalErrors(Lexer.TokenType(booleanExpression));
+                }
 
                 if( ActualToken() == ")" )
                 {
                     Next();
             
-                    if(booleanExpression.value == "true")
+                    if((bool)booleanExpression.value)
                     {
 
                         Expression trueExp = new BooleanOperator();
@@ -34,7 +38,7 @@ namespace HULK
                         }
                         else throw new SyntaxError("Missing ' else ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
                     }
-                    else if(booleanExpression.value == "false")
+                    else if(!(bool)booleanExpression.value)
                     {
                         while(Lexer.index < Lexer.Tokens.Count - 1  && ActualToken() != "else" ) 
                         {

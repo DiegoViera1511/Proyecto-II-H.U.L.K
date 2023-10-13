@@ -194,6 +194,22 @@ namespace HULK
         }
     }
 
+    class ConditionalErrors : SemanticError
+    {
+         public string badToken ;
+        public ConditionalErrors(string badToken)
+        {
+            ProblemType = "ifArgumentTypeError";
+            this.badToken = badToken ;
+        }
+        public override void PrintError()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"! SEMANTIC ERROR: ' if ' expression receives boolean not {badToken}");
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+    }
+
     #endregion
 
     class DefaultError : HulkErrors

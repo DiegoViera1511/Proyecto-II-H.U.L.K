@@ -10,7 +10,7 @@ namespace HULK
     #region Abstract classes
     abstract class Expression
     {
-        public string value ;
+        public Object value ;
         static public void Next()
         {
             Lexer.index++;
@@ -56,18 +56,18 @@ namespace HULK
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
-                value = ActualToken();
+                value = Convert.ToDouble(ActualToken());
                 Next();
             }
             else if(Lexer.index < Lexer.Tokens.Count && Function.functionsId.ContainsKey(ActualToken())) // function variable 
             {
-                string s = Function.functionsId[ActualToken()];
+                var s = Function.functionsId[ActualToken()];
                 Next();
                 value = s ;
             }
             else if (Lexer.index < Lexer.Tokens.Count && Let_in.idStore.ContainsKey(ActualToken())) // let-in variable
             {
-                string s = Let_in.idStore[ActualToken()];
+                var s = Let_in.idStore[ActualToken()];
                 Next();
                 value = s ;
             }
@@ -80,7 +80,7 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 num.Evaluate();
                 
-                if(Lexer.IsNumber(num.value))
+                if(num.value.Equals(typeof(double)))
                 {
                     value = Convert.ToString(-1 * Convert.ToDouble(num.value));
                 }
