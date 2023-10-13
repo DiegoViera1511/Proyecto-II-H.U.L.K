@@ -30,8 +30,6 @@ namespace HULK
 
                 //tester
                 //string input = "print(\"hola\" + 5)"; 
-
-                //Guardar el token en una variable y luego si entro al error ver si está en functon ids
         
                 if(input == "stop hulk")
                 {
