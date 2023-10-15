@@ -23,13 +23,13 @@ namespace HULK
 
                 string? input = Console.ReadLine();
 
-                if(input == null)
-                {
-                    continue ;
-                }
+                // if(input == null)
+                // {
+                //     continue ;
+                // }
 
                 //tester
-                //string input = "print(\"hola\" + 5)"; 
+                //string input = "print ( 5 * 5 );"; 
 
                 //Guardar el token en una variable y luego si entro al error ver si está en functon ids
         
@@ -52,7 +52,7 @@ namespace HULK
                     }
                     else
                     {
-                        foreach(string Prints in Lexer.ConsolePrints)
+                        foreach(object Prints in Lexer.ConsolePrints)
                         {
                             Console.WriteLine(Prints);
                         }

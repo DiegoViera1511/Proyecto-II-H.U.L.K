@@ -103,10 +103,10 @@ namespace HULK
     {
         private string functionName ;
         public List<string> argumentsId = new List<string>();
-        public List<string> argumentsValue = new List<string>();
+        public List<object> argumentsValue = new List<object>();
         public List<string> functionExpression = new List<string>();
-        public static Dictionary<string , string > functionsId = new Dictionary<string, string>();
-
+        public static Dictionary<string , object > functionsId = new Dictionary<string, object>();
+        public Type? functionType ;
         public Function(List<string> argumentsId , List<string> functionExpression , string functionName)
         {
             this.argumentsId = argumentsId ;
@@ -115,7 +115,7 @@ namespace HULK
         }
         public override void Evaluate()
         {
-            if(FunctionDeclaration.functionStack[functionName] > 1000)
+            if(FunctionDeclaration.functionStack[functionName] > 700)
             {   
                 throw new DefaultError("StackOverflow" , functionName );
             }
@@ -129,7 +129,7 @@ namespace HULK
 
                 argumentsValue.Clear();
 
-                Dictionary<string , string> Original_values = new Dictionary<string, string>();
+                Dictionary<string , object> Original_values = new Dictionary<string, object>();
                 while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                 {
                     parameter.Evaluate();
@@ -201,16 +201,25 @@ namespace HULK
                 if(ActualToken() == ")")
                 {
                     value = FE.value ;
+                    if(functionType == null)
+                    {
+                        functionType = value.GetType();
+                    }
                     Next();
                     argumentsValue.Clear();
                     FunctionDeclaration.functionStack[functionName]--;
                 }
                 else 
                 {
-                    throw new SyntaxError("Missing ' ) ' " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
+                    throw new SyntaxError("Missing ' ) ' " , "Missing Token" , "Function call" , Lexer.Tokens[Lexer.index - 1]);
                 }
             }
+            else
+            {
+                throw new SyntaxError("Missing ' ( ' " , "Missing Token" , "Function call" , Lexer.Tokens[Lexer.index - 1]);
+            }
         }
+        
     }
 
     class Print : Expression
@@ -234,14 +243,7 @@ namespace HULK
                 if(ActualToken() == ")")
                 {
                     Next();
-                    if(Lexer.IsString(printExp.value))
-                    {
-                        Lexer.ConsolePrints.Add(printExp.value.Substring( 1 , printExp.value.Length - 2));
-                    }
-                    else 
-                    {
-                        Lexer.ConsolePrints.Add(printExp.value);
-                    }
+                    Lexer.ConsolePrints.Add(printExp.value);
                     value = printExp.value;
                 }
                 else

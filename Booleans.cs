@@ -58,7 +58,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.IsBoolean(left.value) && Lexer.IsBoolean(right.value))
+                    if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(left.value) == "boolean")
                     {
                         left.value = (bool)left.value && (bool)right.value ;
                     }
@@ -75,7 +75,7 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.IsBoolean(left.value) && Lexer.IsBoolean(right.value))
+                    if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(left.value) == "boolean")
                     {
                         left.value = (bool)left.value || (bool)right.value;
                     }
@@ -158,7 +158,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = (double)left.value > (double)right.value;
                     }
@@ -177,7 +177,7 @@ namespace HULK
 
                     right.Evaluate();
                    
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = (double)left.value < (double)right.value;
                     }
@@ -196,7 +196,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = (double)left.value <= (double)right.value;
                     }
@@ -215,7 +215,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
                         left.value = (double)left.value >= (double)right.value;
                     }
@@ -236,7 +236,7 @@ namespace HULK
                     
                     if(Lexer.TokenType(left.value) == Lexer.TokenType(right.value))
                     {
-                        left.value = left.value == right.value;
+                        left.value = left.value.Equals(right.value);
                     }
                     else
                     {
@@ -267,7 +267,7 @@ namespace HULK
                     
                     if(Lexer.TokenType(left.value) == Lexer.TokenType(right.value))
                     {
-                        left.value = left.value != right.value ;
+                        left.value = ! left.value.Equals(right.value); 
                     }
                     else
                     {

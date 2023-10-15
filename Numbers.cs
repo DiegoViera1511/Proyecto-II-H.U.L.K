@@ -46,9 +46,9 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
 
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = Sum(left.value , right.value);
+                        left.value = (double)left.value + (double)right.value;
                     }
                     else 
                     {
@@ -63,9 +63,9 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
 
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = Subtract(left.value , right.value);
+                        left.value = (double)left.value - (double)right.value;
                     }
                     else 
                     {
@@ -79,26 +79,8 @@ namespace HULK
 
                     Expression literal = new BooleanOperator();
                     literal.Evaluate();
-                    if(Lexer.IsString(left.value))
-                    {
-                        if(Lexer.IsString(literal.value))
-                        {
-                            left.value = left.value.Substring( 0 , left.value.Length - 1);
-                            literal.value = literal.value.Substring( 1 , literal.value.Length - 1 );
-                        }
-                        else 
-                        {
-                            left.value = left.value.Substring( 1 , left.value.Length - 2) ;
-                        }
-                    }
-                    else if (Lexer.IsString(literal.value))
-                    {
-                        literal.value = literal.value.Substring( 1 , literal.value.Length - 2 );
-                    }
-
-                    value = left.value + Convert.ToString(literal.value);
-                    return ;
-                    
+                    string result = $"{left.value}{literal.value}";
+                    left.value = result ;
                 }
                 else if (NextTokens.Contains(ActualToken()))
                 {
@@ -159,9 +141,9 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = Multiply(left.value , right.value);
+                        left.value = (double)left.value * (double)right.value;
                     }
                     else 
                     {
@@ -175,14 +157,14 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate(); 
                     
-                    if(right.value == "0")
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        throw new DefaultError("DivisionByZero");
-                    }
+                        if((double)right.value == 0)
+                        {
+                            throw new DefaultError("DivisionByZero");
+                        }
 
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
-                    {
-                        left.value = Division(left.value , right.value);
+                        left.value = (double)left.value / (double)right.value;
                     }
                     else 
                     {
@@ -196,9 +178,9 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate(); 
 
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = Modulo(left.value , right.value);
+                        left.value = (double)left.value % (double)right.value;
                     }
                     else 
                     {
@@ -252,9 +234,9 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.IsNumber(left.value) && Lexer.IsNumber(right.value))
+                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = Pow(left.value , right.value);
+                        left.value = Math.Pow((double)left.value , (double)right.value);
                     }
                     else 
                     {

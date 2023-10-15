@@ -4,7 +4,7 @@ namespace HULK
 {
     class Let_in : Expression
     {
-        public static Dictionary< string , string> idStore = new Dictionary<string, string>();
+        public static Dictionary< string , object> idStore = new Dictionary<string, object>();
 
         public override void Evaluate()
         {
@@ -31,7 +31,7 @@ namespace HULK
                         Expression Value = new BooleanOperator();
                         Value.Evaluate();
                             
-                        string idValue = Value.value;
+                        object idValue = Value.value;
 
                         if(idStore.ContainsKey(id))
                         {
@@ -63,7 +63,7 @@ namespace HULK
                     Next();
                     break;
                 }
-                else if (Regex.IsMatch(ActualToken() , @"^[a-zA-Z]+\w*$"))
+                else if (Lexer.IsID(ActualToken()))
                 {
                     throw new SyntaxError("Missing ' , '" , "Missing Token" , "let_in" , Lexer.Tokens[Lexer.index - 1]);
                 }
@@ -84,12 +84,7 @@ namespace HULK
             Expression letInExp = new BooleanOperator();
             letInExp.Evaluate();
 
-            string result = letInExp.value ;
-           
-            if(result == null)
-            {
-                return;
-            }
+            object result = letInExp.value ;
 
             if(parenthesis)
             {

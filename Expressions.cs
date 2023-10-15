@@ -10,7 +10,9 @@ namespace HULK
     #region Abstract classes
     abstract class Expression
     {
-        public Object value ;
+        public object value ;
+
+        public Type? type ;
         static public void Next()
         {
             Lexer.index++;
@@ -21,6 +23,46 @@ namespace HULK
         }
         public abstract void Evaluate();
     }
+
+    #region Variables
+    abstract class Variable : Object
+    {
+        public string? type ;
+    }
+
+    class VarNumber : Variable
+    {
+        object value ;
+        public VarNumber(string num)
+        {
+            value = Convert.ToDouble(num);
+            type = "number" ;
+        }
+    }
+
+    class VarString : Variable
+    {
+        object value ;
+
+        public VarString(string str)
+        {
+            value = str.Substring( 1 , str.Length - 2);
+            type = "string";
+        }
+    }
+
+    class VarBoolean : Variable
+    {
+        object value ;
+
+        public VarBoolean(string bolean)
+        {
+            value = Convert.ToBoolean(bolean);
+            type = "boolean" ;
+        }
+    }
+
+    #endregion 
     abstract class Binary_Exrpessions : Expression
     {
         public Expression left ;
@@ -56,20 +98,21 @@ namespace HULK
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
-                value = Convert.ToDouble(ActualToken());
+                double num = Convert.ToDouble(ActualToken());
+                value = num ;
                 Next();
             }
             else if(Lexer.index < Lexer.Tokens.Count && Function.functionsId.ContainsKey(ActualToken())) // function variable 
             {
-                var s = Function.functionsId[ActualToken()];
+                var x = Function.functionsId[ActualToken()];
                 Next();
-                value = s ;
+                value = x ;
             }
             else if (Lexer.index < Lexer.Tokens.Count && Let_in.idStore.ContainsKey(ActualToken())) // let-in variable
             {
-                var s = Let_in.idStore[ActualToken()];
+                var x = Let_in.idStore[ActualToken()];
                 Next();
-                value = s ;
+                value = x ;
             }
             else if(ActualToken() == "-") // negative numbers
             {
@@ -90,7 +133,7 @@ namespace HULK
                     {
                         throw new ArgumentTypeError( "number" , Lexer.TokenType(num.value) );
                     }
-                    throw new IncorrectOperator(num.value , "Operator ' - '" , "number");
+                    throw new IncorrectOperator(Lexer.TokenType(num.value) , "Operator ' - '" , "number");
                 }
             }
             else if(ActualToken() == "!")
@@ -103,13 +146,13 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 boolean.Evaluate();
                 
-                if(boolean.value == "true")
+                if(Lexer.TokenType(boolean.value) == "boolean" && (bool)boolean.value)
                 {
-                    value = "false" ;
+                    value = true ;
                 }
-                else if(boolean.value == "false")
+                else if(Lexer.TokenType(boolean.value) == "boolean" && !(bool)boolean.value)
                 {
-                    value = "true" ;
+                    value = false ;
                 }
                 else 
                 {
@@ -117,7 +160,7 @@ namespace HULK
                     {
                         throw new ArgumentTypeError( "boolean" , Lexer.TokenType(boolean.value) );
                     }
-                    throw new IncorrectOperator(boolean.value , "Operator ' ! '" , "boolean");
+                    throw new IncorrectOperator(Lexer.TokenType(boolean.value) , "Operator ' ! '" , "boolean");
                 }
 
             }
@@ -126,11 +169,11 @@ namespace HULK
                 Next();
                 Expression result = new BooleanOperator();
                 result.Evaluate();
-                string s = result.value;
+                var x = result.value;
                 if(Lexer.index < Lexer.Tokens.Count && ActualToken() == ")")
                 {
                     Next();
-                    value = s;
+                    value = x;
                 }
                 else
                 {
@@ -140,7 +183,7 @@ namespace HULK
             }
             else if(Lexer.index < Lexer.Tokens.Count && Lexer.IsString(ActualToken()) ) // strings
             {
-                value = ActualToken();
+                value = ActualToken().Substring( 1 , ActualToken().Length - 2);
                 Next();
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "let ") // let-in expressions
@@ -175,12 +218,12 @@ namespace HULK
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "true") // boolean true
             {
                 Next();
-                value = "true";
+                value = true;
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "false") // boolean false
             {
                 Next();
-                value = "false";
+                value = false;
             }
             else if (ActualToken() == "if") // if-else expression
             {
@@ -249,11 +292,11 @@ namespace HULK
                 Next();
                 FunctionDeclaration.functionStore[Lexer.Tokens[i]].Evaluate() ;
                 value = FunctionDeclaration.functionStore[Lexer.Tokens[i]].value ;
-                if(value != "" && value != null)
+                if(value != null)
                 {
-                    if(Lexer.IsString(value))
+                    if(Lexer.TokenType(value) == "string")
                     {
-                        Lexer.ConsolePrints.Add(value.Substring( 1 , value.Length - 2));// string value 
+                        Lexer.ConsolePrints.Add((string)value);// string value 
                     }
                     else 
                     {

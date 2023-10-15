@@ -6,7 +6,7 @@ namespace HULK
     {
         public string mathExp ;
         public static List<string> MathFunctions = new List<string>(){ "sin" , "cos" , "sqrt" , "rand" , "exp" , "log" , "PI" , "E"};
-        List<string> arguments = new List<string>();
+        List<object> arguments = new List<object>();
         public MathExpressions(string mathExp)
         {
             this.mathExp = mathExp;
@@ -82,10 +82,10 @@ namespace HULK
         {
             if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(arguments[0]))
+                if(Lexer.TokenType(arguments[0]) == "number")
                 {
-                    double result = Math.Sqrt(Convert.ToDouble(arguments[0]));
-                    value = Convert.ToString(result);
+                    double result = Math.Sqrt((double)arguments[0]);
+                    value = result;
                 }
                 else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "sqrt" );
             }
@@ -95,10 +95,10 @@ namespace HULK
         {
             if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(arguments[0]))
+                if(Lexer.TokenType(arguments[0]) == "number")
                 {
-                    double result = Math.Sin(Convert.ToDouble(arguments[0]));
-                    value = Convert.ToString(result);
+                    double result = Math.Sin((double)arguments[0]);
+                    value = result;
                 }
                 else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "sin" );
             }
@@ -108,10 +108,10 @@ namespace HULK
         {
            if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(arguments[0]))
+                if(Lexer.TokenType(arguments[0]) == "number")
                 {
-                    double result = Math.Cos(Convert.ToDouble(arguments[0]));
-                    value = Convert.ToString(result);
+                    double result = Math.Cos((double)arguments[0]);
+                    value = result;
                 }
                 else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "cos" );
             }
@@ -122,9 +122,9 @@ namespace HULK
         {
             if(arguments.Count == 1)
             {
-                if(Lexer.IsNumber(arguments[0]))
+                if(Lexer.TokenType(arguments[0]) == "number")
                 {
-                    double result = Math.Cos(Convert.ToDouble(arguments[0]));
+                    double result = Math.Cos((double)arguments[0]);
                     value = Convert.ToString(result);
                 }
                 else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "exp" );
@@ -135,14 +135,14 @@ namespace HULK
         {
             if(arguments.Count == 2)
             {
-                if(Lexer.IsNumber(arguments[0]))
+                if(Lexer.TokenType(arguments[0]) == "number")
                 {
-                    double logBase = Convert.ToDouble(arguments[0]);
-                    if(Lexer.IsNumber(arguments[1]))
+                    double logBase = (double)arguments[0];
+                    if(Lexer.TokenType(arguments[1]) == "number")
                     {
-                        double n = Convert.ToDouble(arguments[1]);
+                        double n = (double)arguments[1];
                         double result = Math.Log(n , logBase);
-                        value = Convert.ToString(result) ;
+                        value = result ;
                     }
                     else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[1]) , "log" );
                 }
@@ -156,18 +156,18 @@ namespace HULK
             {
                 Random r = new Random() ;
                 double result = r.NextDouble();
-                value = Convert.ToString(result);
+                value = result;
             }
             else throw new ArgumentsCountError("rand" , 0 , arguments.Count );
         }
         public void PI()
         {
-            value = Convert.ToString(Math.PI) ;
+            value = Math.PI ;
         }
 
         public void E()
         {
-            value = Convert.ToString(Math.E) ;
+            value = Math.E ;
         }
         #endregion 
         

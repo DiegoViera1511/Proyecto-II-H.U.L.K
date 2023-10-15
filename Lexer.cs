@@ -10,7 +10,7 @@ namespace HULK
     {
         public static List<string> Tokens = new List<string>();
 
-        public static List<string> ConsolePrints = new List<string>();
+        public static List<object> ConsolePrints = new List<object>();
 
         static private NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
 
@@ -86,23 +86,19 @@ namespace HULK
         {
             return Regex.IsMatch( Token , @"^[a-zA-Z]+\w*$") ? true : false ;
         }
-        public static string TokenType(string Token)
+        public static string TokenType(object Token)
         {
-            if(IsNumber(Token))
+            if(Convert.ToString(Token.GetType()) == "System.Double")
             {
                 return "number" ;
             }
-            else if(IsString(Token))
+            else if(Convert.ToString(Token.GetType()) == "System.String")
             {
                 return "string" ;
             }
-            else if(IsBoolean(Token))
+            else if(Convert.ToString(Token.GetType()) == "System.Boolean")
             {
                 return "boolean" ;
-            }
-            else if (IsID(Token))
-            {
-                return "ID" ;
             }
             else 
             {
