@@ -210,6 +210,10 @@ namespace HULK
                     throw new SyntaxError("Missing ' ) ' " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
                 }
             }
+            else 
+            {
+                throw new SyntaxError("Missing ' ( ' " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
+            }
         }
     }
 
