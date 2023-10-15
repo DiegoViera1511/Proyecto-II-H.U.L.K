@@ -23,45 +23,6 @@ namespace HULK
         public abstract void Evaluate();
     }
 
-    #region Variables
-    abstract class Variable : Object
-    {
-        public string? type ;
-    }
-
-    class VarNumber : Variable
-    {
-        object value ;
-        public VarNumber(string num)
-        {
-            value = Convert.ToDouble(num);
-            type = "number" ;
-        }
-    }
-
-    class VarString : Variable
-    {
-        object value ;
-
-        public VarString(string str)
-        {
-            value = str.Substring( 1 , str.Length - 2);
-            type = "string";
-        }
-    }
-
-    class VarBoolean : Variable
-    {
-        object value ;
-
-        public VarBoolean(string bolean)
-        {
-            value = Convert.ToBoolean(bolean);
-            type = "boolean" ;
-        }
-    }
-
-    #endregion 
     abstract class Binary_Exrpessions : Expression
     {
         public Expression left ;
