@@ -174,7 +174,7 @@ namespace HULK
                 }
                 else if(ActualToken() == "%")
                 {   
-                    Next();
+                    Next() ;
                     iDRight = ActualToken() ;
                     right.Evaluate(); 
 

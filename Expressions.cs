@@ -12,7 +12,6 @@ namespace HULK
     {
         public object value ;
 
-        public Type? type ;
         static public void Next()
         {
             Lexer.index++;
@@ -98,8 +97,7 @@ namespace HULK
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
-                double num = Convert.ToDouble(ActualToken());
-                value = num ;
+                value = Convert.ToDouble(ActualToken());
                 Next();
             }
             else if(Lexer.index < Lexer.Tokens.Count && Function.functionsId.ContainsKey(ActualToken())) // function variable 
@@ -123,9 +121,9 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 num.Evaluate();
                 
-                if(num.value.Equals(typeof(double)))
+                if(Convert.ToString(num.value.GetType()) == "System.Double")
                 {
-                    value = Convert.ToString(-1 * Convert.ToDouble(num.value));
+                    value = -1 * (double)num.value ;
                 }
                 else 
                 {
@@ -148,11 +146,11 @@ namespace HULK
                 
                 if(Lexer.TokenType(boolean.value) == "boolean" && (bool)boolean.value)
                 {
-                    value = true ;
+                    value = "false" ;
                 }
                 else if(Lexer.TokenType(boolean.value) == "boolean" && !(bool)boolean.value)
                 {
-                    value = false ;
+                    value = "true" ;
                 }
                 else 
                 {
@@ -218,12 +216,12 @@ namespace HULK
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "true") // boolean true
             {
                 Next();
-                value = true;
+                value = "true";
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "false") // boolean false
             {
                 Next();
-                value = false;
+                value = "false";
             }
             else if (ActualToken() == "if") // if-else expression
             {
@@ -292,17 +290,9 @@ namespace HULK
                 Next();
                 FunctionDeclaration.functionStore[Lexer.Tokens[i]].Evaluate() ;
                 value = FunctionDeclaration.functionStore[Lexer.Tokens[i]].value ;
-                if(value != null)
-                {
-                    if(Lexer.TokenType(value) == "string")
-                    {
-                        Lexer.ConsolePrints.Add((string)value);// string value 
-                    }
-                    else 
-                    {
-                        Lexer.ConsolePrints.Add(value);
-                    }
-                }
+                
+                Lexer.ConsolePrints.Add(value);
+              
             }
             else //Atom expression
             {

@@ -23,10 +23,10 @@ namespace HULK
 
                 string? input = Console.ReadLine();
 
-                // if(input == null)
-                // {
-                //     continue ;
-                // }
+                if(input == null)
+                {
+                    continue ;
+                }
 
                 //tester
                 //string input = "print ( 5 * 5 );"; 
