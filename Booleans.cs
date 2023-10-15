@@ -16,31 +16,6 @@ namespace HULK
             this.right = new Comparison();
         }
         
-        #region Methods
-        private static string And(string a , string b)
-        {
-            bool left = a == "true" ? true : false ;
-            bool right = b == "true" ? true : false ;
-
-            if(left && right)
-            {
-                return "true" ;
-            }
-            else return "false" ;
-        }
-        private static string Or(string a , string b)
-        {
-            bool left = a == "true" ? true : false ;
-            bool right = b == "true" ? true : false ;
-
-            if(left || right)
-            {
-                return "true" ;
-            }
-            else return "false" ;
-        }
-        #endregion
-
         public override void Evaluate()
         {
             
@@ -109,38 +84,6 @@ namespace HULK
             right = new SumExpression();
         }
 
-        #region Methods
-        private static string GreaterThan(string a , string b)
-        {
-            return double.Parse(a) > double.Parse(b) ? "true" : "false";
-        }
-
-        private static string LessThan(string a , string b)
-        {
-            return double.Parse(a) < double.Parse(b) ? "true" : "false";
-        }
-
-        private static string GreaterThanOrEqual(string a , string b)
-        {
-            return double.Parse(a) >= double.Parse(b) ? "true" : "false";
-        }
-
-        private static string LessThanOrEqual(string a , string b)
-        {
-            return double.Parse(a) <= double.Parse(b) ? "true" : "false";
-        }
-
-        private static string Equals(string a , string b)
-        {
-            return a == b ? "true" : "false";
-        }
-
-        private static string Inequality(string a , string b)
-        {
-            return a != b ? "true" : "false";
-        }
-
-        #endregion
         public override void Evaluate()
         {   
             

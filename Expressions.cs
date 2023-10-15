@@ -11,7 +11,6 @@ namespace HULK
     abstract class Expression
     {
         public object value ;
-
         static public void Next()
         {
             Lexer.index++;
@@ -177,12 +176,12 @@ namespace HULK
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "true") // boolean true
             {
                 Next();
-                value = "true";
+                value = true;
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "false") // boolean false
             {
                 Next();
-                value = "false";
+                value = false;
             }
             else if (ActualToken() == "if") // if-else expression
             {

@@ -55,7 +55,7 @@ namespace HULK
             {
                 if( GoodTokens.IsMatch (m.Value) )
                 {
-                    Tokens.Add(m.Value) ;
+                    Tokens.Add(m.Value);
                 }
                 else 
                 {

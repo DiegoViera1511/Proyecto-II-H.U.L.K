@@ -106,7 +106,7 @@ namespace HULK
         public List<object> argumentsValue = new List<object>();
         public List<string> functionExpression = new List<string>();
         public static Dictionary<string , object > functionsId = new Dictionary<string, object>();
-        public Type? functionType ;
+        public string? functionType ;
         public Function(List<string> argumentsId , List<string> functionExpression , string functionName)
         {
             this.argumentsId = argumentsId ;
@@ -203,7 +203,7 @@ namespace HULK
                     value = FE.value ;
                     if(functionType == null)
                     {
-                        functionType = value.GetType();
+                        functionType = Lexer.TokenType(value);
                     }
                     Next();
                     argumentsValue.Clear();

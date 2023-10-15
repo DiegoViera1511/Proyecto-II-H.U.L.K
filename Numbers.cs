@@ -12,23 +12,6 @@ namespace HULK
 
             this.right = new MultiplyExpression();
         }
-        
-
-        #region Methods
-        private static string Sum( string a , string b)
-        {
-            double result = double.Parse(a) + double.Parse(b);
-
-            return Convert.ToString(result);  
-        }
-        private static string Subtract( string a , string b)
-        {
-            double result = double.Parse(a) - double.Parse(b);
-
-            return Convert.ToString(result);  
-        }
-
-        #endregion
 
         public override void Evaluate()
         {
@@ -105,27 +88,6 @@ namespace HULK
             this.right = new PowerExpression();
         }
 
-        #region Methods
-        private static string Multiply( string a , string b)
-        {
-            double result = double.Parse(a) * double.Parse(b);
-
-            return Convert.ToString(result);  
-        }
-        private static string Division( string a , string b)
-        {
-            double result = double.Parse(a) / double.Parse(b);
-
-            return Convert.ToString(result);  
-        }
-        private static string Modulo( string a , string b )
-        {
-            double result = double.Parse(a) % double.Parse(b);
-
-            return Convert.ToString(result);  
-        }
-
-        #endregion
         public override void Evaluate()
         {
             
@@ -212,12 +174,6 @@ namespace HULK
             this.left = new Atom();
 
             this.right = new Atom();
-        }
-
-        private static string Pow( string a , string b)
-        {
-            double result = Math.Pow(double.Parse(a) , double.Parse(b)) ;
-            return Convert.ToString(result);  
         }
 
         public override void Evaluate()
