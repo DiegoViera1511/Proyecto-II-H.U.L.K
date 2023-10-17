@@ -89,23 +89,6 @@ namespace HULK
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
-                // else if(ActualToken() == "-")
-                // {
-                //     Next();
-
-                //     iDRight = ActualToken() ;
-                //     right.Evaluate();
-
-                //     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
-                //     {
-                //         left.value = (double)left.value - (double)right.value;
-                //     }
-                //     else 
-                //     {
-                //         CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
-                //         throw new IncorrectBinaryExpression("Operator ' - '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                //     }
-                // }
                 else if (NextTokens.Contains(ActualToken()))
                 {
                     value = left.value;
@@ -115,15 +98,6 @@ namespace HULK
                 {
                     throw new UnExpectedToken(ActualToken());
                 }
-                // else if(ActualToken() == "@")
-                // {
-                //     Next();
-
-                //     Expression literal = new BooleanOperator();
-                //     literal.Evaluate();
-                //     string result = $"{left.value}{literal.value}";
-                //     left.value = result ;
-                // }
             }
         }
     }
@@ -219,44 +193,6 @@ namespace HULK
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
-                // else if(ActualToken() == "/")
-                // {
-                //     Next();
-                //     iDRight = ActualToken() ;
-                //     right.Evaluate(); 
-                    
-                //     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
-                //     {
-                //         if((double)right.value == 0)
-                //         {
-                //             throw new DefaultError("DivisionByZero");
-                //         }
-
-                //         left.value = (double)left.value / (double)right.value;
-                //     }
-                //     else 
-                //     {
-                //         CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
-                //         throw new IncorrectBinaryExpression("Operator ' / '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                //     }
-                // }
-                // else if(ActualToken() == "%")
-                // {   
-                //     Next() ;
-                //     iDRight = ActualToken() ;
-                //     right.Evaluate(); 
-
-                //     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
-                //     {
-                //         left.value = (double)left.value % (double)right.value;
-                //     }
-                //     else 
-                //     {
-                //         CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
-                //         throw new IncorrectBinaryExpression("Operator ' % '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                //     }
-                    
-                // }
                 else if(NextTokens.Contains(ActualToken()))
                 {
                     //Siguientes
