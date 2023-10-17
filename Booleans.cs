@@ -30,7 +30,7 @@ namespace HULK
         }
         public override void Analize()
         {
-            iDLeft = ActualToken() ;
+            iDLeft = ActualToken() ;// guardar token que representa a left ej x = 5 
 
             left.Analize();
 
@@ -39,13 +39,14 @@ namespace HULK
                 if(ActualToken() == "&" || ActualToken() == "|")
                 {
                     string operatorToken = ActualToken();
-                    if(left.type == "inference") left.type = "boolean";
+
+                    if(left.type == "inference") left.type = "boolean";// si el type es inference asígnale el valor predeterminado del operador
 
                     Next();
 
                     iDRight = ActualToken() ;
                     right.Analize();
-                    if(right.type == "inference") right.type = "boolean";
+                    if(right.type == "inference") right.type = "boolean";// si el type es inference asígnale el valor predeterminado del operador
 
                     
                     if(!(left.type == "boolean" && right.type == "boolean"))

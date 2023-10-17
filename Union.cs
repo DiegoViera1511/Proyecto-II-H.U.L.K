@@ -13,22 +13,22 @@ namespace HULK
             this.right = new BooleanOperator();
         }
 
-        public override object Operation(object left , string operatorToken , object right)
+        public override object Operation(object left , string operatorToken , object right)//Operación de @
         {
             return $"{left}{right}";
         }
         public override void Analize()
         {
             iDLeft = ActualToken() ;
-            left.Analize();
+            left.Analize(); // analiza la izquierda 
             
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(ActualToken() == "@")
                 {
                     Next();
-                    right.Analize() ;
-                    type = "string" ;
+                    right.Analize() ;//analiza la derecha
+                    type = "string" ;// @ devuelve un valor de type string
                 }
                 else if (NextTokens.Contains(ActualToken()))
                 {

@@ -28,11 +28,9 @@ namespace HULK
                     continue ;
                 }
 
-                //tester
+                //tester debugg
                 //string input = "print ( 5 )"; 
 
-                //Guardar el token en una variable y luego si entro al error ver si está en functon ids
-        
                 if(input == "stop hulk")
                 {
                     break;
@@ -44,9 +42,9 @@ namespace HULK
 
                     Expression result = new HulkExpression() ;
 
-                    result.Analize();
-                    Lexer.index = 0;
-                    result.Evaluate();
+                    result.Analize();// analiza la expresión primero antes de evaluar , verificando types
+                    Lexer.index = 0; // reinicio el index
+                    result.Evaluate(); // evalua la expresión
 
                     if((Lexer.index >= Lexer.Tokens.Count || Expression.ActualToken() != ";") && Lexer.Tokens.Count != 0)
                     {
