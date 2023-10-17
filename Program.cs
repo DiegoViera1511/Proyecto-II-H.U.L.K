@@ -29,7 +29,7 @@ namespace HULK
                 }
 
                 //tester
-                //string input = "print ( 5 * 5 );"; 
+                //string input = "print ( 5 )"; 
 
                 //Guardar el token en una variable y luego si entro al error ver si está en functon ids
         
@@ -44,6 +44,8 @@ namespace HULK
 
                     Expression result = new HulkExpression() ;
 
+                    result.Analize();
+                    Lexer.index = 0;
                     result.Evaluate();
 
                     if((Lexer.index >= Lexer.Tokens.Count || Expression.ActualToken() != ";") && Lexer.Tokens.Count != 0)

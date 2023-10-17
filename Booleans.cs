@@ -1,6 +1,7 @@
 using System;
 using System.Data.Common;
 using System.Linq.Expressions;
+using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
@@ -8,14 +9,64 @@ namespace HULK
 {
     class BooleanOperator : Binary_Exrpessions //Logic boolean operators
     {
-        List<string> NextTokens = new List<string>(){")",";",",","in","else"};//Siguientes
+        List<string> NextTokens = new List<string>(){")",";",",","in","else","@"};//Siguientes
         public BooleanOperator()
         {
             this.left = new Comparison();
 
             this.right = new Comparison();
         }
-        
+
+        public override object Operation(object left , string operatorToken , object right)
+        {
+            if(operatorToken == "&")
+            {
+                return (bool)left && (bool)right ;
+            }
+            else // |
+            {
+                return (bool)left || (bool)right ;
+            }
+        }
+        public override void Analize()
+        {
+            iDLeft = ActualToken() ;
+
+            left.Analize();
+
+            while(Lexer.index < Lexer.Tokens.Count)
+            {
+                if(ActualToken() == "&" || ActualToken() == "|")
+                {
+                    string operatorToken = ActualToken();
+                    if(left.type == "inference") left.type = "boolean";
+
+                    Next();
+
+                    iDRight = ActualToken() ;
+                    right.Analize();
+                    if(right.type == "inference") right.type = "boolean";
+
+                    
+                    if(!(left.type == "boolean" && right.type == "boolean"))
+                    {
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "boolean");
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
+                    }
+                    else left.type = "boolean" ;
+                }
+                else if(NextTokens.Contains(ActualToken()))
+                {
+                    type = left.type;
+                    break;
+                }
+                else 
+                {
+                    throw new UnExpectedToken(ActualToken());
+                }
+            }
+        }
+
         public override void Evaluate()
         {
             
@@ -25,8 +76,9 @@ namespace HULK
 
             while(Lexer.index < Lexer.Tokens.Count)
             {
-                if(ActualToken() == "&")
+                if(ActualToken() == "&" || ActualToken() == "|" )
                 {
+                    string operatorToken = ActualToken(); 
                     Next();
 
                     iDRight = ActualToken() ;
@@ -35,30 +87,13 @@ namespace HULK
                     
                     if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(left.value) == "boolean")
                     {
-                        left.value = (bool)left.value && (bool)right.value ;
+                        left.value = Operation(left.value , operatorToken , right.value) ;
                     }
                     else 
                     {
                         CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "boolean");
         
-                        throw new IncorrectBinaryExpression("Operator ' & '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                    }
-                }
-                else if( ActualToken() == "|" )
-                {
-                    Next();
-                    iDRight = ActualToken() ;
-                    right.Evaluate();
-                    
-                    if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(left.value) == "boolean")
-                    {
-                        left.value = (bool)left.value || (bool)right.value;
-                    }
-                    else 
-                    {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "boolean");
-                        
-                        throw new IncorrectBinaryExpression("Operator ' | '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '", Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if(NextTokens.Contains(ActualToken()))
@@ -76,7 +111,7 @@ namespace HULK
 
     class Comparison : Binary_Exrpessions //Boolean comparison
     {
-        List<string> NextTokens = new List<string>(){")",";",",","in","else","&","|"};
+        List<string> NextTokens = new List<string>(){")",";",",","in","else","&","|","@"};
         public Comparison()
         {
             left = new SumExpression();
@@ -84,17 +119,108 @@ namespace HULK
             right = new SumExpression();
         }
 
+        public override void Analize()
+        {
+            string operatorToken ;
+            iDLeft = ActualToken();
+
+            left.Analize();
+
+            while(Lexer.index < Lexer.Tokens.Count)
+            {
+                if( ActualToken() == ">" || ActualToken() == "<" || ActualToken() == "<=" || ActualToken() == ">=" )
+                {
+                    operatorToken = ActualToken();
+                    if(left.type == "inference") left.type = "number";
+
+                    Next();
+
+                    iDRight = ActualToken() ;
+                    right.Analize();
+                    if(right.type == "inference") right.type = "number";
+                    
+                    if(!(left.type == "number" && right.type == "number"))
+                    {
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
+                    }
+                    else left.type = "boolean" ;
+                }
+                else if( ActualToken() == "=="  || ActualToken() == "!=" )
+                {
+                    operatorToken = ActualToken();
+
+                    Next();
+
+                    iDRight = ActualToken();
+                    right.Analize();
+
+                    if(left.type == "inference")
+                    {
+                        left.type = right.type ;
+                    }
+                    else if(right.type == "inference")
+                    {
+                        right.type = left.type ;
+                    }
+                    
+                    if(left.type != right.type)
+                    {
+                        if(Function.functionsId.ContainsKey(iDLeft))
+                        {
+                            throw new ArgumentTypeError(Lexer.TokenType(right.value) , Lexer.TokenType(left.value));   
+                        }
+                        else if(Function.functionsId.ContainsKey(iDRight))
+                        {
+                            throw new ArgumentTypeError(Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        }
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , left.type);
+                    }
+                    else left.type = "boolean" ;
+                }
+                else if (NextTokens.Contains(ActualToken()))
+                {
+                    type = left.type;
+                    break;
+                }
+                else 
+                {
+                    throw new UnExpectedToken(ActualToken());
+                }
+            } 
+        }
+
+        public  override object Operation(object left , string operatorToken , object right)
+        {
+            if(operatorToken == ">")
+            {
+                return (double)left > (double)right;
+            }
+            else if (operatorToken == "<")
+            {
+                return (double)left < (double)right;
+            }
+            else if (operatorToken == "<=")
+            {
+                return (double)left <= (double)right;
+            }
+            else // >=
+            {
+                return (double)left >= (double)right;
+            }
+        }
         public override void Evaluate()
         {   
-            
+            string operatorToken ;
             iDLeft = ActualToken();
 
             left.Evaluate();
 
             while(Lexer.index < Lexer.Tokens.Count)
             {
-                if( ActualToken() == ">" )
+                if(  ActualToken() == ">" || ActualToken() == "<" || ActualToken() == "<=" || ActualToken() == ">=" )
                 {
+                    operatorToken = ActualToken();
                     Next();
 
                     iDRight = ActualToken() ;
@@ -103,74 +229,18 @@ namespace HULK
                     
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = (double)left.value > (double)right.value;
+                        left.value = Operation(left.value , operatorToken , right.value) ;
                     }
                     else 
                     {
                         CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
                         
-                        throw new IncorrectBinaryExpression("Operator ' > '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '", Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
-                else if( ActualToken() == "<" )
+                else if( ActualToken() == "==" || ActualToken() == "!=" )
                 {
-                    Next();
-
-                   iDRight = ActualToken();
-
-                    right.Evaluate();
-                   
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
-                    {
-                        left.value = (double)left.value < (double)right.value;
-                    }
-                    else 
-                    {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
-                        
-                        throw new IncorrectBinaryExpression("Operator ' < '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                    }
-                }
-                else if( ActualToken() == "<=" )
-                {
-                    Next();
-
-                   iDRight = ActualToken() ;
-
-                    right.Evaluate();
-                    
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
-                    {
-                        left.value = (double)left.value <= (double)right.value;
-                    }
-                    else 
-                    {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
-                        //Si no hay problema de argumento lanza el error Binary expression
-                        throw new IncorrectBinaryExpression("Operator ' <= '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                    }
-                }
-                else if( ActualToken() == ">=" )
-                {
-                    Next();
-
-                    iDRight = ActualToken() ;
-
-                    right.Evaluate();
-                    
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
-                    {
-                        left.value = (double)left.value >= (double)right.value;
-                    }
-                    else 
-                    {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
-                        
-                        throw new IncorrectBinaryExpression("Operator ' >= '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                    }
-                }
-                else if( ActualToken() == "==" )
-                {
+                    operatorToken = ActualToken();
                     Next();
 
                     iDRight = ActualToken();
@@ -179,7 +249,14 @@ namespace HULK
                     
                     if(Lexer.TokenType(left.value) == Lexer.TokenType(right.value))
                     {
-                        left.value = left.value.Equals(right.value);
+                        if(operatorToken == "==")
+                        {
+                            left.value = left.value.Equals(right.value);
+                        }
+                        else //(!=)
+                        {
+                            left.value = ! left.value.Equals(right.value); 
+                        }
                     }
                     else
                     {
@@ -197,38 +274,7 @@ namespace HULK
                                 throw new ArgumentTypeError(Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                             }
                         }
-                        throw new IncorrectBinaryExpression("Operator ' == '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                    }
-                }
-                else if( ActualToken() == "!=" )
-                {
-                    Next();
-
-                    iDRight = ActualToken() ;
-
-                    right.Evaluate();
-                    
-                    if(Lexer.TokenType(left.value) == Lexer.TokenType(right.value))
-                    {
-                        left.value = ! left.value.Equals(right.value); 
-                    }
-                    else
-                    {
-                        if(Function.functionsId.ContainsKey(iDLeft))
-                        {
-                            if(Lexer.TokenType(left.value) != Lexer.TokenType(right.value))
-                            {
-                                throw new ArgumentTypeError(Lexer.TokenType(right.value) , Lexer.TokenType(left.value));
-                            }
-                        }
-                        else if(Function.functionsId.ContainsKey(iDRight))
-                        {
-                            if(Lexer.TokenType(right.value) != Lexer.TokenType(left.value))
-                            {
-                                throw new ArgumentTypeError(Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
-                            }
-                        }
-                        throw new IncorrectBinaryExpression("Operator ' != '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
                 else if (NextTokens.Contains(ActualToken()))

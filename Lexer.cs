@@ -30,6 +30,9 @@ namespace HULK
                 FunctionDeclaration.functionStack[id] = 0 ;
             }
             ConsolePrints.Clear();
+            FunctionDeclaration.functionsIdInference.Clear();
+            FunctionDeclaration.functionArgumentsCount = 0 ;
+            Function.functionsId.Clear();
             index = 0;
             Tokens.Clear();
         }
@@ -88,15 +91,15 @@ namespace HULK
         }
         public static string TokenType(object Token)
         {
-            if(Convert.ToString(Token.GetType()) == "System.Double")
+            if(Token.GetType() == Type.GetType("System.Double"))
             {
                 return "number" ;
             }
-            else if(Convert.ToString(Token.GetType()) == "System.String")
+            else if(Token.GetType() == Type.GetType("System.String"))
             {
                 return "string" ;
             }
-            else if(Convert.ToString(Token.GetType()) == "System.Boolean")
+            else if(Token.GetType() == Type.GetType("System.Boolean"))
             {
                 return "boolean" ;
             }

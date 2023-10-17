@@ -12,16 +12,76 @@ namespace HULK
             this.mathExp = mathExp;
         }
 
+        public override void Analize()
+        {
+            if(mathExp == "PI" || mathExp == "E")
+            {
+                type = "number" ;
+            }
+
+            if(ActualToken() == "(")
+            {   
+                Next();
+
+                int countOfArguments = 0 ;
+                while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
+                {
+                    Expression e = new Union();
+                    e.Analize();
+                    if(e.type == "inference") e.type = "number" ;
+                    if(e.type != "number")
+                    {
+                        throw new ArgumentTypeError("number" , e.type , mathExp );
+                    }
+                    countOfArguments += 1 ;
+                    if(ActualToken() == ",")
+                    {
+                        Next();
+                    }
+                    else if(ActualToken() == ")")
+                    {
+                        break ;
+                    }
+                    else throw new SyntaxError("Missing ' , '" , "Missing Token" , "Math function" , Lexer.Tokens[Lexer.index - 1]);
+                }
+                if(ActualToken() == ")")
+                {
+                    Next();
+                    if(mathExp == "sqrt" || mathExp == "sin" || mathExp == "cos" || mathExp == "exp")
+                    {
+                        if(countOfArguments != 1)
+                        {
+                            throw new ArgumentsCountError(mathExp , 1 , countOfArguments );
+                        }
+                    }
+                    else if ( mathExp == "log")
+                    {
+                        if(countOfArguments != 2)
+                        {
+                            throw new ArgumentsCountError(mathExp , 2 , countOfArguments );
+                        }
+                    }
+                    else if( mathExp == "rand")
+                    {
+                        if(countOfArguments != 0)
+                        {
+                            throw new ArgumentsCountError(mathExp , 0 , countOfArguments );
+                        }
+                    }
+                }
+                type = "number" ;
+            }
+        }
         public override void Evaluate()
         {
             if(mathExp == "PI")
             {
-               value = Convert.ToString(Math.PI);
+               value = Math.PI;
                return ;
             }
             else if (mathExp == "E")
             {
-                value = Convert.ToString(Math.E);
+                value = Math.E;
                 return ;
             }
             if(ActualToken() == "(")
@@ -30,7 +90,7 @@ namespace HULK
 
                 while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                 {
-                    Expression e = new BooleanOperator();
+                    Expression e = new Union();
                     e.Evaluate();
                     arguments.Add(e.value);
                     if(ActualToken() == ",")
@@ -160,15 +220,7 @@ namespace HULK
             }
             else throw new ArgumentsCountError("rand" , 0 , arguments.Count );
         }
-        public void PI()
-        {
-            value = Math.PI ;
-        }
-
-        public void E()
-        {
-            value = Math.E ;
-        }
+        
         #endregion 
         
     }
