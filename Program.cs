@@ -42,9 +42,9 @@ namespace HULK
 
                     Expression result = new HulkExpression() ;
 
-                    result.Analize();// analiza la expresión primero antes de evaluar , verificando types
-                    Lexer.index = 0; // reinicio el index
-                    result.Evaluate(); // evalua la expresión
+                    result.Analize();// Analize expression
+                    Lexer.index = 0; // restart intdex
+                    result.Evaluate(); // evaluate expression
 
                     if((Lexer.index >= Lexer.Tokens.Count || Expression.ActualToken() != ";") && Lexer.Tokens.Count != 0)
                     {
