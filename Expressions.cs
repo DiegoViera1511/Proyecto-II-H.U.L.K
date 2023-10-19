@@ -158,7 +158,7 @@ namespace HULK
                 Next();
                 Expression p = new Print();
                 p.Analize();
-                value = p.type;
+                type = p.type;
             }
             else if(Lexer.index < Lexer.Tokens.Count && MathExpressions.MathFunctions.Contains(ActualToken())) // Math function expression
             {
