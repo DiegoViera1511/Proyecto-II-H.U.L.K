@@ -358,7 +358,6 @@ namespace HULK
                 {
                     Lexer.Tokens = originalsTokens;
                     Lexer.index = originalIndex;
-                    System.Console.WriteLine(ae.badToken);
                     throw new ArgumentTypeError(ae.expectedToken , ae.badToken , functionName );
                 }
                 catch(HulkErrors he)
