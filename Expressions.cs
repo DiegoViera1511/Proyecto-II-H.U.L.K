@@ -172,7 +172,7 @@ namespace HULK
                 int i = Lexer.index;
                 Next();
                 FunctionDeclaration.functionStore[Lexer.Tokens[i]].Analize();
-                type = FunctionDeclaration.functionStore[Lexer.Tokens[i]].type;
+                type = "inference";
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "true") // boolean true
             {
