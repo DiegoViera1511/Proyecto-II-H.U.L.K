@@ -28,9 +28,6 @@ namespace HULK
                     continue ;
                 }
 
-                //tester debugg
-                //string input = "print ( 5 )"; 
-
                 if(input == "stop hulk")
                 {
                     break;

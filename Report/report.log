@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.28)  3 NOV 2023 16:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.28)  28 OCT 2023 21:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/Presentation/presentation.tex
-(/Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/Presentation/presentation.tex
+**/Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/Report/report.tex
+(/Users/diegovieramartinez/Desktop/WorkSpace/H.U.L.K/Report/report.tex
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-23>
 (/usr/local/texlive/2023basic/texmf-dist/tex/latex/base/article.cls
@@ -285,11 +285,11 @@ Package color Info: Driver file: pdftex.def on input line 149.
 File: l3backend-pdftex.def 2023-10-23 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count290
 \l__pdf_internal_box=\box53
-) (./presentation.aux
+) (./report.aux
 LaTeX Info: Redefining \. on input line 12.
 LaTeX Info: Redefining \% on input line 12.
 )
-\openout1 = `presentation.aux'.
+\openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
@@ -369,30 +369,30 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 13.
-(./presentation.out) (./presentation.out)
+(./report.out) (./report.out)
 \@outlinefile=\write3
-\openout3 = `presentation.out'.
+\openout3 = `report.out'.
 
 LaTeX Info: Redefining \. on input line 13.
 LaTeX Info: Redefining \% on input line 13.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <24.88> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 21.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 21.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 19.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 19.
  (/usr/local/texlive/2023basic/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 21.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 19.
  (/usr/local/texlive/2023basic/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 <Pictures/matcom.jpg, id=44, 200.75pt x 200.75pt>
 File: Pictures/matcom.jpg Graphic file (type jpg)
 <use Pictures/matcom.jpg>
-Package pdftex.def Info: Pictures/matcom.jpg  used on input line 22.
+Package pdftex.def Info: Pictures/matcom.jpg  used on input line 20.
 (pdftex.def)             Requested size: 140.52403pt x 140.52403pt.
  [1
 
-{/usr/local/texlive/2023basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Pictures/matcom.jpg>] [2] [3] [4] (./presentation.aux
+{/usr/local/texlive/2023basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Pictures/matcom.jpg>] [2] [3] [4] (./report.aux
 LaTeX Info: Redefining \. on input line 12.
 LaTeX Info: Redefining \% on input line 12.
 )
@@ -400,19 +400,19 @@ LaTeX Info: Redefining \% on input line 12.
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-23>
  ***********
-Package rerunfilecheck Info: File `presentation.out' has not changed.
-(rerunfilecheck)             Checksum: 667AF0A5B1825F40FBB4524E499D7250;1430.
+Package rerunfilecheck Info: File `report.out' has not changed.
+(rerunfilecheck)             Checksum: 82F13F29E462A93C82D000BAD5AA45EE;1357.
  ) 
 Here is how much of TeX's memory you used:
- 11828 strings out of 475855
- 183523 string characters out of 5784681
+ 11825 strings out of 475855
+ 183345 string characters out of 5784681
  1932033 words of memory out of 5000000
- 33524 multiletter control sequences out of 15000+600000
+ 33521 multiletter control sequences out of 15000+600000
  567209 words of font info for 73 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 75i,7n,79p,614b,605s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,602b,605s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2023basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on presentation.pdf (4 pages, 57744 bytes).
+Output written on report.pdf (4 pages, 56245 bytes).
 PDF statistics:
  100 PDF objects out of 1000 (max. 8388607)
  84 compressed objects within 1 object stream

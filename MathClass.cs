@@ -1,7 +1,10 @@
 using System.Data.SqlTypes;
 using System.Text.RegularExpressions ;
 namespace HULK
-{
+{   
+    /// <summary>
+    /// Representa las expresiones matemáticas básicas
+    /// </summary>
     class MathExpressions : Expression
     {
         public string mathExp ;
@@ -11,7 +14,12 @@ namespace HULK
         {
             this.mathExp = mathExp;
         }
-
+        /// <summary>
+        /// Analiza que el llamado de función sea correcto
+        /// </summary>
+        /// <exception cref="ArgumentTypeError">Lanza error si el tipo del argumento no es correcto</exception>
+        /// <exception cref="SyntaxError">Lanza error de sintaxs</exception>
+        /// <exception cref="ArgumentsCountError">Lanza error si la cantidad de argumentos esperados son incorrectos</exception>
         public override void Analize()
         {
             if(mathExp == "PI" || mathExp == "E")
@@ -72,6 +80,11 @@ namespace HULK
                 type = "number" ;
             }
         }
+
+        /// <summary>
+        /// Evalúa el llamado de la función
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         public override void Evaluate()
         {
             if(mathExp == "PI")

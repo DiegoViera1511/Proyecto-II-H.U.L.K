@@ -2,10 +2,17 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+    /// <summary>
+    /// Representa las expresiones let-in
+    /// </summary>
     class Let_in : Expression
     {
         public static Dictionary< string , object> idStore = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Analiza que no hayan errores en la expresión 
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         public override void Analize()
         {
             while(Lexer.index < Lexer.Tokens.Count)
@@ -102,6 +109,10 @@ namespace HULK
                 idStore.Clear();
             }
         }
+        /// <summary>
+        /// Evalúa la expresión let-in , dándole valor a la expresión .
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         public override void Evaluate()
         {
             while(Lexer.index < Lexer.Tokens.Count)

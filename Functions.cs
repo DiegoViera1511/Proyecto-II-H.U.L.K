@@ -2,6 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+    /// <summary>
+    /// Representa las expresiones de declaraciones de funciones
+    /// </summary>
     class FunctionDeclaration : Expression
     {
         public static Dictionary < string , Function > functionStore = new Dictionary<string, Function>();
@@ -10,6 +13,11 @@ namespace HULK
         public static int functionArgumentsCount = 0;
         public static Dictionary<string , string> functionsIdInference = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Analiza que sea correcta la declaración de la función .
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
+        /// <exception cref="DuplicateArgument">Lanza error si existen argumentos de la función duplicados</exception>
         public override void Analize()
         {
             List<string> functionExpression = new List<string>();
@@ -125,6 +133,12 @@ namespace HULK
                 throw new SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
             }
         }
+
+        /// <summary>
+        /// Una vez analizada la expresión , guarda la función en functionStore
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
+        /// <exception cref="DuplicateArgument">Lanza error si existen argumentos de la función duplicados</exception>
         public override void Evaluate()
         {
             List<string> functionExpression = new List<string>();
@@ -214,8 +228,12 @@ namespace HULK
                 throw new SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
             }
         }
-    }
 
+    }
+    
+    /// <summary>
+    /// Representa las expresiones de llamado de función
+    /// </summary>
     class Function : Expression
     {
         private string functionName ;
@@ -230,7 +248,11 @@ namespace HULK
             this.functionExpression = functionExpression ;
             this.functionName = functionName ;
         }
-
+        /// <summary>
+        /// Analiza que el llamado de la función sea correcto sin evaluarla
+        /// </summary>
+        /// <param name="functionName">Nombre de la función</param>
+        /// <exception cref="ArgumentsCountError">Lanza error si la cantidad de argumentos esperados son incorrectos</exception>
         public static void CheckfunctionCall(string functionName)
         {
             if(ActualToken() == "(")
@@ -257,6 +279,11 @@ namespace HULK
                 Next();
             }   
         }
+        /// <summary>
+        /// Analiza que el llamado de la función sea correcto
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
+        /// <exception cref="ArgumentsCountError">Lanza error si la cantidad de argumentos esperados son incorrectos</exception>
         public override void Analize()
         {
             if(ActualToken() == "(")
@@ -294,6 +321,14 @@ namespace HULK
                 throw new SyntaxError("Missing ' ( ' " , "Missing Token" , "Function call" , Lexer.Tokens[Lexer.index - 1]);
             }
         }
+
+        /// <summary>
+        /// Evalúa la función , devolviendo el valor de su cuerpo con los argumentos dados
+        /// </summary>
+        /// <exception cref="DefaultError">Stack Overflow</exception>
+        /// <exception cref="ArgumentsCountError">La cantidad de argumentos esperados son incorrectos</exception>
+        /// <exception cref="ArgumentTypeError"></exception>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         public override void Evaluate()
         {
             if(FunctionDeclaration.functionStack[functionName] > 700)
@@ -399,8 +434,15 @@ namespace HULK
         
     }
 
+    /// <summary>
+    /// Representa la función de Print .
+    /// </summary>
     class Print : Expression
     {
+        /// <summary>
+        /// Analiza que no hayan errores de sintaxis en la expresión 
+        /// </summary>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         public override void Analize()
         {
             if(ActualToken() == "(")
@@ -431,6 +473,11 @@ namespace HULK
                 throw new SyntaxError("Missing ' ( '" , "Missing Token" , "print" , Lexer.Tokens[Lexer.index-1]);
             }
         }
+
+        /// <summary>
+        /// Evalúa la expresión , imprimiendo en pantalla el valor de la expresión 
+        /// </summary>
+        /// <exception cref="SyntaxError"></exception>
         public override void Evaluate()
         {
             if(ActualToken() == "(")
@@ -464,4 +511,5 @@ namespace HULK
             }
         }
     }
+    
 }

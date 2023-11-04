@@ -6,6 +6,9 @@ using System.Globalization;
 
 namespace HULK
 {
+    /// <summary>
+    /// Representa la clase que tokeniza la expresión
+    /// </summary>
     class Lexer
     {
         public static List<string> Tokens = new List<string>();
@@ -22,7 +25,10 @@ namespace HULK
        
 
         #region Methods 
-
+        
+        /// <summary>
+        /// Reinicia las variables para una nueva línea
+        /// </summary>
         public static void Restart()
         {
             foreach(string id in FunctionDeclaration.functionStack.Keys)
@@ -36,6 +42,11 @@ namespace HULK
             index = 0;
             Tokens.Clear();
         }
+        /// <summary>
+        /// Tokeniza la expresión 
+        /// </summary>
+        /// <param name="input">Input del usuario</param>
+        /// <exception cref="LexicalError">Lanza error léxico</exception>
         public static void TokenizeInput(string input)
         {
             input = Regex.Replace(input , @"\s+" , " ");
@@ -66,6 +77,11 @@ namespace HULK
                 }
             }
         }
+        /// <summary>
+        /// Determina si la expresión es un número
+        /// </summary>
+        /// <param name="Token">Token actual</param>
+        /// <returns>Es o no un número</returns>
         public static bool IsNumber(string Token)
         {
             if(decimalSeparator == ".")
@@ -77,18 +93,38 @@ namespace HULK
                 return Regex.IsMatch(Token , @"^-{0,1}\d+$|^-{0,1}\d+,\d+E(\+|-)\d+$|^-{0,1}\d+,\d+$") || Token == Convert.ToString(double.PositiveInfinity) ? true : false ;
             }
         }
+        /// <summary>
+        /// Determina si la expresión es un string
+        /// </summary>
+        /// <param name="Token">Token actual</param>
+        /// <returns>Es o no un string</returns>
         public static bool IsString(string Token)
         {
             return Regex.IsMatch(Token , @"(\u0022([^\u0022\\]|\\.)*\u0022)") ? true : false ;
         }
+        /// <summary>
+        /// Determina si la expresión es un boolean
+        /// </summary>
+        /// <param name="Token">Token actual</param>
+        /// <returns>Es o no un boolean</returns>
         public static bool IsBoolean(string Token)
         {
            return Regex.IsMatch(Token , @"^true$|^false$") ?  true : false ;
         }
+        /// <summary>
+        /// Determina si la expresión es un ID válido
+        /// </summary>
+        /// <param name="Token">Token actual</param>
+        /// <returns>Es o no un ID válido</returns>
         public static bool IsID(string Token)
         {
             return Regex.IsMatch( Token , @"^[a-zA-Z]+\w*$") ? true : false ;
         }
+        /// <summary>
+        /// Determina el tipo de la expresión 
+        /// </summary>
+        /// <param name="Token">Token actual</param>
+        /// <returns>Tipo de la expresión</returns>
         public static string TokenType(object Token)
         {
             if(Token.GetType() == Type.GetType("System.Double"))
@@ -109,7 +145,13 @@ namespace HULK
                 return "error in code";
             }
         }
-
+        /// <summary>
+        /// Encuentra cual es el token incorrecto de una expresión binaria
+        /// </summary>
+        /// <param name="a">Tipo del valor de la expresión izquierda</param>
+        /// <param name="b">Tipo del valor de la expresión derecha</param>
+        /// <param name="expectedToken">Tipo de valor esperado</param>
+        /// <returns>Tipo de expresión incorrecta</returns>
         public static string GetIncorrectToken(string a , string b , string expectedToken)
         {
             if(a != expectedToken )

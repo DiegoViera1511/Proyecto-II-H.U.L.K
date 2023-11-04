@@ -6,17 +6,31 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+    enum ExpressionType
+    {
+        String , Number , Boolean 
+    }
     //Abstract classes
     #region Abstract classes
+    /// <summary>
+    /// Clase abstracta de expresión
+    /// </summary>
     abstract class Expression
     {
         public object value ;
 
         public string type ;
+        /// <summary>
+        /// Mueve el índice al próximo token
+        /// </summary>
         static public void Next()
         {
             Lexer.index++;
         }
+        /// <summary>
+        /// Retorna el token actual
+        /// </summary>
+        /// <returns>Token actual</returns>
         static public string ActualToken()
         {
             return Lexer.Tokens[Lexer.index];
@@ -25,7 +39,9 @@ namespace HULK
 
         public abstract void Analize();
     }
-
+    /// <summary>
+    /// Clase abstracta de expresiones binarias
+    /// </summary>
     abstract class Binary_Exrpessions : Expression
     {
         public Expression left ;
@@ -35,6 +51,15 @@ namespace HULK
 
         public abstract object Operation(object left , string operatorToken , object right);
 
+        /// <summary>
+        /// Encuentra errores de argumentos de funciones
+        /// </summary>
+        /// <param name="idLeft">Token que representa al valor de la izquierda</param>
+        /// <param name="leftType">Tipo del valor de la expresión de la izquierda</param>
+        /// <param name="iDRight">Token que representa al valor de la derecha</param>
+        /// <param name="rightType">Tipo del valor de la expresión de la derecha</param>
+        /// <param name="expectedType">Tipo de valor esperado</param>
+        /// <exception cref="ArgumentTypeError">Lanza error si left o right no son del tipo correcto y son argumentos de función</exception>
         public void CatchArgumentTypeError(string idLeft , string leftType , string iDRight , string rightType , string expectedType)
         {
             if(Function.functionsId.ContainsKey(idLeft))
@@ -55,10 +80,19 @@ namespace HULK
     }
 
     #endregion
-
+    /// <summary>
+    /// Representa las expresiones atómicas
+    /// </summary>
     class Atom : Expression
     {
         //Atomics expressions ( numbers , strings , booleans )
+        /// <summary>
+        /// Analiza el tipo de la expresión atómica . 
+        /// </summary>
+        /// <exception cref="ArgumentTypeError">Lanza error si left o right no son del tipo correcto y son argumentos de función</exception>
+        /// <exception cref="IncorrectOperator">Lanza error si el operador unario ( ! , - ) no es válido para el tipo de la expresión</exception>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
+        /// <exception cref="UnExpectedToken">Lanza error si no encuentra un siguiente de la expresión o es un token no válido</exception>
         public override void Analize()
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
@@ -218,6 +252,13 @@ namespace HULK
                 }
             }
         }
+        /// <summary>
+        /// Evalúa la expresión atómica .
+        /// </summary>
+        /// <exception cref="ArgumentTypeError">Lanza error si left o right no son del tipo correcto y son argumentos de función</exception>
+        /// <exception cref="IncorrectOperator">Lanza error si el operador unario ( ! , - ) no es válido para el tipo de la expresión</exception>
+        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
+        /// <exception cref="UnExpectedToken">Lanza error si no encuentra un siguiente de la expresión o es un token no válido</exception>
         public override void Evaluate()
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
@@ -368,7 +409,9 @@ namespace HULK
             }
         }
     }
-    
+    /// <summary>
+    /// Clase inicializadora , evalúa todo tipo de expresiones HULK .
+    /// </summary>
     class HulkExpression : Expression
     {
         //Inicio de Expressión

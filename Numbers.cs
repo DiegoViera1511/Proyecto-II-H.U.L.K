@@ -2,6 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+
+    /// <summary>
+    /// Representa las expresiones binarias de + y - .
+    /// </summary>
     class SumExpression : Binary_Exrpessions // ( + ; - )
     {   
        private List<string> NextTokens = new List<string>(){";",")","in",",",">","<","else","<","<=",">=","&","|","==","!=","@"};
@@ -12,7 +16,13 @@ namespace HULK
 
             this.right = new MultiplyExpression();
         }
-
+        /// <summary>
+        /// Operación de la clase SumExrpession
+        /// </summary>
+        /// <param name="left">Representa el valor de la expresión de la izquierda</param>
+        /// <param name="operatorToken">Operador de la expresión binaria ( + , - )</param>
+        /// <param name="right">Representa el valor de la expresión de la derecha</param>
+        /// <returns>Retorna la operación entre left y right (number)</returns>
         public override object Operation(object left , string operatorToken , object right)
         {
             if(operatorToken == "+")
@@ -24,16 +34,21 @@ namespace HULK
                 return (double)left - (double)right ;
             }
         }
-
+        /// <summary>
+        /// Analiza la expresión , si hay un token de + o - , verifica que left y right sean de tipo number y 
+        /// define el tipo de la expresión actualizando left hasta que encuentre un siguiente de la expresión ;
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo number</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Analize()
         {
             iDLeft = ActualToken() ;
-            left.Analize();
+            left.Analize();//Analiza la izquierda
             
             while(Lexer.index < Lexer.Tokens.Count)
             {
 
-                if(ActualToken() == "+" || ActualToken() == "-")//Cambiar el operador en el error
+                if(ActualToken() == "+" || ActualToken() == "-")
                 {
                     string operatorToken = ActualToken();
                     if(left.type == "inference") left.type = "number";
@@ -41,17 +56,17 @@ namespace HULK
                     Next();
 
                     iDRight = ActualToken() ;
-                    right.Analize();
+                    right.Analize();//Analiza la derecha
                     if(right.type == "inference") right.type = "number";
                 
-                    if(!(left.type == "number" && right.type == "number"))
+                    if(!(left.type == "number" && right.type == "number"))//Verifica que sean ambos de tipo number
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");
-                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");//Verifica si son argumentos de una función
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);//Lanza error
                     }
-                    else left.type = "number" ;
+                    else left.type = "number" ;//Actualiza el tipo de la expresión 
                 }
-                else if (NextTokens.Contains(ActualToken()))
+                else if (NextTokens.Contains(ActualToken()))//Verifica que el token sea un siguiente de la expresión
                 {
                     type = left.type;
                     break;
@@ -62,6 +77,13 @@ namespace HULK
                 }
             }
         }
+
+        /// <summary>
+        /// Evalúa la expresión left , si hay un operador ( + , -) , Evalúa la expresión right y actulaliza el valor de left
+        /// con el valor de la operación entre el valor de left y right.
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo number en tiempo de ejecución</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Evaluate()
         {
 
@@ -81,7 +103,7 @@ namespace HULK
                 
                     if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
                     {
-                        left.value = Operation(left.value , operatorToken , right.value) ;
+                        left.value = Operation(left.value , operatorToken , right.value) ;//Actualiza el valor de left 
                     }
                     else 
                     {
@@ -102,6 +124,9 @@ namespace HULK
         }
     }
 
+    /// <summary>
+    /// Representa las expresiones binarias de * , / , % .
+    /// </summary>
     class MultiplyExpression : Binary_Exrpessions  // ( * ; / ; % )
     {
         private List<string> NextTokens = new List<string>(){";", ")" ,"in",",",">","<","else","<","<=",">=","&","|","==","!=","@","+","-"};
@@ -111,7 +136,13 @@ namespace HULK
 
             this.right = new PowerExpression();
         }
-
+        /// <summary>
+        /// Operación de la clase MultiplyExpressión 
+        /// </summary>
+        /// <param name="left">Representa el valor de la expresión de la izquierda</param>
+        /// <param name="operatorToken">Operador de la expresión binaria ( * , / ,% )</param>
+        /// <param name="right">Representa el valor de la expresión de la derecha</param>
+        /// <returns>Retorna la operación entre left y right (number)</returns>
         public override object Operation(object left , string operatorToken , object right)
         {
             if(operatorToken == "*")
@@ -127,7 +158,12 @@ namespace HULK
                 return (double)left % (double)right ;
             }
         }
-
+        /// <summary>
+        /// Analiza la expresión , si hay un token de  ( * , / % ) , verifica que left y right sean de tipo number y 
+        /// define el tipo de la expresión actualizando left hasta que encuentre un siguiente de la expresión ;
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo number</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Analize()
         {
             iDLeft = ActualToken() ;
@@ -167,6 +203,12 @@ namespace HULK
 
             }    
         }
+        /// <summary>
+        /// Evalúa la expresión left , si hay un operador ( * , / , % ) , Evalúa la expresión right y actulaliza el valor de left
+        /// con el valor de la operación entre el valor de left y right.
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo number en tiempo de ejecución</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Evaluate()
         {
             
@@ -208,6 +250,9 @@ namespace HULK
         }
     }
 
+    /// <summary>
+    /// Representa las expresiones binarias de ^ .
+    /// </summary>
     class PowerExpression : Binary_Exrpessions // ( ^ )
     {
         private List<string> NextTokens = new List<string>(){";", ")" ,"in",",",">","<","else","<=",">=","&","|","==","!=","@","+","-","*","/","%"};
@@ -217,12 +262,23 @@ namespace HULK
 
             this.right = new Atom();
         }
-
+         /// <summary>
+        /// Operación de la clase PowerExpression 
+        /// </summary>
+        /// <param name="left">Representa el valor de la expresión de la izquierda</param>
+        /// <param name="operatorToken">Operador de la expresión binaria ( ^ )</param>
+        /// <param name="right">Representa el valor de la expresión de la derecha</param>
+        /// <returns>Retorna la operación entre left y right (number)/returns>
         public override object Operation(object left , string operatorToken , object right)
         {
             return Math.Pow((double)left , (double)right);
         }
-
+        /// <summary>
+        /// Analiza la expresión , si hay un token de  ( ^ ) , verifica que left y right sean de tipo number y 
+        /// define el tipo de la expresión actualizando left hasta que encuentre un siguiente de la expresión .
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo number</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Analize()
         {
             iDLeft = ActualToken() ;
@@ -258,6 +314,12 @@ namespace HULK
                 }
             }    
         }
+        /// <summary>
+        /// Evalúa la expresión left , si hay un operador ( ^ ) , Evalúa la expresión right y actulaliza el valor de left
+        /// con el valor de la operación entre el valor de left y right.
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo number en tiempo de ejecución</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Evaluate()
         {
 
@@ -294,5 +356,6 @@ namespace HULK
                 }
             }    
         }
-    } 
+    }
+
 }

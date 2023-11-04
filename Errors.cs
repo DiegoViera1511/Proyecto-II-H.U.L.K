@@ -3,11 +3,16 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+    /// <summary>
+    /// Representa la clase abstracta de errores en HULK
+    /// </summary>
     abstract class HulkErrors : Exception 
     {
         public abstract void PrintError();
     }
-
+    /// <summary>
+    /// Representa la clase de errores léxicos
+    /// </summary>
     class LexicalError : HulkErrors
     {
         public string BadToken ;
@@ -22,7 +27,9 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-
+    /// <summary>
+    /// Representa la clase de errores sintácticos
+    /// </summary>
     class SyntaxError : HulkErrors
     {
         public string? Problem ;
@@ -67,6 +74,9 @@ namespace HULK
         }
     }
 
+    /// <summary>
+    /// Representa el error de tokens inesperados
+    /// </summary>
     class UnExpectedToken : HulkErrors 
     {
         public string BadToken ;
@@ -81,13 +91,17 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-
+    /// <summary>
+    /// Representa la clase abstracta de errores semánticos
+    /// </summary>
     #region SemanticError 
     abstract class SemanticError : HulkErrors
     {
         public string? ProblemType ;
     }
-
+    /// <summary>
+    /// Representa el error de operador unario incorrecto
+    /// </summary>
     class IncorrectOperator : SemanticError
     {
         public string operatorProblem ;
@@ -108,7 +122,9 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-
+    /// <summary>
+    /// Representa el error de operadores binarios 
+    /// </summary>
     class IncorrectBinaryExpression : SemanticError
     {
         public string operatorProblem ;
@@ -130,7 +146,9 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-
+    /// <summary>
+    /// Representa el error de argumentos duplicados
+    /// </summary>
     class DuplicateArgument : SemanticError
     {
         string badToken ;
@@ -149,7 +167,9 @@ namespace HULK
         }
 
     }
-
+    /// <summary>
+    /// Representa el error de tipo de argumento incorrecto
+    /// </summary>
     class ArgumentTypeError : SemanticError
     {
         string? functionName ;
@@ -171,7 +191,9 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-
+    /// <summary>
+    /// Representa el error de cantidad de argumentos incorrectos
+    /// </summary>
     class ArgumentsCountError : SemanticError
     {
         string functionName ;
@@ -193,7 +215,9 @@ namespace HULK
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }
-
+    /// <summary>
+    /// Representa el error de expresiones condicionales
+    /// </summary>
     class ConditionalErrors : SemanticError
     {
          public string badToken ;
@@ -211,7 +235,9 @@ namespace HULK
     }
 
     #endregion
-
+    /// <summary>
+    /// Otros errores (Stack overflow , Division by zero , missing ; )
+    /// </summary>
     class DefaultError : HulkErrors
     {
         public string ProblemType ;

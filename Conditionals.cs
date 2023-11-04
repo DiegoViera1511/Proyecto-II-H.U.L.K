@@ -2,8 +2,16 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+    /// <summary>
+    /// Representa las expresiones condicionales if-else
+    /// </summary>
     class Conditional : Expression
     {
+        /// <summary>
+        /// Analiza que sea correcta la sintaxis de if-else
+        /// </summary>
+        /// <exception cref="ConditionalErrors">Lanza error si la expresión de condición no es booleana</exception>
+        /// <exception cref="SyntaxError">Error en la sintaxis en la expresión</exception>
         public override void Analize()
         {
             if( ActualToken() == "(" )
@@ -42,6 +50,11 @@ namespace HULK
                 throw new SyntaxError("Missing ' ( ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
             }
         }
+        /// <summary>
+        /// Evalúa la expresión if-else , dándole valor a la expresión
+        /// </summary>
+        /// <exception cref="ConditionalErrors">Lanza error si la expresión de condición no es booleana</exception>
+        /// <exception cref="SyntaxError">Error de sintaxis en la expresión</exception>
         public override void Evaluate()
         {
             if( ActualToken() == "(" )
@@ -104,4 +117,5 @@ namespace HULK
             }
         }
     }
+    
 }

@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
+    /// <summary>
+    /// Representa las expresiones binarias booleanas de & y | .
+    /// </summary>
     class BooleanOperator : Binary_Exrpessions //Logic boolean operators
     {
         List<string> NextTokens = new List<string>(){")",";",",","in","else","@"};//Siguientes
@@ -16,7 +19,13 @@ namespace HULK
 
             this.right = new Comparison();
         }
-
+        /// <summary>
+        /// Operación de la clase BooleanOperator
+        /// </summary>
+        /// <param name="left">Representa el valor de la expresión de la izquierda</param>
+        /// <param name="operatorToken">Operador de la expresión binaria ( & , | )</param>
+        /// <param name="right">Representa el valor de la expresión de la derecha</param>
+        /// <returns>Retorna la operación entre left y right (bool)</returns>
         public override object Operation(object left , string operatorToken , object right)
         {
             if(operatorToken == "&")
@@ -28,6 +37,12 @@ namespace HULK
                 return (bool)left || (bool)right ;
             }
         }
+        /// <summary>
+        /// Analiza la expresión , si hay un token de  ( & , | ) , verifica que left y right sean de tipo boolean y 
+        /// define el tipo de la expresión actualizando left hasta que encuentre un siguiente de la expresión .
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo boolean</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Analize()
         {
             iDLeft = ActualToken() ;// guardar token que representa a left ej x = 5 
@@ -67,7 +82,12 @@ namespace HULK
                 }
             }
         }
-
+        /// <summary>
+        /// Evalúa la expresión left , si hay un operador ( & , | ) , Evalúa la expresión right y actulaliza el valor de left
+        /// con el valor de la operación entre el valor de left y right.
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son de tipo boolean en tiempo de ejecución</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Evaluate()
         {
             
@@ -109,7 +129,9 @@ namespace HULK
             }
         }
     }
-
+    /// <summary>
+    /// Representa las expresiones binarias de ( < , > , <= , >= , == , != )
+    /// </summary>
     class Comparison : Binary_Exrpessions //Boolean comparison
     {
         List<string> NextTokens = new List<string>(){")",";",",","in","else","&","|","@"};
@@ -119,7 +141,14 @@ namespace HULK
 
             right = new SumExpression();
         }
-
+        /// <summary>
+        /// Analiza la expresión , si hay un token de  ( < , > , <= , >= , == , != ) , verifica que left y right sean 
+        /// de tipo number (< , > , <= , >= ) o del mismo tipo ( == , != ) y define el tipo de la expresión actualizando
+        /// left hasta que encuentre un siguiente de la expresión .
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son del mismo tipo en tiempo de ejecución</exception>
+        /// <exception cref="ArgumentTypeError">Lanza error si left o right no son del tipo correcto y son argumentos de función</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Analize()
         {
             string operatorToken ;
@@ -190,7 +219,13 @@ namespace HULK
                 }
             } 
         }
-
+        /// <summary>
+        /// Operación de la clase Comparison
+        /// </summary>
+        /// <param name="left">Representa el valor de la expresión de la izquierda</param>
+        /// <param name="operatorToken">Operador de la expresión binaria ( < , > , <= , >= , == , != )</param>
+        /// <param name="right">Representa el valor de la expresión de la derecha</param>
+        /// <returns></returns>
         public  override object Operation(object left , string operatorToken , object right)
         {
             if(operatorToken == ">")
@@ -210,6 +245,13 @@ namespace HULK
                 return (double)left >= (double)right;
             }
         }
+        /// <summary>
+        /// Evalúa la expresión left , si hay un operador  ( < , > , <= , >= , == , != ) , Evalúa la expresión right y actulaliza el valor de left
+        /// con el valor de la operación entre el valor de left y right.
+        /// </summary>
+        /// <exception cref="IncorrectBinaryExpression">Lanza la excepción si left o right no son del mismo tipo en tiempo de ejecución</exception>
+        /// <exception cref="ArgumentTypeError">Lanza error si left o right no son del tipo correcto y son argumentos de función</exception>
+        /// <exception cref="UnExpectedToken">Lanza la execpción si no encuentra un siguiente de la expresión</exception>
         public override void Evaluate()
         {   
             string operatorToken ;
@@ -290,4 +332,5 @@ namespace HULK
             } 
         }
     }   
+    
 }
