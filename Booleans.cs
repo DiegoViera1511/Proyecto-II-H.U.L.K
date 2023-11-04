@@ -55,21 +55,21 @@ namespace HULK
                 {
                     string operatorToken = ActualToken();
 
-                    if(left.type == "inference") left.type = "boolean";// si el type es inference asígnale el valor predeterminado del operador
+                    if(left.type == InferenceType) left.type = BooleanType;// si el type es inference asígnale el valor predeterminado del operador
 
                     Next();
 
                     iDRight = ActualToken() ;
                     right.Analize();
-                    if(right.type == "inference") right.type = "boolean";// si el type es inference asígnale el valor predeterminado del operador
+                    if(right.type == InferenceType) right.type = BooleanType;// si el type es inference asígnale el valor predeterminado del operador
 
                     
-                    if(!(left.type == "boolean" && right.type == "boolean"))
+                    if(!(left.type == BooleanType && right.type == BooleanType))
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "boolean");
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , BooleanType);
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
                     }
-                    else left.type = "boolean" ;
+                    else left.type = BooleanType ;
                 }
                 else if(NextTokens.Contains(ActualToken()))
                 {
@@ -106,13 +106,13 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "boolean" && Lexer.TokenType(left.value) == "boolean")
+                    if(Lexer.TokenType(left.value) == BooleanType && Lexer.TokenType(left.value) == BooleanType)
                     {
                         left.value = Operation(left.value , operatorToken , right.value) ;
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "boolean");
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , BooleanType);
         
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '", Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
@@ -161,20 +161,20 @@ namespace HULK
                 if( ActualToken() == ">" || ActualToken() == "<" || ActualToken() == "<=" || ActualToken() == ">=" )
                 {
                     operatorToken = ActualToken();
-                    if(left.type == "inference") left.type = "number";
+                    if(left.type == InferenceType) left.type = NumberType;
 
                     Next();
 
                     iDRight = ActualToken() ;
                     right.Analize();
-                    if(right.type == "inference") right.type = "number";
+                    if(right.type == InferenceType) right.type = NumberType;
                     
-                    if(!(left.type == "number" && right.type == "number"))
+                    if(!(left.type == NumberType && right.type == NumberType))
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
                     }
-                    else left.type = "boolean" ;
+                    else left.type = BooleanType ;
                 }
                 else if( ActualToken() == "=="  || ActualToken() == "!=" )
                 {
@@ -185,11 +185,11 @@ namespace HULK
                     iDRight = ActualToken();
                     right.Analize();
 
-                    if(left.type == "inference")
+                    if(left.type == InferenceType)
                     {
                         left.type = right.type ;
                     }
-                    else if(right.type == "inference")
+                    else if(right.type == InferenceType)
                     {
                         right.type = left.type ;
                     }
@@ -206,7 +206,7 @@ namespace HULK
                         }
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , left.type);
                     }
-                    else left.type = "boolean" ;
+                    else left.type = BooleanType ;
                 }
                 else if (NextTokens.Contains(ActualToken()))
                 {
@@ -270,13 +270,13 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
                     {
                         left.value = Operation(left.value , operatorToken , right.value) ;
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
                         
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '", Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
@@ -332,5 +332,5 @@ namespace HULK
             } 
         }
     }   
-    
+
 }

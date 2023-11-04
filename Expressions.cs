@@ -6,10 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace HULK
 {
-    enum ExpressionType
-    {
-        String , Number , Boolean 
-    }
+
     //Abstract classes
     #region Abstract classes
     /// <summary>
@@ -17,6 +14,11 @@ namespace HULK
     /// </summary>
     abstract class Expression
     {
+        public const string NumberType = "number" ;
+        public const string StringType = "string" ;
+        public const string BooleanType = "boolean" ;
+        public const string InferenceType = "inference" ;
+
         public object value ;
 
         public string type ;
@@ -97,7 +99,7 @@ namespace HULK
         {
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
-                type = "number";
+                type = NumberType;
                 Next();
             }
             else if(Lexer.index < Lexer.Tokens.Count && Function.functionsId.ContainsKey(ActualToken())) // function variable 
@@ -121,9 +123,9 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 num.Analize();
                 
-                if(num.type == "number")
+                if(num.type == NumberType)
                 {
-                    type = "number" ;
+                    type = NumberType ;
                 }
                 else 
                 {
@@ -131,7 +133,7 @@ namespace HULK
                     {
                         throw new ArgumentTypeError( "number" , num.type );
                     }
-                    throw new IncorrectOperator( num.type , "Operator ' - '" , "number");
+                    throw new IncorrectOperator( num.type , "Operator ' - '" , NumberType);
                 }
             }
             else if(ActualToken() == "!")
@@ -144,9 +146,9 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 boolean.Analize();
                 
-                if(boolean.type == "boolean")
+                if(boolean.type == BooleanType)
                 {
-                    type = "boolean" ;
+                    type = BooleanType ;
                 }
                 else 
                 {
@@ -154,7 +156,7 @@ namespace HULK
                     {
                         throw new ArgumentTypeError( "boolean" , boolean.type );
                     }
-                    throw new IncorrectOperator(boolean.type , "Operator ' ! '" , "boolean");
+                    throw new IncorrectOperator(boolean.type , "Operator ' ! '" , BooleanType);
                 }
 
             }
@@ -177,7 +179,7 @@ namespace HULK
             }
             else if(Lexer.index < Lexer.Tokens.Count && Lexer.IsString(ActualToken()) ) // strings
             {
-                type = "string" ;
+                type = StringType ;
                 Next();
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "let ") // let-in expressions
@@ -206,17 +208,17 @@ namespace HULK
                 int i = Lexer.index;
                 Next();
                 FunctionDeclaration.functionStore[Lexer.Tokens[i]].Analize();
-                type = "inference";
+                type = InferenceType;
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "true") // boolean true
             {
                 Next();
-                type = "boolean" ;
+                type = BooleanType ;
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "false") // boolean false
             {
                 Next();
-                type = "boolean" ;
+                type = BooleanType ;
             }
             else if (ActualToken() == "if") // if-else expression
             {
@@ -232,12 +234,12 @@ namespace HULK
                     string functionName = ActualToken();
                     Next();
                     Function.CheckfunctionCall(functionName);
-                    type = "inference";
+                    type = InferenceType ;
                 }
                 else if(FunctionDeclaration.functionsIdInference[ActualToken()] == "variable")
                 {
                     Next();
-                    type = "inference";
+                    type = InferenceType;
                 }
             }
             else 
@@ -295,9 +297,9 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        throw new ArgumentTypeError( "number" , Lexer.TokenType(num.value) );
+                        throw new ArgumentTypeError( NumberType , Lexer.TokenType(num.value) );
                     }
-                    throw new IncorrectOperator(Lexer.TokenType(num.value) , "Operator ' - '" , "number");
+                    throw new IncorrectOperator(Lexer.TokenType(num.value) , "Operator ' - '" , NumberType);
                 }
             }
             else if(ActualToken() == "!")
@@ -310,11 +312,11 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 boolean.Evaluate();
                 
-                if(Lexer.TokenType(boolean.value) == "boolean" && (bool)boolean.value)
+                if(Lexer.TokenType(boolean.value) == BooleanType && (bool)boolean.value)
                 {
                     value = "false" ;
                 }
-                else if(Lexer.TokenType(boolean.value) == "boolean" && !(bool)boolean.value)
+                else if(Lexer.TokenType(boolean.value) == BooleanType && !(bool)boolean.value)
                 {
                     value = "true" ;
                 }
@@ -322,9 +324,9 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        throw new ArgumentTypeError( "boolean" , Lexer.TokenType(boolean.value) );
+                        throw new ArgumentTypeError( BooleanType , Lexer.TokenType(boolean.value) );
                     }
-                    throw new IncorrectOperator(Lexer.TokenType(boolean.value) , "Operator ' ! '" , "boolean");
+                    throw new IncorrectOperator(Lexer.TokenType(boolean.value) , "Operator ' ! '" , BooleanType);
                 }
 
             }

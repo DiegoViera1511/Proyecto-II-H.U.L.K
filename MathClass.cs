@@ -24,7 +24,7 @@ namespace HULK
         {
             if(mathExp == "PI" || mathExp == "E")
             {
-                type = "number" ;
+                type = NumberType ;
             }
 
             if(ActualToken() == "(")
@@ -36,10 +36,10 @@ namespace HULK
                 {
                     Expression e = new Union();
                     e.Analize();
-                    if(e.type == "inference") e.type = "number" ;
-                    if(e.type != "number")
+                    if(e.type == InferenceType) e.type = NumberType ;
+                    if(e.type != NumberType)
                     {
-                        throw new ArgumentTypeError("number" , e.type , mathExp );
+                        throw new ArgumentTypeError(NumberType , e.type , mathExp );
                     }
                     countOfArguments += 1 ;
                     if(ActualToken() == ",")
@@ -77,7 +77,7 @@ namespace HULK
                         }
                     }
                 }
-                type = "number" ;
+                type = NumberType ;
             }
         }
 
@@ -155,12 +155,12 @@ namespace HULK
         {
             if(arguments.Count == 1)
             {
-                if(Lexer.TokenType(arguments[0]) == "number")
+                if(Lexer.TokenType(arguments[0]) == NumberType)
                 {
                     double result = Math.Sqrt((double)arguments[0]);
                     value = result;
                 }
-                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "sqrt" );
+                else throw new ArgumentTypeError(NumberType , Lexer.TokenType(arguments[0]) , "sqrt" );
             }
             else throw new ArgumentsCountError("sqrt" , 1 , arguments.Count );
         }
@@ -168,12 +168,12 @@ namespace HULK
         {
             if(arguments.Count == 1)
             {
-                if(Lexer.TokenType(arguments[0]) == "number")
+                if(Lexer.TokenType(arguments[0]) == NumberType)
                 {
                     double result = Math.Sin((double)arguments[0]);
                     value = result;
                 }
-                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "sin" );
+                else throw new ArgumentTypeError(NumberType , Lexer.TokenType(arguments[0]) , "sin" );
             }
             else throw new ArgumentsCountError("sin" , 1 , arguments.Count );
         }
@@ -181,12 +181,12 @@ namespace HULK
         {
            if(arguments.Count == 1)
             {
-                if(Lexer.TokenType(arguments[0]) == "number")
+                if(Lexer.TokenType(arguments[0]) == NumberType)
                 {
                     double result = Math.Cos((double)arguments[0]);
                     value = result;
                 }
-                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "cos" );
+                else throw new ArgumentTypeError(NumberType , Lexer.TokenType(arguments[0]) , "cos" );
             }
             else throw new ArgumentsCountError("cos"  , 1 , arguments.Count );
 
@@ -195,12 +195,12 @@ namespace HULK
         {
             if(arguments.Count == 1)
             {
-                if(Lexer.TokenType(arguments[0]) == "number")
+                if(Lexer.TokenType(arguments[0]) == NumberType)
                 {
                     double result = Math.Cos((double)arguments[0]);
                     value = Convert.ToString(result);
                 }
-                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "exp" );
+                else throw new ArgumentTypeError(NumberType , Lexer.TokenType(arguments[0]) , "exp" );
             }
             else throw new ArgumentsCountError("exp" , 1 , arguments.Count );
         }
@@ -208,18 +208,18 @@ namespace HULK
         {
             if(arguments.Count == 2)
             {
-                if(Lexer.TokenType(arguments[0]) == "number")
+                if(Lexer.TokenType(arguments[0]) == NumberType)
                 {
                     double logBase = (double)arguments[0];
-                    if(Lexer.TokenType(arguments[1]) == "number")
+                    if(Lexer.TokenType(arguments[1]) == NumberType)
                     {
                         double n = (double)arguments[1];
                         double result = Math.Log(n , logBase);
                         value = result ;
                     }
-                    else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[1]) , "log" );
+                    else throw new ArgumentTypeError(NumberType , Lexer.TokenType(arguments[1]) , "log" );
                 }
-                else throw new ArgumentTypeError("number" , Lexer.TokenType(arguments[0]) , "log");
+                else throw new ArgumentTypeError(NumberType , Lexer.TokenType(arguments[0]) , "log");
             }
             else throw new ArgumentsCountError( "log" , 2 , arguments.Count );
         }

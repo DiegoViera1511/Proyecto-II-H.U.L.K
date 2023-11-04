@@ -51,20 +51,20 @@ namespace HULK
                 if(ActualToken() == "+" || ActualToken() == "-")
                 {
                     string operatorToken = ActualToken();
-                    if(left.type == "inference") left.type = "number";
+                    if(left.type == InferenceType) left.type = NumberType;
                     
                     Next();
 
                     iDRight = ActualToken() ;
                     right.Analize();//Analiza la derecha
-                    if(right.type == "inference") right.type = "number";
+                    if(right.type == InferenceType) right.type = NumberType;
                 
-                    if(!(left.type == "number" && right.type == "number"))//Verifica que sean ambos de tipo number
+                    if(!(left.type == NumberType && right.type == NumberType))//Verifica que sean ambos de tipo number
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");//Verifica si son argumentos de una función
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);//Verifica si son argumentos de una función
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);//Lanza error
                     }
-                    else left.type = "number" ;//Actualiza el tipo de la expresión 
+                    else left.type = NumberType ;//Actualiza el tipo de la expresión 
                 }
                 else if (NextTokens.Contains(ActualToken()))//Verifica que el token sea un siguiente de la expresión
                 {
@@ -101,13 +101,13 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                 
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
                     {
                         left.value = Operation(left.value , operatorToken , right.value) ;//Actualiza el valor de left 
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
@@ -175,20 +175,20 @@ namespace HULK
                 {   
                     string operatorToken = ActualToken();
 
-                    if(left.type == "inference") left.type = "number";
+                    if(left.type == InferenceType) left.type = NumberType;
 
                     Next();
 
                     iDRight = ActualToken() ;
                     right.Analize();
-                    if(right.type == "inference") right.type = "number";
+                    if(right.type == InferenceType) right.type = NumberType;
                     
-                    if(!(left.type == "number" && right.type == "number"))
+                    if(!(left.type == NumberType && right.type == NumberType))
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
                     }
-                    else left.type = "number" ;
+                    else left.type = NumberType ;
                 }
                 else if(NextTokens.Contains(ActualToken()))
                 {
@@ -225,13 +225,13 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
                     {
                         left.value = Operation(left.value , operatorToken , right.value);
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
                         throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
@@ -288,20 +288,20 @@ namespace HULK
             {
                 if(ActualToken() == "^")
                 {
-                   if(left.type == "inference") left.type = "number";
+                   if(left.type == InferenceType) left.type = NumberType;
 
                     Next();
 
                     iDRight = ActualToken() ;
                     right.Analize();
-                    if(right.type == "inference") right.type = "number";
+                    if(right.type == InferenceType) right.type = NumberType;
                     
-                    if(!(left.type == "number" && right.type == "number"))
+                    if(!(left.type == NumberType && right.type == NumberType))
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , "number");
+                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);
                         throw new IncorrectBinaryExpression("Operator ' ^ '" , left.type , right.type);
                     }
-                    else left.type = "number";
+                    else left.type = NumberType;
                 }
                 else if(NextTokens.Contains(ActualToken()))
                 {
@@ -335,13 +335,13 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == "number" && Lexer.TokenType(right.value) == "number")
+                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
                     {
                         left.value = Operation(left.value , operatorToken , right.value) ;
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , "number");
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
                         throw new IncorrectBinaryExpression("Operator ' ^ '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
                     }
                 }
