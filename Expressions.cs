@@ -12,16 +12,34 @@ namespace HULK
     /// <summary>
     /// Clase abstracta de expresión
     /// </summary>
-    abstract class Expression
+    public abstract class Expression
     {
         public const string NumberType = "number" ;
         public const string StringType = "string" ;
         public const string BooleanType = "boolean" ;
         public const string InferenceType = "inference" ;
 
-        public object value ;
+        public object? value ;
 
-        public string type ;
+        public string? type ;
+
+        public object GetValue()
+        {
+            if(value != null)
+            {
+                return value ;
+            }
+            else throw new DefaultError("Null value");
+        }
+
+        public string GetExpType()
+        {
+            if(type != null)
+            {
+                return type ;
+            }
+            else throw new DefaultError("Null value");
+        }
         /// <summary>
         /// Mueve el índice al próximo token
         /// </summary>
@@ -46,9 +64,8 @@ namespace HULK
     /// </summary>
     abstract class Binary_Exrpessions : Expression
     {
-        public Expression left ;
+
         public string? iDLeft  ;
-        public Expression right ;
         public string? iDRight  ;
 
         public abstract object Operation(object left , string operatorToken , object right);
@@ -177,7 +194,7 @@ namespace HULK
                 FunctionDeclaration.functionStore[Lexer.Tokens[i]].Evaluate() ;
                 value = FunctionDeclaration.functionStore[Lexer.Tokens[i]].value ;
                 
-                Lexer.ConsolePrints.Add(value);
+                Lexer.ConsolePrints.Add(GetValue());
               
             }
             else //Atom expression

@@ -7,14 +7,11 @@ namespace HULK
     /// </summary>
     class Union : Binary_Exrpessions // ( @ )
     {   
-       private List<string> NextTokens = new List<string>(){";",")","in",",","else"};
+        public Expression left = new BooleanOperator();
+        public Expression right = new BooleanOperator();
+        private List<string> NextTokens = new List<string>(){";",")","in",",","else"};
         
-        public Union()
-        {
-            this.left = new BooleanOperator();
-
-            this.right = new BooleanOperator();
-        }
+        
         /// <summary>
         /// Operación de la clase Union ( Une como string dos valores )
         /// </summary>
@@ -71,7 +68,7 @@ namespace HULK
                 {
                     Next();
                     right.Evaluate() ;
-                    left.value = Operation(left.value , "@" , right.value) ;
+                    left.value = Operation(left.GetValue() , "@" , right.GetValue()) ;
                 }
                 else if (NextTokens.Contains(ActualToken()))
                 {

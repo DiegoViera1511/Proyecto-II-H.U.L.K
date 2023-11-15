@@ -349,7 +349,7 @@ namespace HULK
                 while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                 {
                     parameter.Evaluate();
-                    argumentsValue.Add(parameter.value);
+                    argumentsValue.Add(parameter.GetValue());
                     if(ActualToken() != ",")
                     {
                         break;
@@ -497,7 +497,7 @@ namespace HULK
                 if(ActualToken() == ")")
                 {
                     Next();
-                    Lexer.ConsolePrints.Add(printExp.value);
+                    Lexer.ConsolePrints.Add(printExp.GetValue());
                     value = printExp.value;
                 }
                 else

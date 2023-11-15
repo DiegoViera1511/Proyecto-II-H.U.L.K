@@ -272,6 +272,10 @@ namespace HULK
             {
                 Console.WriteLine("Missing ' ; '");
             }
+            else if(ProblemType == "Null value")
+            {
+                Console.WriteLine("Null value");
+            }
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }

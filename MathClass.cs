@@ -39,7 +39,7 @@ namespace HULK
                     if(e.type == InferenceType) e.type = NumberType ;
                     if(e.type != NumberType)
                     {
-                        throw new ArgumentTypeError(NumberType , e.type , mathExp );
+                        throw new ArgumentTypeError(NumberType , e.GetExpType() , mathExp );
                     }
                     countOfArguments += 1 ;
                     if(ActualToken() == ",")
@@ -105,7 +105,7 @@ namespace HULK
                 {
                     Expression e = new Union();
                     e.Evaluate();
-                    arguments.Add(e.value);
+                    arguments.Add(e.GetValue());
                     if(ActualToken() == ",")
                     {
                         Next();

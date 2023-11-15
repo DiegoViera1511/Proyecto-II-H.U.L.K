@@ -8,14 +8,11 @@ namespace HULK
     /// </summary>
     class SumExpression : Binary_Exrpessions // ( + ; - )
     {   
-       private List<string> NextTokens = new List<string>(){";",")","in",",",">","<","else","<","<=",">=","&","|","==","!=","@"};
-        
-        public SumExpression()
-        {
-            this.left = new MultiplyExpression();
+        private List<string> NextTokens = new List<string>(){";",")","in",",",">","<","else","<","<=",">=","&","|","==","!=","@"};
 
-            this.right = new MultiplyExpression();
-        }
+        public Expression left = new MultiplyExpression();
+        public Expression right = new MultiplyExpression();
+        
         /// <summary>
         /// Operación de la clase SumExrpession
         /// </summary>
@@ -61,8 +58,8 @@ namespace HULK
                 
                     if(!(left.type == NumberType && right.type == NumberType))//Verifica que sean ambos de tipo number
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);//Verifica si son argumentos de una función
-                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);//Lanza error
+                        CatchArgumentTypeError(iDLeft , left.GetExpType() , iDRight , right.GetExpType() , NumberType);//Verifica si son argumentos de una función
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.GetExpType() , right.GetExpType());//Lanza error
                     }
                     else left.type = NumberType ;//Actualiza el tipo de la expresión 
                 }
@@ -101,14 +98,14 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                 
-                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
+                    if(Lexer.TokenType(left.GetValue()) == NumberType && Lexer.TokenType(right.GetValue()) == NumberType)
                     {
-                        left.value = Operation(left.value , operatorToken , right.value) ;//Actualiza el valor de left 
+                        left.value = Operation(left.GetValue() , operatorToken , right.GetValue()) ;//Actualiza el valor de left 
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
-                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.GetValue()) , iDRight , Lexer.TokenType(right.GetValue()) , NumberType);
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.GetValue()) , Lexer.TokenType(right.GetValue()));
                     }
                 }
                 else if (NextTokens.Contains(ActualToken()))
@@ -129,13 +126,10 @@ namespace HULK
     /// </summary>
     class MultiplyExpression : Binary_Exrpessions  // ( * ; / ; % )
     {
+        public Expression left = new PowerExpression();
+        public Expression right = new PowerExpression();
         private List<string> NextTokens = new List<string>(){";", ")" ,"in",",",">","<","else","<","<=",">=","&","|","==","!=","@","+","-"};
-        public MultiplyExpression()
-        {
-            this.left = new PowerExpression();
-
-            this.right = new PowerExpression();
-        }
+        
         /// <summary>
         /// Operación de la clase MultiplyExpressión 
         /// </summary>
@@ -185,8 +179,8 @@ namespace HULK
                     
                     if(!(left.type == NumberType && right.type == NumberType))
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);
-                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.type , right.type);
+                        CatchArgumentTypeError(iDLeft , left.GetExpType() , iDRight , right.GetExpType() , NumberType);
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , left.GetExpType() , right.GetExpType());
                     }
                     else left.type = NumberType ;
                 }
@@ -225,14 +219,14 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
+                    if(Lexer.TokenType(left.GetValue()) == NumberType && Lexer.TokenType(right.GetValue()) == NumberType)
                     {
-                        left.value = Operation(left.value , operatorToken , right.value);
+                        left.value = Operation(left.GetValue() , operatorToken , right.GetValue());
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
-                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.GetValue()) , iDRight , Lexer.TokenType(right.GetValue()) , NumberType);
+                        throw new IncorrectBinaryExpression($"Operator ' {operatorToken} '" , Lexer.TokenType(left.GetValue()) , Lexer.TokenType(right.GetValue()));
                     }
                 }
                 else if(NextTokens.Contains(ActualToken()))
@@ -255,13 +249,10 @@ namespace HULK
     /// </summary>
     class PowerExpression : Binary_Exrpessions // ( ^ )
     {
+        public Expression left = new Atom();
+        public Expression right = new Atom();
         private List<string> NextTokens = new List<string>(){";", ")" ,"in",",",">","<","else","<=",">=","&","|","==","!=","@","+","-","*","/","%"};
-        public PowerExpression()
-        {
-            this.left = new Atom();
-
-            this.right = new Atom();
-        }
+        
          /// <summary>
         /// Operación de la clase PowerExpression 
         /// </summary>
@@ -298,8 +289,8 @@ namespace HULK
                     
                     if(!(left.type == NumberType && right.type == NumberType))
                     {
-                        CatchArgumentTypeError(iDLeft , left.type , iDRight , right.type , NumberType);
-                        throw new IncorrectBinaryExpression("Operator ' ^ '" , left.type , right.type);
+                        CatchArgumentTypeError(iDLeft , left.GetExpType() , iDRight , right.GetExpType() , NumberType);
+                        throw new IncorrectBinaryExpression("Operator ' ^ '" , left.GetExpType() , right.GetExpType());
                     }
                     else left.type = NumberType;
                 }
@@ -335,14 +326,14 @@ namespace HULK
                     iDRight = ActualToken() ;
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.value) == NumberType && Lexer.TokenType(right.value) == NumberType)
+                    if(Lexer.TokenType(left.GetValue()) == NumberType && Lexer.TokenType(right.GetValue()) == NumberType)
                     {
-                        left.value = Operation(left.value , operatorToken , right.value) ;
+                        left.value = Operation(left.GetValue() , operatorToken , right.GetValue()) ;
                     }
                     else 
                     {
-                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.value) , iDRight , Lexer.TokenType(right.value) , NumberType);
-                        throw new IncorrectBinaryExpression("Operator ' ^ '" , Lexer.TokenType(left.value) , Lexer.TokenType(right.value));
+                        CatchArgumentTypeError(iDLeft , Lexer.TokenType(left.GetValue()) , iDRight , Lexer.TokenType(right.GetValue()) , NumberType);
+                        throw new IncorrectBinaryExpression("Operator ' ^ '" , Lexer.TokenType(left.GetValue()) , Lexer.TokenType(right.GetValue()));
                     }
                 }
                 else if(NextTokens.Contains(ActualToken()))

@@ -52,9 +52,9 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        throw new ArgumentTypeError( "number" , num.type );
+                        throw new ArgumentTypeError( "number" , num.GetExpType() );
                     }
-                    throw new IncorrectOperator( num.type , "Operator ' - '" , NumberType);
+                    throw new IncorrectOperator( num.GetExpType() , "Operator ' - '" , NumberType);
                 }
             }
             else if(ActualToken() == "!")
@@ -75,9 +75,9 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        throw new ArgumentTypeError( "boolean" , boolean.type );
+                        throw new ArgumentTypeError( "boolean" , boolean.GetExpType() );
                     }
-                    throw new IncorrectOperator(boolean.type , "Operator ' ! '" , BooleanType);
+                    throw new IncorrectOperator(boolean.GetExpType() , "Operator ' ! '" , BooleanType);
                 }
 
             }
@@ -86,11 +86,11 @@ namespace HULK
                 Next();
                 Expression result = new Union();
                 result.Analize();
-                string x = result.type;
+                string resultType = result.GetExpType();
                 if(Lexer.index < Lexer.Tokens.Count && ActualToken() == ")")
                 {
                     Next();
-                    type = x;
+                    type = resultType;
                 }
                 else
                 {
@@ -210,17 +210,17 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 num.Evaluate();
                 
-                if(num.value.GetType() == Type.GetType("System.Double"))
+                if(num.GetValue().GetType() == Type.GetType("System.Double"))
                 {
-                    value = -1 * (double)num.value ;
+                    value = -1 * (double)num.GetValue() ;
                 }
                 else 
                 {
                     if(isIdfunction)
                     {
-                        throw new ArgumentTypeError( NumberType , Lexer.TokenType(num.value) );
+                        throw new ArgumentTypeError( NumberType , Lexer.TokenType(num.GetValue()) );
                     }
-                    throw new IncorrectOperator(Lexer.TokenType(num.value) , "Operator ' - '" , NumberType);
+                    throw new IncorrectOperator(Lexer.TokenType(num.GetValue()) , "Operator ' - '" , NumberType);
                 }
             }
             else if(ActualToken() == "!")
@@ -233,11 +233,11 @@ namespace HULK
                 if(Function.functionsId.ContainsKey(ActualToken())) isIdfunction = true ;
                 boolean.Evaluate();
                 
-                if(Lexer.TokenType(boolean.value) == BooleanType && (bool)boolean.value)
+                if(Lexer.TokenType(boolean.GetValue()) == BooleanType && (bool)boolean.GetValue())
                 {
                     value = "false" ;
                 }
-                else if(Lexer.TokenType(boolean.value) == BooleanType && !(bool)boolean.value)
+                else if(Lexer.TokenType(boolean.GetValue()) == BooleanType && !(bool)boolean.GetValue())
                 {
                     value = "true" ;
                 }
@@ -245,9 +245,9 @@ namespace HULK
                 {
                     if(isIdfunction)
                     {
-                        throw new ArgumentTypeError( BooleanType , Lexer.TokenType(boolean.value) );
+                        throw new ArgumentTypeError( BooleanType , Lexer.TokenType(boolean.GetValue()) );
                     }
-                    throw new IncorrectOperator(Lexer.TokenType(boolean.value) , "Operator ' ! '" , BooleanType);
+                    throw new IncorrectOperator(Lexer.TokenType(boolean.GetValue()) , "Operator ' ! '" , BooleanType);
                 }
 
             }

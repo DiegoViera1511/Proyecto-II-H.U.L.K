@@ -38,7 +38,7 @@ namespace HULK
                         Expression Value = new Union();
                         Value.Analize();
                             
-                        string idType = Value.type;
+                        string idType = Value.GetExpType();
 
                         if(idStore.ContainsKey(id))
                         {
@@ -138,7 +138,7 @@ namespace HULK
                         Expression Value = new Union();
                         Value.Evaluate();
                             
-                        object idValue = Value.value;
+                        object idValue = Value.GetValue();
 
                         if(idStore.ContainsKey(id))
                         {
@@ -191,7 +191,7 @@ namespace HULK
             Expression letInExp = new Union();
             letInExp.Evaluate();
 
-            object result = letInExp.value ;
+            object result = letInExp.GetValue() ;
 
             if(parenthesis)
             {

@@ -22,7 +22,7 @@ namespace HULK
                 booleanExpression.Analize();
                 if(booleanExpression.type != "boolean")
                 {
-                    throw new ConditionalErrors(booleanExpression.type);
+                    throw new ConditionalErrors(booleanExpression.GetExpType());
                 }
 
                 if( ActualToken() == ")" )
@@ -63,7 +63,7 @@ namespace HULK
 
                 Expression booleanExpression = new Union();
                 booleanExpression.Evaluate();
-                if(!(Convert.ToString(booleanExpression.value.GetType()) == "System.Boolean"))
+                if(!(Convert.ToString(booleanExpression.GetValue().GetType()) == "System.Boolean"))
                 {
                     throw new ConditionalErrors(Lexer.TokenType(booleanExpression));
                 }
@@ -72,7 +72,7 @@ namespace HULK
                 {
                     Next();
             
-                    if((bool)booleanExpression.value)
+                    if((bool)booleanExpression.GetValue())
                     {
 
                         Expression trueExp = new Union();
@@ -89,7 +89,7 @@ namespace HULK
                         }
                         else throw new SyntaxError("Missing ' else ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);
                     }
-                    else if(!(bool)booleanExpression.value)
+                    else if(!(bool)booleanExpression.GetValue())
                     {
                         while(Lexer.index < Lexer.Tokens.Count - 1  && ActualToken() != "else" ) 
                         {
