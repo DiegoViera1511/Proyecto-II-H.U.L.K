@@ -63,7 +63,7 @@ namespace HULK
 
                 Expression booleanExpression = new Union();
                 booleanExpression.Evaluate();
-                if(!(Convert.ToString(booleanExpression.GetValue().GetType()) == "System.Boolean"))
+                if(booleanExpression.GetValue().GetType() != Type.GetType("System.Boolean"))
                 {
                     throw new ConditionalErrors(Lexer.TokenType(booleanExpression));
                 }

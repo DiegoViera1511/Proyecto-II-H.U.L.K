@@ -103,7 +103,7 @@ namespace HULK
 
                     right.Evaluate();
                     
-                    if(Lexer.TokenType(left.GetValue()) == BooleanType && Lexer.TokenType(left.GetValue()) == BooleanType)
+                    if(Lexer.TokenType(left.GetValue()) == BooleanType && Lexer.TokenType(right.GetValue()) == BooleanType)
                     {
                         left.value = Operation(left.GetValue() , operatorToken , right.GetValue()) ;
                     }

@@ -30,7 +30,6 @@ namespace HULK
         /// <exception cref="UnExpectedToken">Lanza error si no encuentra un siguiente de la expresión</exception>
         public override void Analize()
         {
-            iDLeft = ActualToken() ;
             left.Analize(); // analiza la izquierda 
             
             while(Lexer.index < Lexer.Tokens.Count)
@@ -59,7 +58,6 @@ namespace HULK
         /// <exception cref="UnExpectedToken">Lanza error si no encuentra un siguiente de la expresión</exception>
         public override void Evaluate()
         {
-            iDLeft = ActualToken() ;
             left.Evaluate();
             
             while(Lexer.index < Lexer.Tokens.Count)
