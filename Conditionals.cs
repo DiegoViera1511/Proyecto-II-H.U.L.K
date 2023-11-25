@@ -32,10 +32,10 @@ namespace HULK
                     Expression trueExp = new Union();
                     trueExp.Analize();
                         
+                    Expression falseExp = new Union();
                     if(ActualToken() == "else")
                     {
                         Next();
-                        Expression falseExp = new Union();
                         falseExp.Analize();
                     }
                     else throw new SyntaxError("Missing ' else ' " , "Missing Token" , "if-else" , Lexer.Tokens[Lexer.index - 1]);

@@ -5,7 +5,7 @@ namespace HULK
     /// <summary>
     /// Representa las expresiones de declaraciones de funciones
     /// </summary>
-    class FunctionDeclaration : Expression
+    class FunctionDeclaration 
     {
         public static Dictionary < string , Function > functionStore = new Dictionary<string, Function>();
         public static Dictionary < string , int > functionStack = new Dictionary<string, int>();
@@ -18,70 +18,70 @@ namespace HULK
         /// </summary>
         /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         /// <exception cref="DuplicateArgument">Lanza error si existen argumentos de la función duplicados</exception>
-        public override void Analize()
+        public void Analize()
         {
             List<string> functionExpression = new List<string>();
 
-            if( Lexer.IsID(ActualToken()) )
+            if( Lexer.IsID(Expression.ActualToken()) )
             {
-                if(Lexer.Key_Words.Contains(ActualToken()))
+                if(Lexer.Key_Words.Contains(Expression.ActualToken()))
                 {
-                    throw new SyntaxError( ActualToken() , "KeyWordID" );
+                    throw new SyntaxError( Expression.ActualToken() , "KeyWordID" );
                 }
 
-                string functionId = ActualToken();
+                string functionId = Expression.ActualToken();
                 functionsIdInference.Add(functionId , "functionId");
 
-                Next();
-                if(ActualToken() == "(")
+                Expression.Next();
+                if(Expression.ActualToken() == "(")
                 {
-                    Next();
+                    Expression.Next();
                     
-                    while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
+                    while(Lexer.index < Lexer.Tokens.Count && Expression.ActualToken() != ")")
                     {
-                        if(Lexer.IsID(ActualToken()))
+                        if(Lexer.IsID(Expression.ActualToken()))
                         {
-                            if(!functionArguments.Contains(ActualToken()))
+                            if(!functionArguments.Contains(Expression.ActualToken()))
                             {
-                                functionsIdInference.Add(ActualToken() , "variable");
-                                functionArguments.Add(ActualToken());
+                                functionsIdInference.Add(Expression.ActualToken() , "variable");
+                                functionArguments.Add(Expression.ActualToken());
                                 functionArgumentsCount += 1 ;
-                                Next();
+                                Expression.Next();
                             }
                             else
                             {
-                                throw new DuplicateArgument( ActualToken() ) ;
+                                throw new DuplicateArgument( Expression.ActualToken() ) ;
                             }
                         }
                         else 
                         {
                             throw new SyntaxError("Missing ID" , "Missing Token" , "Function declaration"  , Lexer.Tokens[Lexer.index - 1] );
                         }
-                        if(ActualToken() != ",")
+                        if(Expression.ActualToken() != ",")
                         {
                             break;
                         }
-                        else Next();
+                        else Expression.Next();
                     }
-                    if(ActualToken() == ")")
+                    if(Expression.ActualToken() == ")")
                     {
-                        Next();
-                        if(ActualToken() == "=>")
+                        Expression.Next();
+                        if(Expression.ActualToken() == "=>")
                         {
-                            Next();
-                            while( Lexer.index < Lexer.Tokens.Count && ActualToken() != ";" )
+                            Expression.Next();
+                            while( Lexer.index < Lexer.Tokens.Count && Expression.ActualToken() != ";" )
                             {
-                                if(Lexer.IsID(ActualToken()) && !Lexer.Key_Words.Contains(ActualToken()) && !functionArguments.Contains(ActualToken()) && ActualToken() != functionId && !functionStore.ContainsKey(ActualToken()) && !Let_in.idStore.ContainsKey(ActualToken()))
+                                if(Lexer.IsID(Expression.ActualToken()) && !Lexer.Key_Words.Contains(Expression.ActualToken()) && !functionArguments.Contains(Expression.ActualToken()) && Expression.ActualToken() != functionId && !functionStore.ContainsKey(Expression.ActualToken()) && !Let_in.idStore.ContainsKey(Expression.ActualToken()))
                                 {
-                                    throw new SyntaxError(ActualToken() , "DoNotExistID");
+                                    throw new SyntaxError(Expression.ActualToken() , "DoNotExistID");
                                 }
-                                functionExpression.Add(ActualToken());
-                                Next();
+                                functionExpression.Add(Expression.ActualToken());
+                                Expression.Next();
                             }
 
-                            if(Lexer.index < Lexer.Tokens.Count && ActualToken() == ";" )
+                            if(Lexer.index < Lexer.Tokens.Count && Expression.ActualToken() == ";" )
                             {
-                                functionExpression.Add(ActualToken());
+                                functionExpression.Add(Expression.ActualToken());
                             }
                             else return;
 
@@ -106,14 +106,16 @@ namespace HULK
 
                             Lexer.Tokens = originalsTokens ;
                             Lexer.index = originalIndex ;
+
+                            Function f = new Function(functionArguments , functionExpression , functionId){type = functionbody.type};
                         
                             if(functionStore.ContainsKey(functionId))
                             {
-                                functionStore[functionId] = new Function(functionArguments , functionExpression , functionId);
+                                functionStore[functionId] = f ;
                             }
                             else 
                             {
-                                functionStore.Add(functionId , new Function(functionArguments , functionExpression , functionId));
+                                functionStore.Add(functionId , f);
                                 functionStack.Add(functionId , 0);
                             }
                         }
@@ -133,102 +135,6 @@ namespace HULK
                 throw new SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
             }
         }
-
-        /// <summary>
-        /// Una vez analizada la expresión , guarda la función en functionStore
-        /// </summary>
-        /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
-        /// <exception cref="DuplicateArgument">Lanza error si existen argumentos de la función duplicados</exception>
-        public override void Evaluate()
-        {
-            List<string> functionExpression = new List<string>();
-
-            if( Lexer.IsID(ActualToken()) )
-            {
-                if(Lexer.Key_Words.Contains(ActualToken()))
-                {
-                    throw new SyntaxError( ActualToken() , "KeyWordID" );
-                }
-
-                string functionId = ActualToken();
-                Next();
-                if(ActualToken() == "(")
-                {
-                    Next();
-                    
-                    while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
-                    {
-                        if(Lexer.IsID(ActualToken()))
-                        {
-                            if(!functionArguments.Contains(ActualToken()))
-                            {
-                                functionArguments.Add(ActualToken());
-                                Next();
-                            }
-                            else
-                            {
-                                throw new DuplicateArgument( ActualToken() ) ;
-                            }
-                        }
-                        else 
-                        {
-                            throw new SyntaxError("Missing ID" , "Missing Token" , "Function declaration"  , Lexer.Tokens[Lexer.index - 1] );
-                        }
-                        if(ActualToken() != ",")
-                        {
-                            break;
-                        }
-                        else Next();
-                    }
-                    if(ActualToken() == ")")
-                    {
-                        Next();
-                        if(ActualToken() == "=>")
-                        {
-                            Next();
-                            while(ActualToken() != ";" && Lexer.index < Lexer.Tokens.Count)
-                            {
-                                if(Lexer.IsID(ActualToken()) && !Lexer.Key_Words.Contains(ActualToken()) && !functionArguments.Contains(ActualToken()) && ActualToken() != functionId && !functionStore.ContainsKey(ActualToken()) && !Let_in.idStore.ContainsKey(ActualToken()))
-                                {
-                                    throw new SyntaxError(ActualToken() , "DoNotExistID");
-                                }
-                                functionExpression.Add(ActualToken());
-                                Next();
-                            }
-
-                            if(Lexer.index < Lexer.Tokens.Count && ActualToken() == ";" )
-                            {
-                                functionExpression.Add(ActualToken());
-                            }
-                            else return;
-                        
-                            if(functionStore.ContainsKey(functionId))
-                            {
-                                functionStore[functionId] = new Function(functionArguments , functionExpression , functionId);
-                            }
-                            else
-                            {
-                                functionStore.Add(functionId , new Function(functionArguments , functionExpression , functionId));
-                                functionStack.Add(functionId , 0);
-                            }
-                        }
-                        else 
-                        {
-                            throw new SyntaxError("Missing ' => " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
-                        }
-                    }
-                    else 
-                    {
-                        throw new SyntaxError("Missing ' ) " , "Missing Token" , "Function Declaration" , Lexer.Tokens[Lexer.index - 1]);
-                    }
-                }
-            }
-            else 
-            {
-                throw new SyntaxError("Missing ID" , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1]);
-            }
-        }
-
     }
     
     /// <summary>

@@ -135,7 +135,7 @@ namespace HULK
             else if(ActualToken() == "function")
             {
                 Next();
-                Expression f = new FunctionDeclaration();
+                FunctionDeclaration f = new FunctionDeclaration();
                 f.Analize();
             }
             else if(FunctionDeclaration.functionStore.ContainsKey(ActualToken()))
@@ -178,13 +178,6 @@ namespace HULK
                 Expression ifelse = new Conditional();
                 ifelse.Evaluate();
                 value = ifelse.value;
-            }
-            else if(ActualToken() == "function")
-            {
-                Next();
-                Expression f = new FunctionDeclaration();
-                f.Evaluate();
-                value = "";
             }
             else if(FunctionDeclaration.functionStore.ContainsKey(ActualToken()))
             {

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace HULK
@@ -13,8 +14,16 @@ namespace HULK
         /// Analiza que no hayan errores en la expresión 
         /// </summary>
         /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
+        private void RemoveVariables(List<string> vars)
+        {
+            foreach(string variable in vars)
+            {
+                idStore.Remove(variable);
+            }
+        }
         public override void Analize()
         {
+            List<string> LocalVariables = new();
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.IsID(ActualToken()))
@@ -42,13 +51,17 @@ namespace HULK
 
                         if(idStore.ContainsKey(id))
                         {
-                            idStore[id] = idType;
+                            throw new DuplicateArgument(id);
                         }
                         else if(Function.functionsId.ContainsKey(id))
                         {
                             Function.functionsId[id] = idType;
                         }
-                        else idStore.Add(id , idType);
+                        else
+                        {
+                            idStore.Add(id , idType);
+                            LocalVariables.Add(id);
+                        }
                     }
                     else
                     {
@@ -80,34 +93,11 @@ namespace HULK
 
             }    
 
-            bool parenthesis = false;
-            if(ActualToken() == "(")
-            {
-                Next();
-                parenthesis = true ;
-            }
-        
             Expression letInExp = new Union();
             letInExp.Analize();
-
-            if(parenthesis)
-            {
-                if(ActualToken() == ")")
-                {
-                    Next();
-                    type = letInExp.type;
-                    idStore.Clear();
-                }
-                else 
-                {
-                    throw new SyntaxError("Missing ' ) " , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1] );
-                }
-            }
-            else
-            {
-                type = letInExp.type ;
-                idStore.Clear();
-            }
+            type = letInExp.type ;
+            RemoveVariables(LocalVariables);
+            
         }
         /// <summary>
         /// Evalúa la expresión let-in , dándole valor a la expresión .
@@ -115,6 +105,7 @@ namespace HULK
         /// <exception cref="SyntaxError">Lanza error de sintaxis</exception>
         public override void Evaluate()
         {
+            List<string> LocalVariables = new();
             while(Lexer.index < Lexer.Tokens.Count)
             {
                 if(Lexer.IsID(ActualToken()))
@@ -142,13 +133,17 @@ namespace HULK
 
                         if(idStore.ContainsKey(id))
                         {
-                            idStore[id] = idValue;
+                            throw new DuplicateArgument(id);
                         }
                         else if(Function.functionsId.ContainsKey(id))
                         {
                             Function.functionsId[id] = idValue;
                         }
-                        else idStore.Add(id , idValue );
+                        else
+                        {
+                            idStore.Add(id , idValue);
+                            LocalVariables.Add(id);
+                        }
                             
                     }
                     else
@@ -181,36 +176,13 @@ namespace HULK
 
             }    
 
-            bool parenthesis = false;
-            if(ActualToken() == "(")
-            {
-                Lexer.index++;
-                parenthesis = true ;
-            }
-        
             Expression letInExp = new Union();
             letInExp.Evaluate();
 
-            object result = letInExp.GetValue() ;
+            value = letInExp.GetValue();
 
-            if(parenthesis)
-            {
-                if(ActualToken() == ")")
-                {
-                    Lexer.index++;
-                    value = result;
-                    idStore.Clear();
-                }
-                else 
-                {
-                    throw new SyntaxError("Missing ' ) " , "Missing Token" , "let-in" , Lexer.Tokens[Lexer.index - 1] );
-                }
-            }
-            else
-            {
-                value = result;
-                idStore.Clear();
-            }
+            RemoveVariables(LocalVariables);
+
         }  
     }
     

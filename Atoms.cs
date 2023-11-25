@@ -129,7 +129,7 @@ namespace HULK
                 int i = Lexer.index;
                 Next();
                 FunctionDeclaration.functionStore[Lexer.Tokens[i]].Analize();
-                type = InferenceType;
+                type = FunctionDeclaration.functionStore[Lexer.Tokens[i]].GetExpType() ;
             }
             else if(Lexer.index < Lexer.Tokens.Count && ActualToken() == "true") // boolean true
             {
@@ -146,7 +146,7 @@ namespace HULK
                 Next();
                 Expression c = new Conditional();
                 c.Analize();
-                type = c.type;
+                type = InferenceType;
             }
             else if(Lexer.index < Lexer.Tokens.Count && FunctionDeclaration.functionsIdInference.ContainsKey(ActualToken()))
             {

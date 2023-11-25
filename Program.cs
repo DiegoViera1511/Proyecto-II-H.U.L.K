@@ -40,19 +40,24 @@ namespace HULK
                     Expression result = new HulkExpression() ;
 
                     result.Analize();// Analize expression
-                    Lexer.index = 0; // restart intdex
-                    result.Evaluate(); // evaluate expression
 
                     if((Lexer.index >= Lexer.Tokens.Count || Expression.ActualToken() != ";") && Lexer.Tokens.Count != 0)
                     {
                         throw new DefaultError("Missing endOfFile");
                     }
-                    else
+
+                    Lexer.index = 0; // restart intdex
+
+                    if(Expression.ActualToken() == "function")//Statement
                     {
-                        foreach(object Prints in Lexer.ConsolePrints)
-                        {
-                            Console.WriteLine(Prints);
-                        }
+                        continue ;
+                    }
+
+                    result.Evaluate(); // evaluate expression
+
+                    foreach(object Prints in Lexer.ConsolePrints)
+                    {
+                        Console.WriteLine(Prints);
                     }
                 }
                 catch (HulkErrors he)

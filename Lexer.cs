@@ -39,6 +39,7 @@ namespace HULK
             FunctionDeclaration.functionsIdInference.Clear();
             FunctionDeclaration.functionArgumentsCount = 0 ;
             Function.functionsId.Clear();
+            Let_in.idStore.Clear();
             index = 0;
             Tokens.Clear();
         }
