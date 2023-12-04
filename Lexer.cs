@@ -78,7 +78,7 @@ namespace HULK
                 }
             }
         }
-        /// <summary>
+        /// <summary>≤
         /// Determina si la expresión es un número
         /// </summary>
         /// <param name="Token">Token actual</param>

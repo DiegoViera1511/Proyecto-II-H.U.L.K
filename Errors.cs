@@ -276,6 +276,10 @@ namespace HULK
             {
                 Console.WriteLine("Null value");
             }
+            else if(ProblemType == "Missing token")
+            {
+                Console.WriteLine("Missing tokens");
+            }
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }

@@ -251,7 +251,7 @@ namespace HULK
 
                 argumentsValue.Clear();
 
-                Dictionary<string , object> Original_values = new Dictionary<string, object>();
+                Dictionary<string , object> Original_values = new Dictionary<string, object>();//Guardar los argumentos de la llamada de función actual
                 while(Lexer.index < Lexer.Tokens.Count && ActualToken() != ")")
                 {
                     parameter.Evaluate();

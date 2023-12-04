@@ -294,7 +294,7 @@ namespace HULK
                     }
                     else left.type = NumberType;
                 }
-                else if(NextTokens.Contains(ActualToken()))
+                else if(Lexer.index < Lexer.Tokens.Count && NextTokens.Contains(ActualToken()))
                 {
                     type = left.type;
                     break;
@@ -336,7 +336,7 @@ namespace HULK
                         throw new IncorrectBinaryExpression("Operator ' ^ '" , Lexer.TokenType(left.GetValue()) , Lexer.TokenType(right.GetValue()));
                     }
                 }
-                else if(NextTokens.Contains(ActualToken()))
+                else if( Lexer.index < Lexer.Tokens.Count && NextTokens.Contains(ActualToken()))
                 {
                     value = left.value;
                     break;

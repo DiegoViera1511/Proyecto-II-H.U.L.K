@@ -21,7 +21,7 @@ namespace HULK
             
                 Console.Write("> ");
 
-                string? input = Console.ReadLine();
+                string? input = "5 + ";
 
                 if(input == null)
                 {

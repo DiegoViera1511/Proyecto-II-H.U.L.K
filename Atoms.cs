@@ -18,6 +18,10 @@ namespace HULK
         /// <exception cref="UnExpectedToken">Lanza error si no encuentra un siguiente de la expresión o es un token no válido</exception>
         public override void Analize()
         {
+            if(Lexer.index >= Lexer.Tokens.Count)
+            {
+                throw new DefaultError("Missing endOfFile");
+            }
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
                 type = NumberType;
@@ -174,6 +178,10 @@ namespace HULK
                     throw new UnExpectedToken(ActualToken()) ;
                 }
             }
+            if(Lexer.index >= Lexer.Tokens.Count)
+            {
+                throw new DefaultError("Missing endOfFile");
+            }
         }
         /// <summary>
         /// Evalúa la expresión atómica .
@@ -184,6 +192,10 @@ namespace HULK
         /// <exception cref="UnExpectedToken">Lanza error si no encuentra un siguiente de la expresión o es un token no válido</exception>
         public override void Evaluate()
         {
+            if(Lexer.index >= Lexer.Tokens.Count)
+            {
+                throw new DefaultError("Missing endOfFile");
+            }
             if(Lexer.IsNumber(ActualToken())) // numbers
             {
                 value = Convert.ToDouble(ActualToken());
@@ -329,6 +341,10 @@ namespace HULK
                 {
                     throw new UnExpectedToken(ActualToken()) ;
                 }
+            }
+            if(Lexer.index >= Lexer.Tokens.Count)
+            {
+                throw new DefaultError("Missing endOfFile");
             }
         }
     }

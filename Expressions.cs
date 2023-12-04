@@ -53,6 +53,10 @@ namespace HULK
         /// <returns>Token actual</returns>
         static public string ActualToken()
         {
+            if(Lexer.index >= Lexer.Tokens.Count)
+            {
+                throw new DefaultError("Missing token");
+            }
             return Lexer.Tokens[Lexer.index];
         }
         public abstract void Evaluate();
